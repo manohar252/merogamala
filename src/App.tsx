@@ -8,7 +8,6 @@ import AdminPanel from './components/AdminPanel';
 import ShopSection from "./components/ShopSection";
 import Header from './components/Header';
 import Hero from './components/Hero';
-import ShopSection from './components/ShopSection';
 import Features from './components/Features';
 import About from './components/About';
 import PlantCareGuide from './components/PlantCareGuide';
