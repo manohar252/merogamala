@@ -5,7 +5,7 @@ import { CartProvider } from './contexts/CartContext';
 import LanguageModal from './components/LanguageModal';
 import AdminLogin from './components/AdminLogin';
 import AdminPanel from './components/AdminPanel';
-import ShopSection from "./components/ShopSection";
+import ShopSection from "./components/ShopSection2";
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
