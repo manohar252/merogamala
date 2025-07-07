@@ -2,6 +2,7 @@ import React from 'react';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { AdminProvider } from './contexts/AdminContext';
 import { CartProvider } from './contexts/CartContext';
+import { OrderProvider } from './contexts/OrderContext';
 import LanguageModal from './components/LanguageModal';
 import SecretAdminLogin from './components/SecretAdminLogin';
 import AdminPanel from './components/AdminPanel';
@@ -64,9 +65,11 @@ function App() {
   return (
     <LanguageProvider>
       <AdminProvider>
-        <CartProvider>
-          <AppContent />
-        </CartProvider>
+        <OrderProvider>
+          <CartProvider>
+            <AppContent />
+          </CartProvider>
+        </OrderProvider>
       </AdminProvider>
     </LanguageProvider>
   );
