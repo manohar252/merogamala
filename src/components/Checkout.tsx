@@ -12,14 +12,16 @@ import {
   CreditCard,
   Smartphone,
   Building2,
-  QrCode
+  QrCode,
+  X
 } from 'lucide-react';
 
 interface CheckoutProps {
   onBack: () => void;
+  onClose?: () => void;
 }
 
-const Checkout: React.FC<CheckoutProps> = ({ onBack }) => {
+const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
   const { t } = useLanguage();
   const { items, clearCart } = useCart();
   const { addOrder } = useOrders();
@@ -52,8 +54,8 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack }) => {
 
     if (!customerDetails.phoneNumber.trim()) {
       newErrors.phoneNumber = t('language') === 'en' ? 'Phone number is required' : 'फोन नम्बर आवश्यक छ';
-    } else if (!/^(\+977|977|0)?[0-9]{9,10}$/.test(customerDetails.phoneNumber.replace(/\s/g, ''))) {
-      newErrors.phoneNumber = t('language') === 'en' ? 'Please enter a valid phone number' : 'कृपया मान्य फोन नम्बर प्रविष्ट गर्नुहोस्';
+    } else if (!/^(\+977|977|0)?[9][0-9]{8,9}$/.test(customerDetails.phoneNumber.replace(/\s/g, ''))) {
+      newErrors.phoneNumber = t('language') === 'en' ? 'Please enter a valid Nepali phone number' : 'कृपया मान्य नेपाली फोन नम्बर प्रविष्ट गर्नुहोस्';
     }
 
     setErrors(newErrors);
@@ -70,6 +72,11 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack }) => {
   const handlePaymentSubmit = async () => {
     if (!selectedPayment) {
       alert(t('language') === 'en' ? 'Please select a payment method' : 'कृपया भुक्तानी विधि छान्नुहोस्');
+      return;
+    }
+
+    if (items.length === 0) {
+      alert(t('language') === 'en' ? 'Your cart is empty' : 'तपाईंको टोकरी खाली छ');
       return;
     }
 
@@ -120,6 +127,16 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack }) => {
   if (step === 'success') {
     return (
       <div className="text-center py-8">
+        {onClose && (
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X className="h-5 w-5 text-gray-500" />
+            </button>
+          </div>
+        )}
         <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
           {t('language') === 'en' ? 'Order Placed Successfully!' : 'अर्डर सफलतापूर्वक राखियो!'}
@@ -136,7 +153,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack }) => {
           }
         </p>
         <button
-          onClick={onBack}
+          onClick={onClose || onBack}
           className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
         >
           {t('language') === 'en' ? 'Continue Shopping' : 'किनमेल जारी राख्नुहोस्'}
@@ -148,16 +165,26 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack }) => {
   if (step === 'payment') {
     return (
       <div>
-        <div className="flex items-center mb-6">
-          <button
-            onClick={() => setStep('details')}
-            className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
-          </button>
-          <h2 className="text-xl font-semibold text-gray-900">
-            {t('language') === 'en' ? 'Select Payment Method' : 'भुक्तानी विधि छान्नुहोस्'}
-          </h2>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <button
+              onClick={() => setStep('details')}
+              className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5 text-gray-600" />
+            </button>
+            <h2 className="text-xl font-semibold text-gray-900">
+              {t('language') === 'en' ? 'Select Payment Method' : 'भुक्तानी विधि छान्नुहोस्'}
+            </h2>
+          </div>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X className="h-5 w-5 text-gray-500" />
+            </button>
+          )}
         </div>
 
         <div className="space-y-4 mb-6">
@@ -248,6 +275,14 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack }) => {
               {t('language') === 'en' ? 'Delivery Details' : 'डेलिभरी विवरण'}
             </h2>
           </div>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X className="h-5 w-5 text-gray-500" />
+            </button>
+          )}
         </div>
 
       <form onSubmit={handleDetailsSubmit} className="space-y-4">

@@ -55,7 +55,7 @@ const Cart = () => {
           {/* Main Content */}
           <div className="flex-1 overflow-y-auto p-6">
             {showCheckout ? (
-              <Checkout onBack={handleBackToCart} />
+              <Checkout onBack={handleBackToCart} onClose={handleCloseCart} />
             ) : items.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingBag className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -126,7 +126,8 @@ const Cart = () => {
               <div className="space-y-2">
                 <button 
                   onClick={() => setShowCheckout(true)}
-                  className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                  disabled={items.length === 0}
+                  className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t('language') === 'en' ? 'Checkout' : 'भुक्तानी गर्नुहोस्'}
                 </button>
