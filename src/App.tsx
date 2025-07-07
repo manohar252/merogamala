@@ -14,7 +14,6 @@ import PlantCareGuide from './components/PlantCareGuide';
 import PlantRequestForm from './components/PlantRequestForm';
 import Footer from './components/Footer';
 import Cart from './components/Cart';
-import ShopSection from './components/ShopSection';
 const AppContent = () => {
   const { showLanguageModal, setLanguage } = useLanguage();
   const [currentPath, setCurrentPath] = React.useState(
