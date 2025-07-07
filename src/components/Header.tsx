@@ -7,7 +7,7 @@ import { useAdmin } from '../contexts/AdminContext';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { t } = useLanguage();
-  const { cartItems, toggleCart } = useCart();
+  const { items: cartItems, setIsCartOpen } = useCart();
   const { isAuthenticated, logout } = useAdmin();
 
   const scrollToTop = () => {
@@ -87,7 +87,7 @@ const Header = () => {
             
             {/* Shopping Cart */}
             <button 
-              onClick={toggleCart}
+              onClick={() => setIsCartOpen(true)}
               className="relative p-2 text-gray-700 hover:text-emerald-600 transition-colors"
             >
               <ShoppingCart className="h-6 w-6" />
@@ -156,7 +156,7 @@ const Header = () => {
               
               {/* Mobile Cart */}
               <button 
-                onClick={toggleCart}
+                onClick={() => setIsCartOpen(true)}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 flex items-center gap-2"
               >
                 <ShoppingCart className="h-5 w-5" />

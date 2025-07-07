@@ -22,7 +22,7 @@ const AdminLogin = () => {
       if (!success) {
         setError('Invalid credentials or 2FA code');
       }
-    } catch (err) {
+    } catch {
       setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
