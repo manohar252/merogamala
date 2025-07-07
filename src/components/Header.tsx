@@ -1,14 +1,12 @@
 import React from 'react';
-import { Leaf, Menu, X, ShoppingCart, Settings } from 'lucide-react';
+import { Leaf, Menu, X, ShoppingCart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
-import { useAdmin } from '../contexts/AdminContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { t } = useLanguage();
   const { items: cartItems, setIsCartOpen } = useCart();
-  const { isAuthenticated, logout } = useAdmin();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -57,32 +55,7 @@ const Header = () => {
                 {t('contact')}
               </button>
               
-              {/* Admin Access Button */}
-              {isAuthenticated ? (
-                <div className="flex items-center gap-2">
-                  <a 
-                    href="/admin"
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
-                  >
-                    <Settings className="h-4 w-4" />
-                    Admin Panel
-                  </a>
-                  <button 
-                    onClick={logout}
-                    className="text-gray-700 hover:text-red-600 transition-colors"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <a 
-                  href="/admin"
-                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
-                >
-                  <Settings className="h-4 w-4" />
-                  Admin Login
-                </a>
-              )}
+
             </nav>
             
             {/* Shopping Cart */}
@@ -129,30 +102,7 @@ const Header = () => {
                 {t('contact')}
               </button>
               
-              {/* Mobile Admin Access */}
-              {isAuthenticated ? (
-                <div className="space-y-2 pt-2 border-t">
-                  <a 
-                    href="/admin"
-                    className="block w-full bg-emerald-600 text-white px-3 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
-                  >
-                    Admin Panel
-                  </a>
-                  <button 
-                    onClick={logout}
-                    className="block w-full text-left px-3 py-2 text-red-600 hover:text-red-700"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <a 
-                  href="/admin"
-                  className="block w-full bg-gray-100 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors mt-2"
-                >
-                  Admin Login
-                </a>
-              )}
+
               
               {/* Mobile Cart */}
               <button 

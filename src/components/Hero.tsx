@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Truck, Shield, Heart, Settings } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import AdminAccessBanner from './AdminAccessBanner';
+
 
 const Hero = () => {
   const { t } = useLanguage();
@@ -22,7 +22,7 @@ const Hero = () => {
 
   return (
     <>
-      <AdminAccessBanner />
+
       <section id="home" className="relative bg-gradient-to-br from-emerald-50 to-green-100 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">

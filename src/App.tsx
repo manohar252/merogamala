@@ -3,7 +3,7 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { AdminProvider } from './contexts/AdminContext';
 import { CartProvider } from './contexts/CartContext';
 import LanguageModal from './components/LanguageModal';
-import AdminLogin from './components/AdminLogin';
+import SecretAdminLogin from './components/SecretAdminLogin';
 import AdminPanel from './components/AdminPanel';
 import ShopSection from "./components/ShopSection2";
 import Header from './components/Header';
@@ -33,9 +33,9 @@ const AppContent = () => {
     setLanguage(language);
   };
 
-  // Admin routes
-  if (currentPath === '/admin') {
-    return <AdminLogin />;
+  // Admin routes - Secret admin login page
+  if (currentPath === '/admin-portal-secure') {
+    return <SecretAdminLogin />;
   }
 
   if (currentPath === '/admin/dashboard') {
