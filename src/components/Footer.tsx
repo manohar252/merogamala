@@ -1,5 +1,5 @@
 import React from 'react';
-import { Leaf, Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Footer = () => {
@@ -11,7 +11,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
             <div className="flex items-center">
-              <Leaf className="h-8 w-8 text-emerald-400" />
+              <img 
+                src="/logo-mark.svg" 
+                alt="MERO GAMALA" 
+                className="h-8 w-8"
+              />
               <span className="ml-2 text-xl font-bold">{t('storeName')}</span>
             </div>
             <p className="text-gray-300">

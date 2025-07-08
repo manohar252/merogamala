@@ -1,5 +1,5 @@
 import React from 'react';
-import { Leaf, Menu, X, ShoppingCart } from 'lucide-react';
+import { Menu, X, ShoppingCart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 
@@ -30,8 +30,21 @@ const Header = () => {
             className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
             onClick={scrollToTop}
           >
-            <Leaf className="h-8 w-8 text-emerald-600" />
-            <span className="ml-2 text-xl font-bold text-gray-900">{t('storeName')}</span>
+            {/* Desktop Logo - Full logo with text */}
+            <img 
+              src="/logo.svg" 
+              alt="MERO GAMALA" 
+              className="hidden sm:block h-10 w-auto"
+            />
+            {/* Mobile Logo - Logo mark only with text */}
+            <div className="flex items-center sm:hidden">
+              <img 
+                src="/logo-mark.svg" 
+                alt="MERO GAMALA" 
+                className="h-8 w-8"
+              />
+              <span className="ml-2 text-xl font-bold text-gray-900">{t('storeName')}</span>
+            </div>
           </div>
           
           <div className="flex items-center gap-4">
