@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import Logo from './Logo';
 
 interface FooterProps {
   onShopClick?: () => void;
@@ -27,14 +28,7 @@ const Footer = ({ onShopClick, onContactClick }: FooterProps) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <div className="flex items-center">
-              <img 
-                src="/logo-mark.svg" 
-                alt="MERO GAMALA" 
-                className="h-8 w-8"
-              />
-              <span className="ml-2 text-xl font-bold">{t('storeName')}</span>
-            </div>
+            <Logo size="medium" className="mb-2" />
             <p className="text-gray-300">
               {t('footerDesc')}
             </p>
@@ -130,8 +124,8 @@ const Footer = ({ onShopClick, onContactClick }: FooterProps) => {
               </div>
               <div className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 text-emerald-400" />
-                <a href="mailto:manohardhungel@gmail.com" className="hover:text-emerald-400 transition-colors">
-                  manohardhungel@gmail.com
+                <a href="mailto:hello@merogamalaa.com" className="hover:text-emerald-400 transition-colors">
+                  hello@merogamalaa.com
                 </a>
               </div>
             </div>

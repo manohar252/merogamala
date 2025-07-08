@@ -89,7 +89,6 @@ interface LanguageContextType {
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<'en' | 'ne'>('en');
   const [showLanguageModal, setShowLanguageModal] = useState(false);

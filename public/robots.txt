@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Allow all search engines to crawl the site
-Sitemap: https://merogamala.com/sitemap.xml
+Sitemap: https://merogamalaa.com/sitemap.xml
 
 # Block access to admin areas
 Disallow: /admin/

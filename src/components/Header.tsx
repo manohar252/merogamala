@@ -3,6 +3,7 @@ import { Menu, X, ShoppingCart, Search } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useSearch } from '../contexts/SearchContext';
+import Logo from './Logo';
 
 interface HeaderProps {
   onShopClick?: () => void;
@@ -64,26 +65,10 @@ const Header = ({ onShopClick, onContactClick }: HeaderProps) => {
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div 
-            className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+          <Logo 
+            size="medium"
             onClick={scrollToTop}
-          >
-            {/* Desktop Logo - Full logo with text */}
-            <img 
-              src="/logo.svg" 
-              alt="MERO GAMALA" 
-              className="hidden sm:block h-10 w-auto"
-            />
-            {/* Mobile Logo - Logo mark only with text */}
-            <div className="flex items-center sm:hidden">
-              <img 
-                src="/logo-mark.svg" 
-                alt="MERO GAMALA" 
-                className="h-8 w-8"
-              />
-              <span className="ml-2 text-xl font-bold text-gray-900">{t('storeName')}</span>
-            </div>
-          </div>
+          />
           
           {/* Search Bar - Desktop */}
           <div className="hidden lg:flex flex-1 max-w-lg mx-8">

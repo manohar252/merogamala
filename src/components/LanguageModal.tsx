@@ -11,7 +11,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ onSelectLanguage }) => {
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center transform animate-fade-in">
         <div className="mb-6">
           <Globe className="h-16 w-16 text-emerald-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to MERO GAMALA</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to MERO GAMALAA</h2>
           <p className="text-gray-600">Please select your preferred language</p>
           <p className="text-gray-600 mt-1">कृपया आफ्नो मनपर्ने भाषा छान्नुहोस्</p>
         </div>

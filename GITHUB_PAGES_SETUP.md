@@ -1,8 +1,8 @@
-# 🚀 GitHub Pages Deployment Setup - MERO GAMALA
+# 🚀 GitHub Pages Deployment Setup - MERO GAMALAA
 
 ## 📋 **Setup Summary**
 
-Your MERO GAMALA plant store is now **perfectly configured for GitHub Pages deployment**! Here's what was implemented:
+Your MERO GAMALAA plant store is now **perfectly configured for GitHub Pages deployment**! Here's what was implemented:
 
 ---
 
@@ -24,7 +24,7 @@ Your MERO GAMALA plant store is now **perfectly configured for GitHub Pages depl
 ## 📁 **File Structure Overview**
 
 ```
-merogamala/
+merogamalaa/
 ├── 📄 index.html                    # Development version (7,020 bytes)
 ├── 📄 README.md                     # Comprehensive docs (7,559 bytes)
 ├── 📁 docs/                        # 🚀 GITHUB PAGES FOLDER
@@ -50,7 +50,7 @@ merogamala/
 ### **Deployment Options Available:**
 
 #### **Option A: Manual GitHub Pages Setup** (Recommended)
-1. **Go to Repository Settings**: `github.com/manohar252/merogamala/settings`
+1. **Go to Repository Settings**: `github.com/manohar252/merogamalaa/settings`
 2. **Navigate to Pages**: Left sidebar → "Pages"
 3. **Set Source**: "Deploy from a branch"
 4. **Select Branch**: `main` (or current branch)
@@ -69,7 +69,7 @@ merogamala/
 Once GitHub Pages is enabled:
 
 ### **🌟 Live Website**
-- **URL**: `https://manohar252.github.io/merogamala`
+- **URL**: `https://manohar252.github.io/merogamalaa`
 - **Status**: Ready to deploy
 - **Content**: Production-optimized React app
 
@@ -174,7 +174,7 @@ git push origin main
 1. **Enable GitHub Pages** in repository settings
 2. **Set source** to `/docs` folder  
 3. **Wait 2-3 minutes** for first deployment
-4. **Visit** `https://manohar252.github.io/merogamala`
+4. **Visit** `https://manohar252.github.io/merogamalaa`
 
 ### **🔄 To Update:**
 1. **Make changes** to React code
@@ -204,7 +204,7 @@ git push origin main
 
 ## 🎉 **Congratulations!**
 
-Your **MERO GAMALA plant store** is now:
+Your **MERO GAMALAA plant store** is now:
 - 🚀 **Deployment Ready** - Perfect GitHub Pages setup
 - 📖 **Well Documented** - Comprehensive README and guides  
 - 🔄 **Auto-Deploying** - GitHub Actions workflow configured
@@ -216,5 +216,5 @@ Your **MERO GAMALA plant store** is now:
 ---
 
 *Setup completed on: July 8, 2025*  
-*Repository: github.com/manohar252/merogamala*  
-*Live URL: https://manohar252.github.io/merogamala (after enabling Pages)*
+*Repository: github.com/manohar252/merogamalaa*
+*Live URL: https://manohar252.github.io/merogamalaa (after enabling Pages)*
