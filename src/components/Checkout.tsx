@@ -25,7 +25,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
   const { addOrder } = useOrders();
 
   const [step, setStep] = useState<'details' | 'payment' | 'success'>('details');
-  const [isProcessing, setIsProcessing] = useState(false);
+
   const [orderNumber, setOrderNumber] = useState('');
 
   const [customerDetails, setCustomerDetails] = useState<CustomerDetails>({
@@ -65,13 +65,11 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
     }
   };
 
-  const handlePaymentSuccess = async (paymentData: any) => {
+  const handlePaymentSuccess = async (paymentData: { method: string; transactionId?: string }) => {
     if (items.length === 0) {
       alert(t('language') === 'en' ? 'Your cart is empty' : 'तपाईंको टोकरी खाली छ');
       return;
     }
-
-    setIsProcessing(true);
 
     try {
       const orderItems: OrderItem[] = items.map(item => ({
@@ -82,7 +80,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
         image: item.image
       }));
 
-      const newOrderNumber = await addOrder(customerDetails, orderItems, paymentData.paymentMethod);
+      const newOrderNumber = await addOrder(customerDetails, orderItems, paymentData.method);
       setOrderNumber(newOrderNumber);
       clearCart();
       setStep('success');
@@ -92,12 +90,10 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
         console.error('Order placement failed:', error);
       }
       alert(t('language') === 'en' ? 'Order placement failed. Please try again.' : 'अर्डर राख्न असफल भयो। कृपया फेरि प्रयास गर्नुहोस्।');
-    } finally {
-      setIsProcessing(false);
     }
   };
 
-  const handlePaymentFailure = (error: any) => {
+  const handlePaymentFailure = (error: { message: string; code?: string }) => {
     if (import.meta.env.DEV) {
       console.error('Payment failed:', error);
     }

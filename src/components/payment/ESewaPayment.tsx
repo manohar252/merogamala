@@ -5,8 +5,8 @@ import { ExternalLink, Loader2 } from 'lucide-react';
 interface ESewaPaymentProps {
   amount: number;
   orderId: string;
-  onSuccess: (response: any) => void;
-  onFailure: (error: any) => void;
+  onSuccess: (response: { method: string; transactionId?: string }) => void;
+  onFailure: (error: { message: string; code?: string }) => void;
 }
 
 const ESewaPayment: React.FC<ESewaPaymentProps> = ({
@@ -64,7 +64,10 @@ const ESewaPayment: React.FC<ESewaPaymentProps> = ({
       
     } catch (error) {
       setIsProcessing(false);
-      onFailure(error);
+      onFailure({
+        message: error instanceof Error ? error.message : 'eSewa payment failed',
+        code: 'ESEWA_ERROR'
+      });
     }
   };
 
@@ -72,11 +75,8 @@ const ESewaPayment: React.FC<ESewaPaymentProps> = ({
     setIsProcessing(true);
     setTimeout(() => {
       onSuccess({
-        status: 'success',
-        transactionId: `ESW${Date.now()}`,
-        amount,
-        orderId,
-        paymentMethod: 'esewa'
+        method: 'esewa',
+        transactionId: `ESW${Date.now()}`
       });
     }, 2000);
   };

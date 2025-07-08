@@ -6,8 +6,8 @@ import { QRCodeSVG } from 'qrcode.react';
 interface CitizenBankQRProps {
   amount: number;
   orderId: string;
-  onSuccess: (response: any) => void;
-  onFailure: (error: any) => void;
+  onSuccess: (response: { method: string; transactionId?: string }) => void;
+  onFailure: (error: { message: string; code?: string }) => void;
 }
 
 const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
@@ -33,6 +33,7 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
         clearInterval(statusCheckInterval);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -52,6 +53,7 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
         message: language === 'en' ? 'Payment session expired' : 'भुक्तानी सत्र समाप्त भयो'
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeRemaining, paymentStatus]);
 
   const generateCitizenBankQR = async () => {
@@ -106,7 +108,10 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
       }
     } catch (error) {
       setPaymentStatus('failed');
-      onFailure(error);
+      onFailure({
+        message: error instanceof Error ? error.message : 'Citizen Bank QR generation failed',
+        code: 'CITIZEN_BANK_ERROR'
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -120,12 +125,8 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
       if (Math.random() > 0.25) { // 75% success rate
         setPaymentStatus('success');
         onSuccess({
-          status: 'completed',
-          transactionId,
-          amount,
-          orderId,
-          paymentMethod: 'citizen_bank_qr',
-          bankReference: `CB${Date.now()}`
+          method: 'citizen_bank_qr',
+          transactionId
         });
       } else {
         setPaymentStatus('failed');

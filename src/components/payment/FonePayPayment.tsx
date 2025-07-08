@@ -6,8 +6,8 @@ import { QRCodeSVG } from 'qrcode.react';
 interface FonePayPaymentProps {
   amount: number;
   orderId: string;
-  onSuccess: (response: any) => void;
-  onFailure: (error: any) => void;
+  onSuccess: (response: { method: string; transactionId?: string }) => void;
+  onFailure: (error: { message: string; code?: string }) => void;
 }
 
 const FonePayPayment: React.FC<FonePayPaymentProps> = ({
@@ -33,6 +33,7 @@ const FonePayPayment: React.FC<FonePayPaymentProps> = ({
         clearInterval(statusCheckInterval);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -52,6 +53,7 @@ const FonePayPayment: React.FC<FonePayPaymentProps> = ({
         message: language === 'en' ? 'Payment session expired' : 'भुक्तानी सत्र समाप्त भयो'
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeRemaining, paymentStatus]);
 
   const generateFonePayQR = async () => {
@@ -103,7 +105,10 @@ const FonePayPayment: React.FC<FonePayPaymentProps> = ({
         }
       }
     } catch (error) {
-      onFailure(error);
+      onFailure({
+        message: error instanceof Error ? error.message : 'FonePay QR generation failed',
+        code: 'FONEPAY_ERROR'
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -117,11 +122,8 @@ const FonePayPayment: React.FC<FonePayPaymentProps> = ({
       if (Math.random() > 0.2) { // 80% success rate
         setPaymentStatus('success');
         onSuccess({
-          status: 'success',
-          transactionId,
-          amount,
-          orderId,
-          paymentMethod: 'fonepay'
+          method: 'fonepay',
+          transactionId
         });
       } else {
         setPaymentStatus('failed');

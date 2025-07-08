@@ -16,8 +16,8 @@ import CitizenBankQR from './CitizenBankQR';
 interface PaymentInterfaceProps {
   amount: number;
   orderId: string;
-  onSuccess: (data: any) => void;
-  onFailure: (error: any) => void;
+  onSuccess: (data: { method: string; transactionId?: string }) => void;
+  onFailure: (error: { message: string; code?: string }) => void;
   onBack?: () => void;
 }
 
@@ -25,10 +25,9 @@ const PaymentInterface: React.FC<PaymentInterfaceProps> = ({
   amount,
   orderId,
   onSuccess,
-  onFailure,
   onBack
 }) => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const [selectedMethod, setSelectedMethod] = useState<string>('');
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'failed'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -75,13 +74,13 @@ const PaymentInterface: React.FC<PaymentInterfaceProps> = ({
     }
   ];
 
-  const handlePaymentSuccess = (data: any) => {
+  const handlePaymentSuccess = (data: { method: string; transactionId?: string }) => {
     setPaymentStatus('success');
     setErrorMessage('');
     setTimeout(() => onSuccess(data), 1500);
   };
 
-  const handlePaymentFailure = (error: any) => {
+  const handlePaymentFailure = (error: { message: string; code?: string }) => {
     setPaymentStatus('failed');
     setErrorMessage(error.message || 'Payment failed. Please try again.');
     setTimeout(() => {
