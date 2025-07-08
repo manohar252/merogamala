@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useOrders, CustomerDetails, OrderItem } from '../contexts/OrderContext';
+import { USD_TO_NPR_RATE, PHONE_NUMBER_REGEX } from '../utils/constants';
 import { 
   User, 
   MapPin, 
@@ -54,7 +55,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
 
     if (!customerDetails.phoneNumber.trim()) {
       newErrors.phoneNumber = t('language') === 'en' ? 'Phone number is required' : 'फोन नम्बर आवश्यक छ';
-    } else if (!/^(\+977|977|0)?[9][0-9]{8,9}$/.test(customerDetails.phoneNumber.replace(/\s/g, ''))) {
+    } else if (!PHONE_NUMBER_REGEX.test(customerDetails.phoneNumber.replace(/\s/g, ''))) {
       newErrors.phoneNumber = t('language') === 'en' ? 'Please enter a valid Nepali phone number' : 'कृपया मान्य नेपाली फोन नम्बर प्रविष्ट गर्नुहोस्';
     }
 
@@ -229,7 +230,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
                     {t('pleaseScanTheQRCode')}
                   </p>
                   <p className="text-lg font-semibold text-emerald-600 mt-2">
-                    {t('amount')}: Rs. {(total * 133).toFixed(0)}
+                    {t('amount')}: Rs. {(total * USD_TO_NPR_RATE).toFixed(0)}
                   </p>
                 </div>
               )}
@@ -342,12 +343,12 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
             {items.map((item) => (
               <div key={item.id} className="flex justify-between">
                 <span>{item.name} x {item.quantity}</span>
-                <span>Rs. {((item.price * item.quantity) * 133).toFixed(0)}</span>
+                <span>Rs. {((item.price * item.quantity) * USD_TO_NPR_RATE).toFixed(0)}</span>
               </div>
             ))}
             <div className="border-t pt-2 font-semibold flex justify-between">
               <span>{t('total')}:</span>
-              <span className="text-emerald-600">Rs. {(total * 133).toFixed(0)}</span>
+              <span className="text-emerald-600">Rs. {(total * USD_TO_NPR_RATE).toFixed(0)}</span>
             </div>
           </div>
         </div>
