@@ -16,7 +16,7 @@ interface Plant {
 }
 
 const ShopSection = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { addToCart } = useCart();
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -103,7 +103,7 @@ const ShopSection = () => {
   const handleAddToCart = (plant: Plant) => {
     addToCart({
       id: plant.id,
-      name: t('language') === 'en' ? plant.name : plant.nameNe,
+      name: language === 'en' ? plant.name : plant.nameNe,
       price: plant.price,
       image: plant.image
     });
@@ -114,13 +114,10 @@ const ShopSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            {t('language') === 'en' ? 'Shop Plants' : 'बिरुवाहरू किन्नुहोस्'}
+            {t('shopPlants')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('language') === 'en' 
-              ? "Discover our collection of beautiful, healthy plants perfect for your home and garden"
-              : "तपाईंको घर र बगैंचाका लागि उपयुक्त सुन्दर, स्वस्थ बिरुवाहरूको हाम्रो संग्रह पत्ता लगाउनुहोस्"
-            }
+            {t('discoverOurCollection')}
           </p>
         </div>
 
@@ -136,7 +133,7 @@ const ShopSection = () => {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {t('language') === 'en' ? category.nameEn : category.nameNe}
+              {language === 'en' ? category.nameEn : category.nameNe}
             </button>
           ))}
         </div>
@@ -159,7 +156,7 @@ const ShopSection = () => {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    {t('language') === 'en' ? plant.name : plant.nameNe}
+                    {language === 'en' ? plant.name : plant.nameNe}
                   </h3>
                   <div className="flex items-center">
                     <Star className="h-4 w-4 text-yellow-400 fill-current" />
@@ -168,7 +165,7 @@ const ShopSection = () => {
                 </div>
                 
                 <p className="text-gray-600 text-sm mb-4">
-                  {t('language') === 'en' ? plant.description : plant.descriptionNe}
+                  {language === 'en' ? plant.description : plant.descriptionNe}
                 </p>
                 
                 <div className="flex items-center justify-between">
@@ -180,7 +177,7 @@ const ShopSection = () => {
                     className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors flex items-center"
                   >
                     <Plus className="h-4 w-4 mr-1" />
-                    {t('language') === 'en' ? 'Add to Cart' : 'टोकरीमा थप्नुहोस्'}
+                    {t('addToCart')}
                   </button>
                 </div>
               </div>

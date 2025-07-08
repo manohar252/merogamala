@@ -139,24 +139,21 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
         )}
         <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          {t('language') === 'en' ? 'Order Placed Successfully!' : 'अर्डर सफलतापूर्वक राखियो!'}
+          {t('orderPlacedSuccessfully')}
         </h2>
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <p className="text-green-800 font-medium">
-            {t('language') === 'en' ? 'Order Number:' : 'अर्डर नम्बर:'} {orderNumber}
+            {t('orderNumber')}: {orderNumber}
           </p>
         </div>
         <p className="text-gray-600 mb-6">
-          {t('language') === 'en' 
-            ? 'Thank you for your order! You will receive a WhatsApp confirmation shortly. We will contact you to confirm delivery details.'
-            : 'तपाईंको अर्डरको लागि धन्यवाद! तपाईंले छिट्टै WhatsApp पुष्टिकरण प्राप्त गर्नुहुनेछ। हामी डेलिभरी विवरण पुष्टि गर्न तपाईंलाई सम्पर्क गर्नेछौं।'
-          }
+          {t('thankYouForYourOrder')}
         </p>
         <button
           onClick={onClose || onBack}
           className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
         >
-          {t('language') === 'en' ? 'Continue Shopping' : 'किनमेल जारी राख्नुहोस्'}
+          {t('continueShopping')}
         </button>
       </div>
     );
@@ -174,7 +171,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
               <ArrowLeft className="h-5 w-5 text-gray-600" />
             </button>
             <h2 className="text-xl font-semibold text-gray-900">
-              {t('language') === 'en' ? 'Select Payment Method' : 'भुक्तानी विधि छान्नुहोस्'}
+              {t('selectPaymentMethod')}
             </h2>
           </div>
           {onClose && (
@@ -222,17 +219,14 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
                     />
                     <div className="flex items-center justify-center mt-2 text-sm text-gray-600">
                       <QrCode className="h-4 w-4 mr-1" />
-                      {t('language') === 'en' ? 'Scan to pay' : 'भुक्तानी गर्न स्क्यान गर्नुहोस्'}
+                      {t('scanToPay')}
                     </div>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    {t('language') === 'en' 
-                      ? 'Please scan the QR code with your mobile banking app'
-                      : 'कृपया आफ्नो मोबाइल बैंकिङ एपसँग QR कोड स्क्यान गर्नुहोस्'
-                    }
+                    {t('pleaseScanTheQRCode')}
                   </p>
                   <p className="text-lg font-semibold text-emerald-600 mt-2">
-                    {t('language') === 'en' ? 'Amount:' : 'रकम:'} ${total.toFixed(2)}
+                    {t('amount')}: ${total.toFixed(2)}
                   </p>
                 </div>
               )}
@@ -248,11 +242,11 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
           {isProcessing ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-              {t('language') === 'en' ? 'Processing Order...' : 'अर्डर प्रक्रिया गर्दै...'}
+              {t('processingOrder')}
             </>
           ) : (
             <>
-              {t('language') === 'en' ? 'Confirm Payment & Place Order' : 'भुक्तानी पुष्टि गरेर अर्डर गर्नुहोस्'}
+              {t('confirmPaymentAndPlaceOrder')}
               <ArrowRight className="h-5 w-5 ml-2" />
             </>
           )}
@@ -272,7 +266,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
               <ArrowLeft className="h-5 w-5 text-gray-600" />
             </button>
             <h2 className="text-xl font-semibold text-gray-900">
-              {t('language') === 'en' ? 'Delivery Details' : 'डेलिभरी विवरण'}
+              {t('deliveryDetails')}
             </h2>
           </div>
           {onClose && (
@@ -289,7 +283,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <User className="inline h-4 w-4 mr-1" />
-            {t('language') === 'en' ? 'Full Name' : 'पूरा नाम'} *
+            {t('fullName')} *
           </label>
           <input
             type="text"
@@ -298,7 +292,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent ${
               errors.fullName ? 'border-red-500' : 'border-gray-300'
             }`}
-            placeholder={t('language') === 'en' ? 'Enter your full name' : 'आफ्नो पूरा नाम लेख्नुहोस्'}
+            placeholder={t('enterYourFullName')}
           />
           {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
         </div>
@@ -306,7 +300,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <MapPin className="inline h-4 w-4 mr-1" />
-            {t('language') === 'en' ? 'Delivery Address' : 'डेलिभरी ठेगाना'} *
+            {t('deliveryAddress')} *
           </label>
           <textarea
             value={customerDetails.deliveryAddress}
@@ -315,10 +309,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent ${
               errors.deliveryAddress ? 'border-red-500' : 'border-gray-300'
             }`}
-            placeholder={t('language') === 'en' 
-              ? 'Enter your complete delivery address'
-              : 'आफ्नो पूरा डेलिभरी ठेगाना लेख्नुहोस्'
-            }
+            placeholder={t('enterYourCompleteDeliveryAddress')}
           />
           {errors.deliveryAddress && <p className="text-red-500 text-sm mt-1">{errors.deliveryAddress}</p>}
         </div>
@@ -326,7 +317,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Phone className="inline h-4 w-4 mr-1" />
-            {t('language') === 'en' ? 'Phone Number' : 'फोन नम्बर'} *
+            {t('phoneNumber')} *
           </label>
           <input
             type="tel"
@@ -335,14 +326,14 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent ${
               errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
             }`}
-            placeholder={t('language') === 'en' ? 'Enter your phone number' : 'आफ्नो फोन नम्बर लेख्नुहोस्'}
+            placeholder={t('enterYourPhoneNumber')}
           />
           {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>}
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg">
           <h3 className="font-medium text-gray-900 mb-2">
-            {t('language') === 'en' ? 'Order Summary' : 'अर्डर सारांश'}
+            {t('orderSummary')}
           </h3>
           <div className="space-y-2 text-sm">
             {items.map((item) => (
@@ -352,7 +343,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
               </div>
             ))}
             <div className="border-t pt-2 font-semibold flex justify-between">
-              <span>{t('language') === 'en' ? 'Total:' : 'जम्मा:'}</span>
+              <span>{t('total')}:</span>
               <span className="text-emerald-600">${total.toFixed(2)}</span>
             </div>
           </div>
@@ -362,7 +353,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
           type="submit"
           className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors flex items-center justify-center"
         >
-          {t('language') === 'en' ? 'Continue to Payment' : 'भुक्तानीमा जानुहोस्'}
+          {t('continueToPayment')}
           <ArrowRight className="h-5 w-5 ml-2" />
         </button>
       </form>

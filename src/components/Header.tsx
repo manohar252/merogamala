@@ -54,8 +54,6 @@ const Header = () => {
               >
                 {t('contact')}
               </button>
-              
-
             </nav>
             
             {/* Shopping Cart */}
@@ -102,15 +100,13 @@ const Header = () => {
                 {t('contact')}
               </button>
               
-
-              
               {/* Mobile Cart */}
               <button 
                 onClick={() => setIsCartOpen(true)}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 flex items-center gap-2"
               >
                 <ShoppingCart className="h-5 w-5" />
-                Cart ({totalItems})
+                {t('cart')} ({totalItems})
               </button>
             </div>
           </div>

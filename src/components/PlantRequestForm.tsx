@@ -49,23 +49,17 @@ const PlantRequestForm = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            {t('language') === 'en' ? 'Request a Plant' : 'बिरुवा अनुरोध गर्नुहोस्'}
+            {t('requestAPlant')}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            {t('language') === 'en' 
-              ? "Can't find the plant you're looking for? Let us know and we'll help you find it!"
-              : "तपाईंले खोजेको बिरुवा फेला पार्न सकेनौं? हामीलाई भन्नुहोस् र हामी तपाईंलाई फेला पार्न मद्दत गर्नेछौं!"
-            }
+            {t('cantFindThePlantYoureLookingFor')}
           </p>
         </div>
 
         <div className="bg-gray-50 rounded-2xl p-8">
           {isSubmitted && (
             <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
-              {t('language') === 'en' 
-                ? 'Thank you! Your request has been submitted successfully.'
-                : 'धन्यवाद! तपाईंको अनुरोध सफलतापूर्वक पेश भएको छ।'
-              }
+              {t('thankYouRequestSubmitted')}
             </div>
           )}
 
@@ -74,7 +68,7 @@ const PlantRequestForm = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <User className="inline h-4 w-4 mr-1" />
-                  {t('language') === 'en' ? 'Your Name' : 'तपाईंको नाम'}
+                  {t('yourName')}
                 </label>
                 <input
                   type="text"
@@ -83,14 +77,14 @@ const PlantRequestForm = () => {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder={t('language') === 'en' ? 'Enter your name' : 'तपाईंको नाम लेख्नुहोस्'}
+                  placeholder={t('enterYourName')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <Mail className="inline h-4 w-4 mr-1" />
-                  {t('language') === 'en' ? 'Email Address' : 'इमेल ठेगाना'}
+                  {t('emailAddress')}
                 </label>
                 <input
                   type="email"
@@ -99,14 +93,14 @@ const PlantRequestForm = () => {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder={t('language') === 'en' ? 'Enter your email' : 'तपाईंको इमेल लेख्नुहोस्'}
+                  placeholder={t('enterYourEmail')}
                 />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('language') === 'en' ? 'Plant Type' : 'बिरुवाको प्रकार'}
+                {t('plantType')}
               </label>
               <select
                 name="plantType"
@@ -116,7 +110,7 @@ const PlantRequestForm = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               >
                 <option value="">
-                  {t('language') === 'en' ? 'Select plant type' : 'बिरुवाको प्रकार छान्नुहोस्'}
+                  {t('selectPlantType')}
                 </option>
                 {plantTypes.map((type, index) => (
                   <option key={index} value={type.en}>
@@ -129,7 +123,7 @@ const PlantRequestForm = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <MessageSquare className="inline h-4 w-4 mr-1" />
-                {t('language') === 'en' ? 'Message' : 'सन्देश'}
+                {t('message')}
               </label>
               <textarea
                 name="message"
@@ -138,10 +132,7 @@ const PlantRequestForm = () => {
                 required
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                placeholder={t('language') === 'en' 
-                  ? 'Tell us about the plant you\'re looking for...'
-                  : 'तपाईंले खोज्नुभएको बिरुवाको बारेमा भन्नुहोस्...'
-                }
+                placeholder={t('tellUsAboutThePlant')}
               />
             </div>
 
@@ -153,12 +144,12 @@ const PlantRequestForm = () => {
               {isSubmitting ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  {t('language') === 'en' ? 'Submitting...' : 'पेश गर्दै...'}
+                  {t('submitting')}
                 </>
               ) : (
                 <>
                   <Send className="h-4 w-4 mr-2" />
-                  {t('language') === 'en' ? 'Submit Request' : 'अनुरोध पेश गर्नुहोस्'}
+                  {t('submitRequest')}
                 </>
               )}
             </button>

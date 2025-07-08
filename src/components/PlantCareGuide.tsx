@@ -8,31 +8,23 @@ const PlantCareGuide = () => {
   const careGuides = [
     {
       icon: <Droplets className="h-8 w-8 text-blue-500" />,
-      titleEn: "Watering",
-      titleNe: "पानी",
-      contentEn: "Water your plants when the top inch of soil feels dry. Most houseplants prefer consistent moisture but not waterlogged soil.",
-      contentNe: "माटोको माथिल्लो भाग सुकेको महसुस भएपछि बिरुवामा पानी दिनुहोस्। धेरैजसो घरेलु बिरुवाहरूले निरन्तर नमी मन पराउँछन् तर पानीले भिजेको माटो मन पराउँदैनन्।"
+      title: "watering",
+      content: "wateringDesc"
     },
     {
       icon: <Sun className="h-8 w-8 text-yellow-500" />,
-      titleEn: "Sunlight",
-      titleNe: "घाम",
-      contentEn: "Place plants in appropriate light conditions. Most houseplants thrive in bright, indirect light away from harsh direct sunlight.",
-      contentNe: "बिरुवाहरूलाई उपयुक्त प्रकाशको अवस्थामा राख्नुहोस्। धेरैजसो घरेलु बिरुवाहरू उज्यालो, अप्रत्यक्ष प्रकाशमा फस्टाउँछन्।"
+      title: "sunlight",
+      content: "sunlightDesc"
     },
     {
       icon: <Thermometer className="h-8 w-8 text-red-500" />,
-      titleEn: "Temperature",
-      titleNe: "तापक्रम",
-      contentEn: "Maintain temperatures between 65-75°F (18-24°C) for most houseplants. Avoid placing plants near heating vents or drafty areas.",
-      contentNe: "धेरैजसो घरेलु बिरुवाहरूका लागि ६५-७५°F (१८-२४°C) तापक्रम कायम राख्नुहोस्।"
+      title: "temperature",
+      content: "temperatureDesc"
     },
     {
       icon: <Scissors className="h-8 w-8 text-green-500" />,
-      titleEn: "Pruning",
-      titleNe: "काट्ने",
-      contentEn: "Regularly remove dead, yellowing, or damaged leaves to promote healthy growth and prevent disease spread.",
-      contentNe: "स्वस्थ बृद्धिलाई बढावा दिन र रोगको फैलावट रोक्न नियमित रूपमा मरेका, पहेंलो र बिग्रेका पातहरू हटाउनुहोस्।"
+      title: "pruning",
+      content: "pruningDesc"
     }
   ];
 
@@ -44,10 +36,7 @@ const PlantCareGuide = () => {
             {t('plantCareGuide')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('language') === 'en' 
-              ? "Learn how to care for your plants and keep them thriving"
-              : "आफ्ना बिरुवाहरूको हेरचाह गर्न र तिनीहरूलाई फस्टाउन सिक्नुहोस्"
-            }
+            {t('learnHowToCareForYourPlants')}
           </p>
         </div>
 
@@ -58,10 +47,10 @@ const PlantCareGuide = () => {
                 {guide.icon}
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">
-                {t('language') === 'en' ? guide.titleEn : guide.titleNe}
+                {t(guide.title)}
               </h3>
               <p className="text-gray-600 text-center">
-                {t('language') === 'en' ? guide.contentEn : guide.contentNe}
+                {t(guide.content)}
               </p>
             </div>
           ))}

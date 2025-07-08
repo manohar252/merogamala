@@ -35,7 +35,7 @@ const Cart = () => {
               <div className="flex items-center">
                 <ShoppingBag className="h-6 w-6 text-emerald-600 mr-2" />
                 <h2 className="text-lg font-semibold text-gray-900">
-                  {t('language') === 'en' ? 'Shopping Cart' : 'किनमेल टोकरी'}
+                  {t('shoppingCart')}
                 </h2>
                 {totalItems > 0 && (
                   <span className="ml-2 bg-emerald-100 text-emerald-800 text-sm px-2 py-1 rounded-full">
@@ -60,13 +60,10 @@ const Cart = () => {
               <div className="text-center py-12">
                 <ShoppingBag className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 text-lg">
-                  {t('language') === 'en' ? 'Your cart is empty' : 'तपाईंको टोकरी खाली छ'}
+                  {t('yourCartIsEmpty')}
                 </p>
                 <p className="text-gray-400 text-sm mt-2">
-                  {t('language') === 'en' 
-                    ? 'Add some plants to get started!' 
-                    : 'सुरु गर्न केहि बिरुवाहरू थप्नुहोस्!'
-                  }
+                  {t('addSomePlantsToGetStarted')}
                 </p>
               </div>
             ) : (
@@ -119,7 +116,7 @@ const Cart = () => {
           {!showCheckout && items.length > 0 && (
             <div className="border-t p-6 space-y-4">
               <div className="flex justify-between text-lg font-semibold">
-                <span>{t('language') === 'en' ? 'Total:' : 'जम्मा:'}</span>
+                <span>{t('total')}:</span>
                 <span className="text-emerald-600">${total.toFixed(2)}</span>
               </div>
               
@@ -129,13 +126,13 @@ const Cart = () => {
                   disabled={items.length === 0}
                   className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {t('language') === 'en' ? 'Checkout' : 'भुक्तानी गर्नुहोस्'}
+                  {t('checkout')}
                 </button>
                 <button
                   onClick={clearCart}
                   className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors text-sm"
                 >
-                  {t('language') === 'en' ? 'Clear Cart' : 'टोकरी खाली गर्नुहोस्'}
+                  {t('clearCart')}
                 </button>
               </div>
             </div>

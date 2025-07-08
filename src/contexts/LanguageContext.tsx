@@ -19,6 +19,7 @@ const translations = {
     shop: 'Shop',
     about: 'About',
     contact: 'Contact',
+    cart: 'Cart',
     
     // Hero Section
     heroTitle: 'Bring Nature',
@@ -29,6 +30,79 @@ const translations = {
     deliveryToDoorstep: 'Delivery to Your Doorstep',
     healthyPlantsGuaranteed: 'Healthy Plants Guaranteed',
     expertCareTips: 'Expert Care Tips',
+    
+    // Shopping Cart
+    shoppingCart: 'Shopping Cart',
+    yourCartIsEmpty: 'Your cart is empty',
+    addSomePlantsToGetStarted: 'Add some plants to get started!',
+    total: 'Total',
+    checkout: 'Checkout',
+    clearCart: 'Clear Cart',
+    addToCart: 'Add to Cart',
+    
+    // Checkout
+    deliveryDetails: 'Delivery Details',
+    fullName: 'Full Name',
+    enterYourFullName: 'Enter your full name',
+    deliveryAddress: 'Delivery Address',
+    enterYourCompleteDeliveryAddress: 'Enter your complete delivery address',
+    phoneNumber: 'Phone Number',
+    enterYourPhoneNumber: 'Enter your phone number',
+    orderSummary: 'Order Summary',
+    continueToPayment: 'Continue to Payment',
+    selectPaymentMethod: 'Select Payment Method',
+    scanToPay: 'Scan to pay',
+    pleaseScanTheQRCode: 'Please scan the QR code with your mobile banking app',
+    amount: 'Amount',
+    confirmPaymentAndPlaceOrder: 'Confirm Payment & Place Order',
+    processingOrder: 'Processing Order...',
+    orderPlacedSuccessfully: 'Order Placed Successfully!',
+    orderNumber: 'Order Number',
+    thankYouForYourOrder: 'Thank you for your order! You will receive a WhatsApp confirmation shortly. We will contact you to confirm delivery details.',
+    continueShopping: 'Continue Shopping',
+    
+    // Plant Care Guide
+    learnHowToCareForYourPlants: 'Learn how to care for your plants and keep them thriving',
+    watering: 'Watering',
+    wateringDesc: 'Water your plants when the top inch of soil feels dry. Most houseplants prefer consistent moisture but not waterlogged soil.',
+    sunlight: 'Sunlight',
+    sunlightDesc: 'Place plants in appropriate light conditions. Most houseplants thrive in bright, indirect light away from harsh direct sunlight.',
+    temperature: 'Temperature',
+    temperatureDesc: 'Maintain temperatures between 65-75°F (18-24°C) for most houseplants. Avoid placing plants near heating vents or drafty areas.',
+    pruning: 'Pruning',
+    pruningDesc: 'Regularly remove dead, yellowing, or damaged leaves to promote healthy growth and prevent disease spread.',
+    
+    // Plant Request Form
+    requestAPlant: 'Request a Plant',
+    cantFindThePlantYoureLookingFor: "Can't find the plant you're looking for? Let us know and we'll help you find it!",
+    yourName: 'Your Name',
+    enterYourName: 'Enter your name',
+    emailAddress: 'Email Address',
+    enterYourEmail: 'Enter your email',
+    plantType: 'Plant Type',
+    selectPlantType: 'Select plant type',
+    message: 'Message',
+    tellUsAboutThePlant: 'Tell us about the plant you\'re looking for...',
+    submitting: 'Submitting...',
+    submitRequest: 'Submit Request',
+    thankYouRequestSubmitted: 'Thank you! Your request has been submitted successfully.',
+    
+    // Shop Section
+    shopPlants: 'Shop Plants',
+    discoverOurCollection: 'Discover our collection of beautiful, healthy plants perfect for your home and garden',
+    allPlants: 'All Plants',
+    indoor: 'Indoor',
+    flowering: 'Flowering',
+    succulents: 'Succulents',
+    
+    // Form Validation
+    fullNameIsRequired: 'Full name is required',
+    deliveryAddressIsRequired: 'Delivery address is required',
+    phoneNumberIsRequired: 'Phone number is required',
+    pleaseEnterValidNepaliPhoneNumber: 'Please enter a valid Nepali phone number',
+    pleaseSelectPaymentMethod: 'Please select a payment method',
+    yourCartIsEmptyValidation: 'Your cart is empty',
+    orderPlacementFailed: 'Order placement failed. Please try again.',
     
     // Categories
     shopByNeeds: 'Shop by Your Needs',
@@ -100,6 +174,7 @@ const translations = {
     shop: 'पसल',
     about: 'हाम्रो बारेमा',
     contact: 'सम्पर्क',
+    cart: 'टोकरी',
     
     // Hero Section
     heroTitle: 'प्रकृतिलाई',
@@ -110,6 +185,79 @@ const translations = {
     deliveryToDoorstep: 'तपाईंको ढोकासम्म डेलिभरी',
     healthyPlantsGuaranteed: 'स्वस्थ बिरुवाको ग्यारेन्टी',
     expertCareTips: 'विशेषज्ञ हेरचाह सुझाव',
+    
+    // Shopping Cart
+    shoppingCart: 'किनमेल टोकरी',
+    yourCartIsEmpty: 'तपाईंको टोकरी खाली छ',
+    addSomePlantsToGetStarted: 'सुरु गर्न केहि बिरुवाहरू थप्नुहोस्!',
+    total: 'जम्मा',
+    checkout: 'भुक्तानी गर्नुहोस्',
+    clearCart: 'टोकरी खाली गर्नुहोस्',
+    addToCart: 'टोकरीमा थप्नुहोस्',
+    
+    // Checkout
+    deliveryDetails: 'डेलिभरी विवरण',
+    fullName: 'पूरा नाम',
+    enterYourFullName: 'आफ्नो पूरा नाम लेख्नुहोस्',
+    deliveryAddress: 'डेलिभरी ठेगाना',
+    enterYourCompleteDeliveryAddress: 'आफ्नो पूरा डेलिभरी ठेगाना लेख्नुहोस्',
+    phoneNumber: 'फोन नम्बर',
+    enterYourPhoneNumber: 'आफ्नो फोन नम्बर लेख्नुहोस्',
+    orderSummary: 'अर्डर सारांश',
+    continueToPayment: 'भुक्तानीमा जानुहोस्',
+    selectPaymentMethod: 'भुक्तानी विधि छान्नुहोस्',
+    scanToPay: 'भुक्तानी गर्न स्क्यान गर्नुहोस्',
+    pleaseScanTheQRCode: 'कृपया आफ्नो मोबाइल बैंकिङ एपसँग QR कोड स्क्यान गर्नुहोस्',
+    amount: 'रकम',
+    confirmPaymentAndPlaceOrder: 'भुक्तानी पुष्टि गरेर अर्डर गर्नुहोस्',
+    processingOrder: 'अर्डर प्रक्रिया गर्दै...',
+    orderPlacedSuccessfully: 'अर्डर सफलतापूर्वक राखियो!',
+    orderNumber: 'अर्डर नम्बर',
+    thankYouForYourOrder: 'तपाईंको अर्डरको लागि धन्यवाद! तपाईंले छिट्टै WhatsApp पुष्टिकरण प्राप्त गर्नुहुनेछ। हामी डेलिभरी विवरण पुष्टि गर्न तपाईंलाई सम्पर्क गर्नेछौं।',
+    continueShopping: 'किनमेल जारी राख्नुहोस्',
+    
+    // Plant Care Guide
+    learnHowToCareForYourPlants: 'आफ्ना बिरुवाहरूको हेरचाह गर्न र तिनीहरूलाई फस्टाउन सिक्नुहोस्',
+    watering: 'पानी',
+    wateringDesc: 'माटोको माथिल्लो भाग सुकेको महसुस भएपछि बिरुवामा पानी दिनुहोस्। धेरैजसो घरेलु बिरुवाहरूले निरन्तर नमी मन पराउँछन् तर पानीले भिजेको माटो मन पराउँदैनन्।',
+    sunlight: 'घाम',
+    sunlightDesc: 'बिरुवाहरूलाई उपयुक्त प्रकाशको अवस्थामा राख्नुहोस्। धेरैजसो घरेलु बिरुवाहरू उज्यालो, अप्रत्यक्ष प्रकाशमा फस्टाउँछन्।',
+    temperature: 'तापक्रम',
+    temperatureDesc: 'धेरैजसो घरेलु बिरुवाहरूका लागि ६५-७५°F (१८-२४°C) तापक्रम कायम राख्नुहोस्।',
+    pruning: 'काट्ने',
+    pruningDesc: 'स्वस्थ बृद्धिलाई बढावा दिन र रोगको फैलावट रोक्न नियमित रूपमा मरेका, पहेंलो र बिग्रेका पातहरू हटाउनुहोस्।',
+    
+    // Plant Request Form
+    requestAPlant: 'बिरुवा अनुरोध गर्नुहोस्',
+    cantFindThePlantYoureLookingFor: 'तपाईंले खोजेको बिरुवा फेला पार्न सकेनौं? हामीलाई भन्नुहोस् र हामी तपाईंलाई फेला पार्न मद्दत गर्नेछौं!',
+    yourName: 'तपाईंको नाम',
+    enterYourName: 'तपाईंको नाम लेख्नुहोस्',
+    emailAddress: 'इमेल ठेगाना',
+    enterYourEmail: 'तपाईंको इमेल लेख्नुहोस्',
+    plantType: 'बिरुवाको प्रकार',
+    selectPlantType: 'बिरुवाको प्रकार छान्नुहोस्',
+    message: 'सन्देश',
+    tellUsAboutThePlant: 'तपाईंले खोज्नुभएको बिरुवाको बारेमा भन्नुहोस्...',
+    submitting: 'पेश गर्दै...',
+    submitRequest: 'अनुरोध पेश गर्नुहोस्',
+    thankYouRequestSubmitted: 'धन्यवाद! तपाईंको अनुरोध सफलतापूर्वक पेश भएको छ।',
+    
+    // Shop Section
+    shopPlants: 'बिरुवाहरू किन्नुहोस्',
+    discoverOurCollection: 'तपाईंको घर र बगैंचाका लागि उपयुक्त सुन्दर, स्वस्थ बिरुवाहरूको हाम्रो संग्रह पत्ता लगाउनुहोस्',
+    allPlants: 'सबै बिरुवा',
+    indoor: 'घर भित्र',
+    flowering: 'फूल फुल्ने',
+    succulents: 'रसिलो',
+    
+    // Form Validation
+    fullNameIsRequired: 'पूरा नाम आवश्यक छ',
+    deliveryAddressIsRequired: 'डेलिभरी ठेगाना आवश्यक छ',
+    phoneNumberIsRequired: 'फोन नम्बर आवश्यक छ',
+    pleaseEnterValidNepaliPhoneNumber: 'कृपया मान्य नेपाली फोन नम्बर प्रविष्ट गर्नुहोस्',
+    pleaseSelectPaymentMethod: 'कृपया भुक्तानी विधि छान्नुहोस्',
+    yourCartIsEmptyValidation: 'तपाईंको टोकरी खाली छ',
+    orderPlacementFailed: 'अर्डर राख्न असफल भयो। कृपया फेरि प्रयास गर्नुहोस्।',
     
     // Categories
     shopByNeeds: 'तपाईंको आवश्यकता अनुसार किनमेल गर्नुहोस्',
