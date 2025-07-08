@@ -11,9 +11,9 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const translations: Record<string, Record<'en' | 'ne', string>> = {
-  storeName: { en: 'MERO GAMALA', ne: 'मेरो गमला' },
+  storeName: { en: 'MERO GAMALAA', ne: 'मेरो गमला' },
   heroTitle: { en: 'Bring Greenery to Your Home with', ne: 'तपाईंको घरमा हरियाली ल्याउनुहोस्' },
-  heroTitleHighlight: { en: 'MERO GAMALA', ne: 'मेरो गमला' },
+  heroTitleHighlight: { en: 'MERO GAMALAA', ne: 'मेरो गमला' },
   heroDescription: { en: 'Discover a wide selection of healthy plants, delivered right to your doorstep in Nepal.', ne: 'नेपालमा तपाईंको घरदैलोमा स्वस्थ बिरुवाहरूको विस्तृत चयन पत्ता लगाउनुहोस्।' },
   shopPlantsNow: { en: 'Shop Plants Now', ne: 'अहिले बिरुवा किन्नुहोस्' },
   plantCareGuide: { en: 'Plant Care Guide', ne: 'बिरुवा हेरचाह गाइड' },
@@ -21,7 +21,7 @@ const translations: Record<string, Record<'en' | 'ne', string>> = {
   healthyPlantsGuaranteed: { en: 'Healthy Plants Guaranteed', ne: 'स्वस्थ बिरुवाको ग्यारेन्टी' },
   expertCareTips: { en: 'Expert Care Tips', ne: 'विशेषज्ञ हेरचाह सुझावहरू' },
   whatMakesUsDifferent: { en: 'What Makes Us Different?', ne: 'हामीलाई के फरक बनाउँछ?' },
-  whatMakesUsDifferentDesc: { en: 'At MERO GAMALA, we are committed to providing the best plant shopping experience.', ne: 'मेरो गमलामा, हामी उत्कृष्ट बिरुवा किनमेल अनुभव प्रदान गर्न प्रतिबद्ध छौं।' },
+  whatMakesUsDifferentDesc: { en: 'At MERO GAMALAA, we are committed to providing the best plant shopping experience.', ne: 'मेरो गमलामा, हामी उत्कृष्ट बिरुवा किनमेल अनुभव प्रदान गर्न प्रतिबद्ध छौं।' },
   handpickedPlants: { en: 'Handpicked Plants', ne: 'हातले छानेका बिरुवाहरू' },
   handpickedPlantsDesc: { en: 'Every plant is carefully selected and inspected for quality.', ne: 'प्रत्येक बिरुवा सावधानीपूर्वक चयन गरिन्छ र गुणस्तरको लागि निरीक्षण गरिन्छ।' },
   ecoFriendlyPackaging: { en: 'Eco-Friendly Packaging', ne: 'वातावरणमैत्री प्याकेजिङ्ग' },
@@ -30,7 +30,7 @@ const translations: Record<string, Record<'en' | 'ne', string>> = {
   careInstructionsDesc: { en: 'Each plant comes with a comprehensive guide to help it thrive in your home.', ne: 'प्रत्येक बिरुवा तपाईंको घरमा फस्टाउन मद्दत गर्न विस्तृत गाइडको साथ आउँछ।' },
   expertSupport: { en: 'Expert Support', ne: 'विशेषज्ञ समर्थन' },
   expertSupportDesc: { en: 'Our team of plant enthusiasts is always ready to assist you with any questions.', ne: 'बिरुवा उत्साहीहरूको हाम्रो टोली कुनै पनि प्रश्नहरूको साथ तपाईंलाई सहयोग गर्न सधैं तयार छ।' },
-  aboutTitle: { en: 'About MERO GAMALA', ne: 'मेरो गमला बारे' },
+  aboutTitle: { en: 'About MERO GAMALAA', ne: 'मेरो गमला बारे' },
   aboutDesc: { en: 'Your trusted partner for bringing nature into your home and office.', ne: 'तपाईंको घर र कार्यालयमा प्रकृति ल्याउनको लागि तपाईंको विश्वसनीय साझेदार।' },
   ourMission: { en: 'Our Mission', ne: 'हाम्रो मिशन' },
   ourMissionDesc: { en: 'To make plant ownership accessible and enjoyable for everyone.', ne: 'बिरुवाको स्वामित्व सबैका लागि पहुँचयोग्य र रमाइलो बनाउनु।' },
@@ -119,6 +119,8 @@ const translations: Record<string, Record<'en' | 'ne', string>> = {
   deliveryAvailable: { en: 'Delivery available across Kathmandu Valley.', ne: 'काठमाडौं उपत्यकाभरि डेलिभरी उपलब्ध छ।' },
   allRightsReserved: { en: 'All Rights Reserved', ne: 'सबै अधिकार सुरक्षित' },
   shopCategories: { en: 'Shop Categories', ne: 'पसल कोटीहरू' },
+  footerDesc: { en: 'Your trusted partner for bringing nature into your home and office.', ne: 'तपाईंको घर र कार्यालयमा प्रकृति ल्याउनको लागि तपाईंको विश्वसनीय साझेदार।' },
+  support: { en: 'Support', ne: 'समर्थन' },
   english: { en: 'English', ne: 'अंग्रेजी' },
   nepali: { en: 'Nepali', ne: 'नेपाली' }
 };

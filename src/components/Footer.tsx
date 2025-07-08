@@ -1,6 +1,7 @@
 import React from 'react';
-import { Leaf, Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import Logo from './Logo';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -10,10 +11,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <div className="flex items-center">
-              <Leaf className="h-8 w-8 text-emerald-400" />
-              <span className="ml-2 text-xl font-bold">{t('storeName')}</span>
-            </div>
+            <Logo size="medium" className="mb-2" />
             <p className="text-gray-300">
               {t('footerDesc')}
             </p>

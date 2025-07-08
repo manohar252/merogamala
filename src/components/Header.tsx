@@ -1,7 +1,8 @@
 import React from 'react';
-import { Leaf, Menu, X, ShoppingCart } from 'lucide-react';
+import { Menu, X, ShoppingCart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
+import Logo from './Logo';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -26,13 +27,10 @@ const Header = () => {
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div 
-            className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+          <Logo 
+            size="medium"
             onClick={scrollToTop}
-          >
-            <Leaf className="h-8 w-8 text-emerald-600" />
-            <span className="ml-2 text-xl font-bold text-gray-900">{t('storeName')}</span>
-          </div>
+          />
           
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex space-x-8">
