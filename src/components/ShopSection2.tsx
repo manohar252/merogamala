@@ -170,7 +170,7 @@ const ShopSection = () => {
                 
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold text-emerald-600">
-                    ${plant.price}
+                    Rs. {(plant.price * 133).toFixed(0)}
                   </span>
                   <button
                     onClick={() => handleAddToCart(plant)}
