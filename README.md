@@ -237,7 +237,6 @@ See [BUG_FIXES_REPORT.md](./BUG_FIXES_REPORT.md) for detailed information about:
 ---
 
 ## 📞 **Contact & Support**
-
 - 📧 **Email**: manohardhungel@gmail.com
 - 📱 **WhatsApp**: +977-9766473272
 - 🌐 **Website**: [merogamala.com](https://manohar252.github.io/merogamala)
