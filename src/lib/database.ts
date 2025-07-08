@@ -166,6 +166,7 @@ class MockDatabase implements DatabaseConnection {
   }
 
   async query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]> {
+    // Return data immediately for fast loading
     // Parse simple SQL queries and return mock data
     if (sql.includes('SELECT * FROM plants')) {
       return this.data.get('plants') as T[];
