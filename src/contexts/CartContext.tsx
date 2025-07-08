@@ -68,7 +68,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const finalPrice = item.discountPercentage 
         ? item.price * (1 - item.discountPercentage / 100)
         : item.price;
-      return total + (finalPrice * item.quantity);
+      return total + (finalPrice * item.quantity * 133); // Convert to NPR
     }, 0);
   };
 

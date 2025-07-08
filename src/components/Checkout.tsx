@@ -226,7 +226,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
                     {t('pleaseScanTheQRCode')}
                   </p>
                   <p className="text-lg font-semibold text-emerald-600 mt-2">
-                    {t('amount')}: ${total.toFixed(2)}
+                    {t('amount')}: Rs. {(total * 133).toFixed(0)}
                   </p>
                 </div>
               )}
@@ -339,12 +339,12 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
             {items.map((item) => (
               <div key={item.id} className="flex justify-between">
                 <span>{item.name} x {item.quantity}</span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
+                <span>Rs. {((item.price * item.quantity) * 133).toFixed(0)}</span>
               </div>
             ))}
             <div className="border-t pt-2 font-semibold flex justify-between">
               <span>{t('total')}:</span>
-              <span className="text-emerald-600">${total.toFixed(2)}</span>
+              <span className="text-emerald-600">Rs. {(total * 133).toFixed(0)}</span>
             </div>
           </div>
         </div>

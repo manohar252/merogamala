@@ -139,7 +139,7 @@ const AdminPanel = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Revenue</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  ${orders.reduce((sum, order) => sum + order.total, 0).toFixed(2)}
+                  Rs. {(orders.reduce((sum, order) => sum + order.total, 0) * 133).toFixed(0)}
                 </p>
               </div>
             </div>
@@ -240,7 +240,7 @@ const AdminPanel = () => {
                             </div>
                             <div className="flex items-center text-gray-600">
                               <DollarSign className="h-4 w-4 mr-2" />
-                              Total: ${order.total.toFixed(2)}
+                              Total: Rs. {(order.total * 133).toFixed(0)}
                             </div>
                             <div className="text-gray-600">
                               Payment: {order.paymentMethod}
@@ -259,7 +259,7 @@ const AdminPanel = () => {
                                 {item.name} x {item.quantity}
                               </span>
                               <span className="text-sm font-medium text-gray-900">
-                                ${(item.price * item.quantity).toFixed(2)}
+                                Rs. {((item.price * item.quantity) * 133).toFixed(0)}
                               </span>
                             </div>
                           ))}
