@@ -1,6 +1,6 @@
-# 🌱 MERO GAMALA - Premium Plant Store
+# 🌱 MERO GAMALAA - Premium Plant Store
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/manohar252/merogamala)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/manohar252/merogamalaa)
 [![React](https://img.shields.io/badge/React-18.3.1-blue)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-blue)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4.19-purple)](https://vitejs.dev/)
@@ -12,13 +12,13 @@
 
 ## 🌟 **Live Demo**
 
-🔗 **Website**: [https://manohar252.github.io/merogamala](https://manohar252.github.io/merogamala)
+🔗 **Website**: [https://manohar252.github.io/merogamalaa](https://manohar252.github.io/merogamalaa)
 
 ---
 
-## 📋 **About MERO GAMALA**
+## 📋 **About MERO GAMALAA**
 
-MERO GAMALA is a modern, full-featured e-commerce plant store built with React and TypeScript. It offers a comprehensive online shopping experience for plant enthusiasts in Nepal, featuring:
+MERO GAMALAA is a modern, full-featured e-commerce plant store built with React and TypeScript. It offers a comprehensive online shopping experience for plant enthusiasts in Nepal, featuring:
 
 - 🛒 **Complete E-commerce** - Shopping cart, checkout, order management
 - 🌐 **Bilingual Support** - English and Nepali (मेरो गमला)
@@ -55,10 +55,10 @@ MERO GAMALA is a modern, full-featured e-commerce plant store built with React a
 
 ```bash
 # Clone the repository
-git clone https://github.com/manohar252/merogamala.git
+git clone https://github.com/manohar252/merogamalaa.git
 
 # Navigate to project directory
-cd merogamala
+cd merogamalaa
 
 # Install dependencies
 npm install
@@ -87,7 +87,7 @@ npm run lint
 ## 📁 **Project Structure**
 
 ```
-merogamala/
+merogamalaa/
 ├── 📁 src/
 │   ├── 📁 components/          # React components
 │   │   ├── Header.tsx         # Navigation header
@@ -179,7 +179,7 @@ git push origin main
 ### **Environment Variables** (Optional)
 Copy `.env.example` to `.env.local` and configure:
 ```env
-VITE_APP_NAME="MERO GAMALA"
+VITE_APP_NAME="MERO GAMALAA"
 VITE_API_URL=your_api_url
 VITE_GOOGLE_ANALYTICS_ID=your_ga_id
 ```
@@ -240,7 +240,7 @@ See [BUG_FIXES_REPORT.md](./BUG_FIXES_REPORT.md) for detailed information about:
 
 - 📧 **Email**: manohardhungel@gmail.com
 - 📱 **WhatsApp**: +977-9766473272
-- 🌐 **Website**: [merogamala.com](https://manohar252.github.io/merogamala)
+- 🌐 **Website**: [merogamalaa.com](https://manohar252.github.io/merogamalaa)
 - 📍 **Location**: Kathmandu, Nepal
 
 ---

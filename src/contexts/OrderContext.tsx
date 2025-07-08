@@ -98,7 +98,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const sendWhatsAppConfirmation = async (order: Order): Promise<boolean> => {
     try {
       // Simulate WhatsApp API call
-      const message = `Dear Customer your order has been received successfully. We will confirm the delivery soon. Thank you for shopping with us! 🌿 — MERO GAMALA
+      const message = `Dear Customer your order has been received successfully. We will confirm the delivery soon. Thank you for shopping with us! 🌿 — MERO GAMALAA
 
 Order Details:
 Order Number: ${order.orderNumber}

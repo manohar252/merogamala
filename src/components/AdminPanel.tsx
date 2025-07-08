@@ -75,7 +75,7 @@ const AdminPanel = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Package className="h-8 w-8 text-emerald-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">MERO GAMALA Admin</h1>
+              <h1 className="text-2xl font-bold text-gray-900">MERO GAMALAA Admin</h1>
             </div>
             <div className="flex items-center gap-4">
               <a 
