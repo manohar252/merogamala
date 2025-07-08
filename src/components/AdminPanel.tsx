@@ -14,13 +14,17 @@ import {
   Truck,
   X,
   Home,
-  Filter
+  Filter,
+  RefreshCw,
+  Loader,
+  AlertCircle
 } from 'lucide-react';
 
 const AdminPanel = () => {
-  const { orders, updateOrderStatus, clearAllOrders } = useOrders();
+  const { orders, loading, error, updateOrderStatus, clearAllOrders, refreshOrders } = useOrders();
   const { logout } = useAdmin();
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const statusOptions = [
     { value: 'all', label: 'All Orders', color: 'bg-gray-100' },
@@ -67,6 +71,42 @@ const AdminPanel = () => {
     }).format(new Date(date));
   };
 
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await refreshOrders();
+    } catch (error) {
+      console.error('Failed to refresh orders:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  const handleStatusUpdate = async (orderId: string, newStatus: Order['status']) => {
+    try {
+      await updateOrderStatus(orderId, newStatus);
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+      alert('Failed to update order status. Please try again.');
+    }
+  };
+
+  const handleClearOrders = async () => {
+    if (!import.meta.env.DEV) {
+      alert('This operation is only allowed in development mode');
+      return;
+    }
+
+    if (confirm('Are you sure you want to clear all orders? This action cannot be undone.')) {
+      try {
+        await clearAllOrders();
+      } catch (error) {
+        console.error('Failed to clear orders:', error);
+        alert('Failed to clear orders. Please try again.');
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -76,8 +116,19 @@ const AdminPanel = () => {
             <div className="flex items-center">
               <Package className="h-8 w-8 text-emerald-600 mr-3" />
               <h1 className="text-2xl font-bold text-gray-900">MERO GAMALA Admin</h1>
+              {loading && (
+                <Loader className="h-5 w-5 animate-spin text-emerald-600 ml-4" />
+              )}
             </div>
             <div className="flex items-center gap-4">
+              <button
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="flex items-center text-gray-600 hover:text-emerald-600 transition-colors disabled:opacity-50"
+              >
+                <RefreshCw className={`h-5 w-5 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
               <a 
                 href="/"
                 className="flex items-center text-gray-600 hover:text-emerald-600 transition-colors"
@@ -87,11 +138,7 @@ const AdminPanel = () => {
               </a>
               {import.meta.env.DEV && (
                 <button
-                  onClick={() => {
-                    if (confirm('Are you sure you want to clear all orders? This action cannot be undone.')) {
-                      clearAllOrders();
-                    }
-                  }}
+                  onClick={handleClearOrders}
                   className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors text-sm"
                 >
                   Clear All Orders (Dev)
@@ -109,6 +156,22 @@ const AdminPanel = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Error Display */}
+        {error && (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="flex items-center">
+              <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
+              <p className="text-red-800">{error}</p>
+              <button
+                onClick={handleRefresh}
+                className="ml-auto bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
@@ -116,7 +179,9 @@ const AdminPanel = () => {
               <Package className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Orders</p>
-                <p className="text-2xl font-semibold text-gray-900">{orders.length}</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {loading ? '...' : orders.length}
+                </p>
               </div>
             </div>
           </div>
@@ -127,7 +192,7 @@ const AdminPanel = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Pending</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  {orders.filter(o => o.status === 'pending').length}
+                  {loading ? '...' : orders.filter(o => o.status === 'pending').length}
                 </p>
               </div>
             </div>
@@ -139,7 +204,7 @@ const AdminPanel = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Delivered</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  {orders.filter(o => o.status === 'delivered').length}
+                  {loading ? '...' : orders.filter(o => o.status === 'delivered').length}
                 </p>
               </div>
             </div>
@@ -151,7 +216,7 @@ const AdminPanel = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Revenue</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  Rs. {(orders.reduce((sum, order) => sum + order.total, 0) * 133).toFixed(0)}
+                  {loading ? '...' : `Rs. ${(orders.reduce((sum, order) => sum + order.total, 0) * 133).toFixed(0)}`}
                 </p>
               </div>
             </div>
@@ -178,7 +243,7 @@ const AdminPanel = () => {
                 {option.label}
                 {option.value !== 'all' && (
                   <span className="ml-2 bg-white/20 px-2 py-1 rounded-full text-xs">
-                    {orders.filter(o => o.status === option.value).length}
+                    {loading ? '...' : orders.filter(o => o.status === option.value).length}
                   </span>
                 )}
               </button>
@@ -190,14 +255,26 @@ const AdminPanel = () => {
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-semibold text-gray-900">
-              Orders ({filteredOrders.length})
+              Orders ({loading ? '...' : filteredOrders.length})
             </h2>
           </div>
 
-          {filteredOrders.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <Loader className="h-16 w-16 text-emerald-600 mx-auto mb-4 animate-spin" />
+              <p className="text-gray-500 text-lg">Loading orders from database...</p>
+            </div>
+          ) : filteredOrders.length === 0 ? (
             <div className="text-center py-12">
               <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">No orders found</p>
+              <p className="text-gray-500 text-lg">
+                {orders.length === 0 ? 'No orders found' : 'No orders in this status'}
+              </p>
+              {orders.length === 0 && !error && (
+                <p className="text-gray-400 text-sm mt-2">
+                  Orders will appear here when customers place them from the shop
+                </p>
+              )}
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
@@ -286,7 +363,7 @@ const AdminPanel = () => {
                       </label>
                       <select
                         value={order.status}
-                        onChange={(e) => updateOrderStatus(order.id, e.target.value as Order['status'])}
+                        onChange={(e) => handleStatusUpdate(order.id, e.target.value as Order['status'])}
                         className="block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm"
                       >
                         <option value="pending">Pending</option>
