@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { QrCode, Loader2, CheckCircle, X, RefreshCw } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+// @ts-ignore
+import QRCode from 'qrcode.react';
 
 interface FonePayPaymentProps {
   amount: number;
