@@ -1,5 +1,5 @@
 import React from 'react';
-import { Leaf, Menu, X, ShoppingCart, Settings } from 'lucide-react';
+import { Menu, X, ShoppingCart, Settings } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useAdmin } from '../contexts/AdminContext';
@@ -32,7 +32,11 @@ const Header = () => {
             className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
             onClick={scrollToTop}
           >
-            <Leaf className="h-8 w-8 text-emerald-600" />
+            <img 
+              src="/assets/mero-gamala-logo.svg" 
+              alt="Mero Gamala Logo" 
+              className="h-10 w-10"
+            />
             <span className="ml-2 text-xl font-bold text-gray-900">{t('storeName')}</span>
           </div>
           

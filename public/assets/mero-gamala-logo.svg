@@ -1,0 +1,89 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="#f5f5f0" stroke="#2d2d2d" stroke-width="2"/>
+  
+  <!-- Top text "MERO GAMALA" -->
+  <path id="top-curve" d="M 20 35 A 40 40 0 0 1 100 35" fill="none"/>
+  <text font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#2d2d2d">
+    <textPath href="#top-curve" startOffset="50%" text-anchor="middle">
+      MERO GAMALA
+    </textPath>
+  </text>
+  
+  <!-- Pot -->
+  <path d="M 42 75 L 78 75 L 75 90 L 45 90 Z" fill="#b8622d" stroke="#8b4513" stroke-width="1"/>
+  <rect x="42" y="72" width="36" height="6" fill="#d2752f"/>
+  <rect x="40" y="70" width="40" height="4" rx="2" fill="#8b4513"/>
+  
+  <!-- Soil -->
+  <ellipse cx="60" cy="75" rx="16" ry="3" fill="#4a4a4a"/>
+  
+  <!-- Plant stems and leaves -->
+  <path d="M 55 75 Q 50 65 48 55" stroke="#22c55e" stroke-width="2" fill="none"/>
+  <path d="M 60 75 Q 58 60 56 45" stroke="#22c55e" stroke-width="2" fill="none"/>
+  <path d="M 65 75 Q 70 65 72 55" stroke="#22c55e" stroke-width="2" fill="none"/>
+  
+  <!-- Leaves -->
+  <ellipse cx="48" cy="52" rx="4" ry="8" fill="#16a34a" transform="rotate(-20 48 52)"/>
+  <ellipse cx="52" cy="48" rx="3" ry="6" fill="#22c55e" transform="rotate(10 52 48)"/>
+  <ellipse cx="56" cy="42" rx="4" ry="7" fill="#16a34a" transform="rotate(-10 56 42)"/>
+  <ellipse cx="60" cy="40" rx="3" ry="6" fill="#22c55e" transform="rotate(15 60 40)"/>
+  <ellipse cx="64" cy="45" rx="4" ry="7" fill="#16a34a" transform="rotate(25 64 45)"/>
+  <ellipse cx="68" cy="50" rx="3" ry="6" fill="#22c55e" transform="rotate(-15 68 50)"/>
+  <ellipse cx="72" cy="52" rx="4" ry="8" fill="#16a34a" transform="rotate(20 72 52)"/>
+  
+  <!-- Character face -->
+  <circle cx="60" cy="55" r="12" fill="#fdbcb4"/>
+  
+  <!-- Hair -->
+  <path d="M 48 50 Q 60 35 72 50 Q 72 45 60 40 Q 48 45 48 50" fill="#2d2d2d"/>
+  <circle cx="52" cy="52" r="3" fill="#2d2d2d"/>
+  
+  <!-- Eyes -->
+  <path d="M 55 52 Q 55 54 57 54 Q 55 56 55 54" fill="#2d2d2d"/>
+  <path d="M 63 52 Q 65 54 65 54 Q 63 56 63 54" fill="#2d2d2d"/>
+  
+  <!-- Blush -->
+  <circle cx="52" cy="58" r="2" fill="#ff9999" opacity="0.6"/>
+  <circle cx="68" cy="58" r="2" fill="#ff9999" opacity="0.6"/>
+  
+  <!-- Smile -->
+  <path d="M 56 60 Q 60 64 64 60" stroke="#2d2d2d" stroke-width="1.5" fill="none"/>
+  
+  <!-- Arms -->
+  <circle cx="45" cy="65" r="4" fill="#fdbcb4"/>
+  <circle cx="75" cy="65" r="4" fill="#fdbcb4"/>
+  <path d="M 48 62 Q 55 58 58 62" stroke="#b8622d" stroke-width="3" fill="none"/>
+  <path d="M 62 62 Q 65 58 72 62" stroke="#b8622d" stroke-width="3" fill="none"/>
+  
+  <!-- Decorative leaves around -->
+  <ellipse cx="25" cy="45" rx="2" ry="5" fill="#22c55e" transform="rotate(-30 25 45)"/>
+  <ellipse cx="30" cy="40" rx="1.5" ry="4" fill="#16a34a" transform="rotate(10 30 40)"/>
+  <ellipse cx="95" cy="45" rx="2" ry="5" fill="#22c55e" transform="rotate(30 95 45)"/>
+  <ellipse cx="90" cy="40" rx="1.5" ry="4" fill="#16a34a" transform="rotate(-10 90 40)"/>
+  
+  <!-- Butterflies -->
+  <g transform="translate(15,35) scale(0.6)">
+    <ellipse cx="0" cy="0" rx="3" ry="6" fill="#ff8c00" transform="rotate(-20 0 0)"/>
+    <ellipse cx="2" cy="0" rx="3" ry="6" fill="#ffa500" transform="rotate(20 2 0)"/>
+    <ellipse cx="0" cy="4" rx="2" ry="4" fill="#ff8c00" transform="rotate(-20 0 4)"/>
+    <ellipse cx="2" cy="4" rx="2" ry="4" fill="#ffa500" transform="rotate(20 2 4)"/>
+    <line x1="1" y1="0" x2="1" y2="8" stroke="#2d2d2d" stroke-width="0.5"/>
+  </g>
+  
+  <g transform="translate(100,35) scale(0.6)">
+    <ellipse cx="0" cy="0" rx="3" ry="6" fill="#ff8c00" transform="rotate(-20 0 0)"/>
+    <ellipse cx="2" cy="0" rx="3" ry="6" fill="#ffa500" transform="rotate(20 2 0)"/>
+    <ellipse cx="0" cy="4" rx="2" ry="4" fill="#ff8c00" transform="rotate(-20 0 4)"/>
+    <ellipse cx="2" cy="4" rx="2" ry="4" fill="#ffa500" transform="rotate(20 2 4)"/>
+    <line x1="1" y1="0" x2="1" y2="8" stroke="#2d2d2d" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Bottom text (Nepali) -->
+  <path id="bottom-curve" d="M 25 95 A 35 35 0 0 0 95 95" fill="none"/>
+  <text font-family="Arial, sans-serif" font-size="8" fill="#2d2d2d">
+    <textPath href="#bottom-curve" startOffset="50%" text-anchor="middle">
+      मायाले हुर्काउँदा बिरुवाहरू
+    </textPath>
+  </text>
+</svg>
