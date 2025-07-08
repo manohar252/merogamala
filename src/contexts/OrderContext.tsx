@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export interface CustomerDetails {
   fullName: string;
@@ -32,12 +32,45 @@ interface OrderContextType {
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
   getOrderById: (orderId: string) => Order | undefined;
   sendWhatsAppConfirmation: (order: Order) => Promise<boolean>;
+  clearAllOrders: () => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [orders, setOrders] = useState<Order[]>([]);
+
+  // Load orders from localStorage on component mount
+  useEffect(() => {
+    const storedOrders = localStorage.getItem('mero-gamala-orders');
+    if (storedOrders) {
+      try {
+        const parsedOrders = JSON.parse(storedOrders);
+        // Convert date strings back to Date objects
+        const ordersWithDates = parsedOrders.map((order: Omit<Order, 'orderDate'> & { orderDate: string }) => ({
+          ...order,
+          orderDate: new Date(order.orderDate)
+        }));
+        setOrders(ordersWithDates);
+      } catch (error) {
+        console.error('Failed to parse stored orders:', error);
+        // Clear corrupted data
+        localStorage.removeItem('mero-gamala-orders');
+      }
+    }
+  }, []);
+
+  // Save orders to localStorage whenever orders change
+  useEffect(() => {
+    try {
+      localStorage.setItem('mero-gamala-orders', JSON.stringify(orders));
+      if (import.meta.env.DEV) {
+        console.log(`Saved ${orders.length} orders to localStorage`);
+      }
+    } catch (error) {
+      console.error('Failed to save orders to localStorage:', error);
+    }
+  }, [orders]);
 
   const generateOrderNumber = (): string => {
     const timestamp = Date.now().toString().slice(-6);
@@ -84,11 +117,21 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   const updateOrderStatus = (orderId: string, status: Order['status']) => {
-    setOrders(prev => prev.map(order => 
-      order.id === orderId 
-        ? { ...order, status }
-        : order
-    ));
+    setOrders(prev => {
+      const updatedOrders = prev.map(order => 
+        order.id === orderId 
+          ? { ...order, status }
+          : order
+      );
+      
+      // Debug logging in development
+      if (import.meta.env.DEV) {
+        const updatedOrder = updatedOrders.find(order => order.id === orderId);
+        console.log(`Order ${orderId} status updated to: ${status}`, updatedOrder);
+      }
+      
+      return updatedOrders;
+    });
   };
 
   const getOrderById = (orderId: string): Order | undefined => {
@@ -123,13 +166,22 @@ Delivery Address: ${order.customerDetails.deliveryAddress}`;
     }
   };
 
+  const clearAllOrders = () => {
+    setOrders([]);
+    localStorage.removeItem('mero-gamala-orders');
+    if (import.meta.env.DEV) {
+      console.log('All orders cleared from storage');
+    }
+  };
+
   return (
     <OrderContext.Provider value={{
       orders,
       addOrder,
       updateOrderStatus,
       getOrderById,
-      sendWhatsAppConfirmation
+      sendWhatsAppConfirmation,
+      clearAllOrders
     }}>
       {children}
     </OrderContext.Provider>

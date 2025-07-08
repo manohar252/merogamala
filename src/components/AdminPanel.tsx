@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 const AdminPanel = () => {
-  const { orders, updateOrderStatus } = useOrders();
+  const { orders, updateOrderStatus, clearAllOrders } = useOrders();
   const { logout } = useAdmin();
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
@@ -85,6 +85,18 @@ const AdminPanel = () => {
                 <Home className="h-5 w-5 mr-2" />
                 Back to Site
               </a>
+              {import.meta.env.DEV && (
+                <button
+                  onClick={() => {
+                    if (confirm('Are you sure you want to clear all orders? This action cannot be undone.')) {
+                      clearAllOrders();
+                    }
+                  }}
+                  className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors text-sm"
+                >
+                  Clear All Orders (Dev)
+                </button>
+              )}
               <button
                 onClick={logout}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
