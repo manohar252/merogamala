@@ -6,11 +6,16 @@ import { useAdmin } from '../contexts/AdminContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [logoLoaded, setLogoLoaded] = React.useState(false);
+  const [logoError, setLogoError] = React.useState(false);
   const { t } = useLanguage();
   const { items: cartItems, setIsCartOpen } = useCart();
   const { isAuthenticated, logout } = useAdmin();
 
   const navigateToHome = () => {
+    // Close mobile menu if open
+    setIsMenuOpen(false);
+    
     // If already on home page, scroll to top, otherwise navigate to home
     if (window.location.pathname === '/' || window.location.pathname === '') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -20,6 +25,23 @@ const Header = () => {
       // Trigger popstate event to update the app's routing state
       window.dispatchEvent(new PopStateEvent('popstate'));
     }
+  };
+
+  const handleLogoKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      navigateToHome();
+    }
+  };
+
+  const handleLogoLoad = () => {
+    setLogoLoaded(true);
+    setLogoError(false);
+  };
+
+  const handleLogoError = () => {
+    setLogoError(true);
+    setLogoLoaded(false);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -37,18 +59,41 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div 
-            className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+            className="flex items-center cursor-pointer group transition-all duration-300 ease-in-out hover:scale-105 focus-within:scale-105 rounded-lg px-2 py-1 focus-within:outline focus-within:outline-2 focus-within:outline-emerald-500"
             onClick={navigateToHome}
+            onKeyDown={handleLogoKeyPress}
             role="button"
-            aria-label="Go to home page"
-            title="Go to home page"
+            tabIndex={0}
+            aria-label="Mero Gamala - Go to home page"
+            title="Mero Gamala - Click to go home"
           >
-            <img 
-              src="/assets/mero-gamala-logo.svg" 
-              alt="Mero Gamala Logo - Home" 
-              className="h-10 w-10"
-            />
-            <span className="ml-2 text-xl font-bold text-gray-900">{t('storeName')}</span>
+            <div className="relative">
+              {!logoError ? (
+                <img 
+                  src="/assets/mero-gamala-logo.svg" 
+                  alt="Mero Gamala Logo" 
+                  className={`h-10 w-10 sm:h-12 sm:w-12 transition-all duration-300 ${
+                    logoLoaded ? 'opacity-100' : 'opacity-0'
+                  } group-hover:drop-shadow-lg`}
+                  onLoad={handleLogoLoad}
+                  onError={handleLogoError}
+                  loading="eager"
+                />
+              ) : (
+                // Fallback icon if logo fails to load
+                <div className="h-10 w-10 sm:h-12 sm:w-12 bg-emerald-600 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">MG</span>
+                </div>
+              )}
+              
+              {/* Loading placeholder */}
+              {!logoLoaded && !logoError && (
+                <div className="absolute inset-0 h-10 w-10 sm:h-12 sm:w-12 bg-gray-200 rounded-full animate-pulse"></div>
+              )}
+            </div>
+            <span className="ml-2 sm:ml-3 text-lg sm:text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors duration-300">
+              {t('storeName')}
+            </span>
           </div>
           
           <div className="flex items-center gap-4">
@@ -103,11 +148,13 @@ const Header = () => {
             {/* Shopping Cart */}
             <button 
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-gray-700 hover:text-emerald-600 transition-colors"
+              className="relative p-2 text-gray-700 hover:text-emerald-600 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-lg"
+              aria-label={`Shopping cart with ${totalItems} items`}
+              title={`View cart (${totalItems} items)`}
             >
               <ShoppingCart className="h-6 w-6" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium animate-pulse">
                   {totalItems}
                 </span>
               )}
