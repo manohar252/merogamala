@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- SEO Meta Tags -->
+  <title>MERO GAMALA - Premium Plants Delivered to Your Doorstep in Nepal</title>
+  <meta name="description" content="Discover healthy plants, expert care tips, and doorstep delivery across Kathmandu Valley. Your trusted partner for bringing nature into your home and office." />
+  <meta name="keywords" content="plants Nepal, indoor plants Kathmandu, plant delivery, houseplants, gardening Nepal, MERO GAMALA" />
+  <meta name="author" content="MERO GAMALA" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://merogamala.com/" />
+  <meta property="og:title" content="MERO GAMALA - Premium Plants Delivered in Nepal" />
+  <meta property="og:description" content="Discover healthy plants, expert care tips, and doorstep delivery across Kathmandu Valley." />
+  <meta property="og:image" content="/og-image.jpg" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://merogamala.com/" />
+  <meta property="twitter:title" content="MERO GAMALA - Premium Plants Delivered in Nepal" />
+  <meta property="twitter:description" content="Discover healthy plants, expert care tips, and doorstep delivery across Kathmandu Valley." />
+  <meta property="twitter:image" content="/og-image.jpg" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  
+  <!-- Manifest for PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#10b981" />
+  
+  <!-- Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <!-- Google Fonts for Nepali Support -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "MERO GAMALA",
+    "description": "Premium plant store delivering healthy plants across Kathmandu Valley",
+    "url": "https://merogamala.com",
+    "telephone": "+977-9766473272",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Kathmandu",
+      "addressCountry": "NP"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "27.7172",
+      "longitude": "85.3240"
+    },
+    "openingHours": "Mo-Su 08:00-20:00",
+    "sameAs": [
+      "https://www.facebook.com/merogamala",
+      "https://www.instagram.com/merogamala"
+    ]
+  }
+  </script>
+  
+  <!-- CSS Variables for consistent theming -->
+  <style>
+    :root {
+      --primary-color: #10b981;
+      --primary-dark: #065f46;
+      --secondary-color: #f3f4f6;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-nepali: 'Noto Sans Devanagari', sans-serif;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-inter);
+      line-height: 1.6;
+      color: var(--text-primary);
+      background-color: #ffffff;
+    }
+    
+    .nepali-text {
+      font-family: var(--font-nepali);
+    }
+    
+    /* Loading spinner styles */
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #10b981 0%, #065f46 100%);
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: white;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    
+    /* Hide loading when app loads */
+    #root:not(:empty) + .loading-container {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Main React App Container -->
+  <div id="root"></div>
+  
+  <!-- Loading fallback -->
+  <div class="loading-container">
+    <div>
+      <div class="loading-spinner"></div>
+      <div class="loading-text">मेरो गमला लोड गर्दै...</div>
+    </div>
+  </div>
+  
+  <!-- No JavaScript Fallback -->
+  <noscript>
+    <div style="padding: 40px; text-align: center; font-family: Inter, sans-serif;">
+      <h1 style="color: #10b981; margin-bottom: 20px;">MERO GAMALA</h1>
+      <p style="color: #6b7280; font-size: 16px;">
+        JavaScript is required to run this application. Please enable JavaScript in your browser.
+      </p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 10px; font-family: 'Noto Sans Devanagari', sans-serif;">
+        यो एप चलाउनको लागि JavaScript आवश्यक छ। कृपया आफ्नो ब्राउजरमा JavaScript सक्षम गर्नुहोस्।
+      </p>
+    </div>
+  </noscript>
+  
+  <!-- Module Script -->
+  <script type="module" src="/src/main.tsx"></script>
+  
+  <!-- Analytics (placeholder for Google Analytics or other analytics) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script> -->
+  <script>
+    // Google Analytics placeholder
+    // window.dataLayer = window.dataLayer || [];
+    // function gtag(){dataLayer.push(arguments);}
+    // gtag('js', new Date());
+    // gtag('config', 'GA_MEASUREMENT_ID');
+    
+    // Performance monitoring
+    if ('performance' in window) {
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const perfData = performance.getEntriesByType('navigation')[0];
+          if (perfData && perfData.loadEventEnd > 0) {
+            console.log('Page load time:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
+          }
+        }, 0);
+      });
+    }
+    
+    // Service Worker registration for PWA (optional)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        // navigator.serviceWorker.register('/sw.js')
+        //   .then(function(registration) {
+        //     console.log('SW registered: ', registration);
+        //   })
+        //   .catch(function(registrationError) {
+        //     console.log('SW registration failed: ', registrationError);
+        //   });
+      });
+    }
+  </script>
+</body>
+</html>

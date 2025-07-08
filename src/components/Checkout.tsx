@@ -96,7 +96,10 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
       clearCart();
       setStep('success');
     } catch (error) {
-      console.error('Order placement failed:', error);
+      // Only log in development - in production this would go to error tracking
+      if (import.meta.env.DEV) {
+        console.error('Order placement failed:', error);
+      }
       alert(t('language') === 'en' ? 'Order placement failed. Please try again.' : 'अर्डर राख्न असफल भयो। कृपया फेरि प्रयास गर्नुहोस्।');
     } finally {
       setIsProcessing(false);

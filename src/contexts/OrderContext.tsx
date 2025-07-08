@@ -73,7 +73,11 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           : order
       ));
     } catch (error) {
-      console.error('Failed to send WhatsApp confirmation:', error);
+      // Log error for debugging but don't throw - order should still be created
+      if (import.meta.env.DEV) {
+        console.error('Failed to send WhatsApp confirmation:', error);
+      }
+      // In production, you might want to send this to an error tracking service
     }
 
     return orderNumber;
@@ -102,15 +106,19 @@ Total Amount: Rs. ${(order.total * 133).toFixed(0)}
 Delivery Address: ${order.customerDetails.deliveryAddress}`;
 
       // In production, this would be an actual WhatsApp API call
-      console.log('WhatsApp message sent to:', order.customerDetails.phoneNumber);
-      console.log('Message:', message);
+      if (import.meta.env.DEV) {
+        console.log('WhatsApp message sent to:', order.customerDetails.phoneNumber);
+        console.log('Message:', message);
+      }
       
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       return true;
     } catch (error) {
-      console.error('WhatsApp sending failed:', error);
+      if (import.meta.env.DEV) {
+        console.error('WhatsApp sending failed:', error);
+      }
       return false;
     }
   };

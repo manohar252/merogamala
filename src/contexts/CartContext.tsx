@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+// Currency conversion rate (USD to NPR)
+const USD_TO_NPR_RATE = 133;
+
 interface CartItem {
   id: string;
   name: string;
@@ -28,6 +31,12 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+    // Input validation
+    if (!item || !item.id || typeof item.price !== 'number' || item.price < 0) {
+      console.error('Invalid item data provided to addToCart');
+      return;
+    }
+
     setItems(prev => {
       const existingItem = prev.find(cartItem => cartItem.id === item.id);
       if (existingItem) {
@@ -42,10 +51,19 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const removeFromCart = (id: string) => {
+    if (!id) {
+      console.error('Invalid id provided to removeFromCart');
+      return;
+    }
     setItems(prev => prev.filter(item => item.id !== id));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
+    if (!id || typeof quantity !== 'number' || quantity < 0) {
+      console.error('Invalid parameters provided to updateQuantity');
+      return;
+    }
+
     if (quantity <= 0) {
       removeFromCart(id);
       return;
@@ -68,7 +86,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const finalPrice = item.discountPercentage 
         ? item.price * (1 - item.discountPercentage / 100)
         : item.price;
-      return total + (finalPrice * item.quantity * 133); // Convert to NPR
+      return total + (finalPrice * item.quantity * USD_TO_NPR_RATE);
     }, 0);
   };
 

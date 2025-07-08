@@ -126,18 +126,20 @@ const SecretAdminLogin = () => {
             </button>
           </form>
 
-          {/* Demo Credentials - Only for development */}
-          <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-            <h3 className="text-emerald-100 text-sm font-medium mb-2">Demo Credentials:</h3>
-            <div className="text-white/70 text-xs space-y-1">
-              <p><strong>Username:</strong> admin</p>
-              <p><strong>Password:</strong> admin123</p>
-              <p><strong>2FA Code:</strong> Any 6 digits (e.g., 123456)</p>
+          {/* Demo Credentials - Only show in development */}
+          {import.meta.env.DEV && (
+            <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
+              <h3 className="text-emerald-100 text-sm font-medium mb-2">Demo Credentials:</h3>
+              <div className="text-white/70 text-xs space-y-1">
+                <p><strong>Username:</strong> admin</p>
+                <p><strong>Password:</strong> admin123</p>
+                <p><strong>2FA Code:</strong> Any 6 digits (e.g., 123456)</p>
+              </div>
+              <p className="text-yellow-300 text-xs mt-2">
+                ⚠️ Development mode only
+              </p>
             </div>
-            <p className="text-yellow-300 text-xs mt-2">
-              ⚠️ Remove this section in production
-            </p>
-          </div>
+          )}
         </div>
 
         {/* Back to main site */}

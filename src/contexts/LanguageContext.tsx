@@ -59,8 +59,7 @@ const translations: Record<string, Record<'en' | 'ne', string>> = {
   discoverOurCollection: { en: 'Explore our diverse collection of plants.', ne: 'हाम्रो बिरुवाहरूको विविध संग्रह अन्वेषण गर्नुहोस्।' },
   addToCart: { en: 'Add to Cart', ne: 'कार्टमा थप्नुहोस्' },
   watering: { en: 'Watering', ne: 'पानी हाल्ने' },
-  wateringDesc: { en: 'Understand your plant\'s water needs. Overwatering is a common mistake.', ne: \'तपाईंको बिरुवाको पानीको आवश्यकता बुझ्नुहोस्। धेरै पानी हाल्नु सामान्य गल्ती हो।' },
-  }
+  wateringDesc: { en: 'Understand your plant\'s water needs. Overwatering is a common mistake.', ne: 'तपाईंको बिरुवाको पानीको आवश्यकता बुझ्नुहोस्। धेरै पानी हाल्नु सामान्य गल्ती हो।' },
   sunlight: { en: 'Sunlight', ne: 'सूर्यको प्रकाश' },
   sunlightDesc: { en: 'Different plants require different light levels. Find the right spot.', ne: 'फरक बिरुवाहरूलाई फरक प्रकाश स्तर चाहिन्छ। सही ठाउँ पत्ता लगाउनुहोस्।' },
   temperature: { en: 'Temperature', ne: 'तापमान' },
