@@ -120,7 +120,78 @@ const translations: Record<string, Record<'en' | 'ne', string>> = {
   allRightsReserved: { en: 'All Rights Reserved', ne: 'सबै अधिकार सुरक्षित' },
   shopCategories: { en: 'Shop Categories', ne: 'पसल कोटीहरू' },
   english: { en: 'English', ne: 'अंग्रेजी' },
-  nepali: { en: 'Nepali', ne: 'नेपाली' }
+  nepali: { en: 'Nepali', ne: 'नेपाली' },
+  
+  // Payment Gateway Translations
+  paymentMethod: { en: 'Payment Method', ne: 'भुक्तानी विधि' },
+  paymentSuccessful: { en: 'Payment Successful!', ne: 'भुक्तानी सफल भयो!' },
+  paymentFailed: { en: 'Payment Failed', ne: 'भुक्तानी असफल' },
+  paymentProcessing: { en: 'Processing Payment...', ne: 'भुक्तानी प्रशोधन गर्दै...' },
+  choosePaymentMethod: { en: 'Choose Payment Method', ne: 'भुक्तानी विधि छान्नुहोस्' },
+  totalAmount: { en: 'Total Amount', ne: 'कुल रकम' },
+  securePayment: { en: 'Secure Payment', ne: 'सुरक्षित भुक्तानी' },
+  paymentSecurityNotice: { en: 'Your payment information is encrypted and secure.', ne: 'तपाईंको भुक्तानी जानकारी एन्क्रिप्ट गरिएको र सुरक्षित छ।' },
+  tryAgain: { en: 'Try Again', ne: 'फेरि प्रयास गर्नुहोस्' },
+  backToPaymentMethods: { en: 'Back to payment methods', ne: 'भुक्तानी विधिहरूमा फर्कनुहोस्' },
+  
+  // eSewa specific
+  payWithESewa: { en: 'Pay with eSewa', ne: 'ईसेवासँग भुक्तानी गर्नुहोस्' },
+  esewaDescription: { en: 'Secure digital wallet payment', ne: 'सुरक्षित डिजिटल वालेट भुक्तानी' },
+  esewaDemo: { en: 'eSewa Payment Demo', ne: 'ईसेवा भुक्तानी डेमो' },
+  esewaDemoDescription: { en: 'This is a demo payment. In production, you would be redirected to eSewa.', ne: 'यो एक डेमो भुक्तानी हो। उत्पादनमा, तपाईंलाई ईसेवामा रिडाइरेक्ट गरिनेछ।' },
+  simulateSuccessfulPayment: { en: 'Simulate Successful Payment', ne: 'सफल भुक्तानी सिमुलेट गर्नुहोस्' },
+  simulateFailedPayment: { en: 'Simulate Failed Payment', ne: 'असफल भुक्तानी सिमुलेट गर्नुहोस्' },
+  redirectingToESewa: { en: 'Redirecting to eSewa...', ne: 'ईसेवामा रिडाइरेक्ट गर्दै...' },
+  esewaRedirectNotice: { en: 'You will be redirected to eSewa to complete the payment', ne: 'भुक्तानी पूरा गर्न तपाईंलाई ईसेवामा रिडाइरेक्ट गरिनेछ' },
+  
+  // FonePay specific
+  payWithFonePay: { en: 'Pay with FonePay', ne: 'FonePay सँग भुक्तानी गर्नुहोस्' },
+  fonepayDescription: { en: 'Mobile banking QR payment', ne: 'मोबाइल बैंकिङ QR भुक्तानी' },
+  generatingQR: { en: 'Generating QR Code...', ne: 'QR कोड उत्पादन गर्दै...' },
+  generateQRCode: { en: 'Generate QR Code', ne: 'QR कोड उत्पादन गर्नुहोस्' },
+  scanWithFonePay: { en: 'Scan with FonePay app to pay', ne: 'भुक्तानी गर्न FonePay एप संग स्क्यान गर्नुहोस्' },
+  waitingForPayment: { en: 'Waiting for payment...', ne: 'भुक्तानीको पर्खाइमा...' },
+  timeRemaining: { en: 'Time remaining:', ne: 'बाँकी समय:' },
+  qrCodeExpired: { en: 'QR Code Expired', ne: 'QR कोड समाप्त भयो' },
+  generateNewQR: { en: 'Generate New QR', ne: 'नयाँ QR उत्पादन गर्नुहोस्' },
+  howToPay: { en: 'How to pay:', ne: 'कसरी भुक्तानी गर्ने:' },
+  openFonePayApp: { en: 'Open FonePay app', ne: 'FonePay एप खोल्नुहोस्' },
+  scanThisQR: { en: 'Scan this QR code', ne: 'यो QR कोड स्क्यान गर्नुहोस्' },
+  confirmPayment: { en: 'Confirm payment', ne: 'भुक्तानी पुष्टि गर्नुहोस्' },
+  fonepayTransactionCompleted: { en: 'Transaction completed via FonePay', ne: 'FonePay मार्फत लेनदेन पूरा भयो' },
+  
+  // Citizen Bank specific
+  payWithCitizenBank: { en: 'Pay with Citizen Bank QR', ne: 'सिटिजन बैंक QR सँग भुक्तानी गर्नुहोस्' },
+  citizenBankDescription: { en: 'Bank QR code payment', ne: 'बैंक QR कोड भुक्तानी' },
+  generatingSecureQR: { en: 'Generating secure QR Code...', ne: 'सुरक्षित QR कोड उत्पादन गर्दै...' },
+  scanWithCitizenBank: { en: 'Scan with Citizen Bank app to pay', ne: 'भुक्तानी गर्न सिटिजन बैंक एप संग स्क्यान गर्नुहोस्' },
+  transactionId: { en: 'Transaction ID:', ne: 'लेनदेन ID:' },
+  waitingForConfirmation: { en: 'Waiting for payment confirmation...', ne: 'भुक्तानी पुष्टिको पर्खाइमा...' },
+  qrWillExpire: { en: 'QR code will expire in 5 minutes', ne: 'QR कोड ५ मिनेटमा समाप्त हुनेछ' },
+  openCitizenBankApp: { en: 'Open Citizen Bank mobile app', ne: 'सिटिजन बैंक मोबाइल एप खोल्नुहोस्' },
+  goToQRSection: { en: 'Go to QR payment section', ne: 'QR भुक्तानी खण्डमा जानुहोस्' },
+  enterPINToConfirm: { en: 'Enter your PIN to confirm', ne: 'पुष्टि गर्न आफ्नो PIN प्रविष्ट गर्नुहोस्' },
+  securityNotice: { en: 'Security Notice', ne: 'सुरक्षा सूचना' },
+  qrEncryptedNotice: { en: 'This QR code is encrypted and can only be used for this specific transaction.', ne: 'यो QR कोड एन्क्रिप्ट गरिएको छ र यो विशिष्ट लेनदेनको लागि मात्र प्रयोग गर्न सकिन्छ।' },
+  citizenBankTransactionCompleted: { en: 'Transaction completed via Citizen Bank', ne: 'सिटिजन बैंक मार्फत लेनदेन पूरा भयो' },
+  
+  // Common payment errors
+  paymentCancelled: { en: 'Payment cancelled by user', ne: 'प्रयोगकर्ताद्वारा भुक्तानी रद्द गरियो' },
+  paymentSessionExpired: { en: 'Payment session expired', ne: 'भुक्तानी सत्र समाप्त भयो' },
+  transactionDeclined: { en: 'Transaction declined by bank', ne: 'बैंकले लेनदेन अस्वीकार गर्यो' },
+  failedToGenerateQR: { en: 'Failed to generate QR code', ne: 'QR कोड उत्पादन गर्न असफल भयो' },
+  pleaseWaitProcessing: { en: 'Please wait while we process your payment.', ne: 'कृपया हामी तपाईंको भुक्तानी प्रशोधन गर्दै गर्दा पर्खनुहोस्।' },
+  orderConfirmed: { en: 'Your order has been confirmed.', ne: 'तपाईंको अर्डर पुष्टि भयो।' },
+  paymentFailureMessage: { en: 'Please try again or use a different payment method.', ne: 'कृपया फेरि प्रयास गर्नुहोस् वा अर्को भुक्तानी विधि प्रयोग गर्नुहोस्।' },
+  
+  // Popular/Recommended labels
+  popular: { en: 'Popular', ne: 'लोकप्रिय' },
+  recommended: { en: 'Recommended', ne: 'सिफारिस गरिएको' },
+  
+  // Development notes
+  note: { en: 'Note:', ne: 'नोट:' },
+  developmentMode: { en: 'Development mode only', ne: 'विकास मोड मात्र' },
+  productionRedirectNotice: { en: 'In production, clicking "Pay with eSewa" would redirect you to the eSewa payment gateway.', ne: 'उत्पादनमा, "ईसेवासँग भुक्तानी गर्नुहोस्" क्लिक गर्दा तपाईंलाई ईसेवा भुक्तानी गेटवेमा रिडाइरेक्ट गरिनेछ।' }
 };
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
