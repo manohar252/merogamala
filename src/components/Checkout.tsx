@@ -3,6 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useOrders, CustomerDetails, OrderItem } from '../contexts/OrderContext';
 import { USD_TO_NPR_RATE, PHONE_NUMBER_REGEX } from '../utils/constants';
+import PaymentInterface from './payment/PaymentInterface';
 import { 
   User, 
   MapPin, 
@@ -10,10 +11,6 @@ import {
   ArrowLeft, 
   ArrowRight, 
   CheckCircle, 
-  CreditCard,
-  Smartphone,
-  Building2,
-  QrCode,
   X
 } from 'lucide-react';
 
@@ -38,8 +35,6 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
   });
 
   const [errors, setErrors] = useState<Partial<CustomerDetails>>({});
-  const [selectedPayment, setSelectedPayment] = useState<string>('');
-
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const validateForm = (): boolean => {
@@ -70,12 +65,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
     }
   };
 
-  const handlePaymentSubmit = async () => {
-    if (!selectedPayment) {
-      alert(t('language') === 'en' ? 'Please select a payment method' : 'कृपया भुक्तानी विधि छान्नुहोस्');
-      return;
-    }
-
+  const handlePaymentSuccess = async (paymentData: any) => {
     if (items.length === 0) {
       alert(t('language') === 'en' ? 'Your cart is empty' : 'तपाईंको टोकरी खाली छ');
       return;
@@ -92,7 +82,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
         image: item.image
       }));
 
-      const newOrderNumber = await addOrder(customerDetails, orderItems, selectedPayment);
+      const newOrderNumber = await addOrder(customerDetails, orderItems, paymentData.paymentMethod);
       setOrderNumber(newOrderNumber);
       clearCart();
       setStep('success');
@@ -107,26 +97,12 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
     }
   };
 
-  const paymentMethods = [
-    {
-      id: 'esewa',
-      name: 'eSewa',
-      icon: <Smartphone className="h-6 w-6" />,
-      qr: 'https://via.placeholder.com/200x200/1D4ED8/FFFFFF?text=eSewa+QR'
-    },
-    {
-      id: 'fonepay',
-      name: 'FonePay',
-      icon: <CreditCard className="h-6 w-6" />,
-      qr: 'https://via.placeholder.com/200x200/059669/FFFFFF?text=FonePay+QR'
-    },
-    {
-      id: 'bank',
-      name: 'Bank Transfer',
-      icon: <Building2 className="h-6 w-6" />,
-      qr: 'https://via.placeholder.com/200x200/DC2626/FFFFFF?text=Bank+QR'
+  const handlePaymentFailure = (error: any) => {
+    if (import.meta.env.DEV) {
+      console.error('Payment failed:', error);
     }
-  ];
+    // Payment failure is handled by the PaymentInterface component
+  };
 
   if (step === 'success') {
     return (
@@ -188,73 +164,13 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
           )}
         </div>
 
-        <div className="space-y-4 mb-6">
-          {paymentMethods.map((method) => (
-            <div
-              key={method.id}
-              className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                selectedPayment === method.id
-                  ? 'border-emerald-500 bg-emerald-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-              onClick={() => setSelectedPayment(method.id)}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className={`p-2 rounded-lg mr-3 ${
-                    selectedPayment === method.id ? 'bg-emerald-500 text-white' : 'bg-gray-100'
-                  }`}>
-                    {method.icon}
-                  </div>
-                  <span className="font-medium">{method.name}</span>
-                </div>
-                {selectedPayment === method.id && (
-                  <CheckCircle className="h-5 w-5 text-emerald-500" />
-                )}
-              </div>
-              
-              {selectedPayment === method.id && (
-                <div className="mt-4 text-center">
-                  <div className="bg-white p-4 rounded-lg border inline-block">
-                    <img
-                      src={method.qr}
-                      alt={`${method.name} QR Code`}
-                      className="w-48 h-48 mx-auto"
-                    />
-                    <div className="flex items-center justify-center mt-2 text-sm text-gray-600">
-                      <QrCode className="h-4 w-4 mr-1" />
-                      {t('scanToPay')}
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-2">
-                    {t('pleaseScanTheQRCode')}
-                  </p>
-                  <p className="text-lg font-semibold text-emerald-600 mt-2">
-                    {t('amount')}: Rs. {(total * USD_TO_NPR_RATE).toFixed(0)}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <button
-          onClick={handlePaymentSubmit}
-          disabled={!selectedPayment || isProcessing}
-          className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-        >
-          {isProcessing ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-              {t('processingOrder')}
-            </>
-          ) : (
-            <>
-              {t('confirmPaymentAndPlaceOrder')}
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </>
-          )}
-        </button>
+        <PaymentInterface
+          amount={total * USD_TO_NPR_RATE}
+          orderId={`ORDER-${Date.now()}`}
+          onSuccess={handlePaymentSuccess}
+          onFailure={handlePaymentFailure}
+          onBack={() => setStep('details')}
+        />
       </div>
     );
   }
