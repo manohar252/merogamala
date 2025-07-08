@@ -10,8 +10,16 @@ const Header = () => {
   const { items: cartItems, setIsCartOpen } = useCart();
   const { isAuthenticated, logout } = useAdmin();
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const navigateToHome = () => {
+    // If already on home page, scroll to top, otherwise navigate to home
+    if (window.location.pathname === '/' || window.location.pathname === '') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Navigate to home page
+      window.history.pushState({}, '', '/');
+      // Trigger popstate event to update the app's routing state
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -30,11 +38,14 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <div 
             className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={scrollToTop}
+            onClick={navigateToHome}
+            role="button"
+            aria-label="Go to home page"
+            title="Go to home page"
           >
             <img 
               src="/assets/mero-gamala-logo.svg" 
-              alt="Mero Gamala Logo" 
+              alt="Mero Gamala Logo - Home" 
               className="h-10 w-10"
             />
             <span className="ml-2 text-xl font-bold text-gray-900">{t('storeName')}</span>
