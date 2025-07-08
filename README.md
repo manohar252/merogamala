@@ -16,6 +16,27 @@
 🔗 **Website**: [https://manohar252.github.io/merogamala](https://manohar252.github.io/merogamala)  
 🔐 **Admin Panel**: [https://manohar252.github.io/merogamala/admin-portal-secure](https://manohar252.github.io/merogamala/admin-portal-secure)
 
+### ⚠️ **Current Status: Loading Issue Investigation**
+
+**Issue**: The live site is currently experiencing loading issues due to GitHub Pages deployment cache.
+
+**Status**: 🔄 **FIXES IN PROGRESS**
+- ✅ **Local Build**: Working perfectly (all features functional)
+- ✅ **Asset Paths**: Correctly configured for GitHub Pages
+- ✅ **Jekyll Fix**: Added `.nojekyll` to prevent processing interference
+- 🔄 **Deployment**: Waiting for GitHub Pages cache to update (5-10 minutes)
+
+**Troubleshooting Steps Completed**:
+1. ✅ Fixed Vite configuration with correct base path `/merogamala/`
+2. ✅ Added `.nojekyll` file to prevent Jekyll processing
+3. ✅ Enhanced loading screen with auto-hide functionality
+4. ✅ Rebuilt and deployed fresh production build
+5. ✅ All local tests passing with 315.89 kB build size
+
+**Expected Resolution**: Site should be fully functional within 10 minutes of last deployment.
+
+> 📋 **Technical Details**: See `LIVE_SITE_ISSUES_ANALYSIS.md` for complete troubleshooting documentation.
+
 ---
 
 ## 📋 **About MERO GAMALA**
@@ -321,6 +342,13 @@ merogamala/
 
 ## 🚀 **Deployment**
 
+### **Current Deployment Status**
+- **Platform**: GitHub Pages
+- **Source**: `/docs` folder on `main` branch
+- **Build Status**: ✅ Successful (315.89 kB / 88.86 kB gzipped)
+- **Asset Configuration**: ✅ Correctly configured for subdirectory
+- **Jekyll Processing**: ✅ Disabled with `.nojekyll` file
+
 ### **Environment Setup**
 ```bash
 # Copy environment template
@@ -350,9 +378,65 @@ npm run deploy
 npm run preview
 ```
 
+### **GitHub Pages Deployment Process**
+1. Code changes pushed to `main` branch
+2. Vite builds production files to `dist/`
+3. Files copied to `docs/` folder for GitHub Pages
+4. GitHub Pages serves from `/docs` with base path `/merogamala/`
+5. Deployment typically takes 5-10 minutes to propagate
+
 ---
 
-## 📞 **Contact & Support**
+## � **Troubleshooting**
+
+### **If Live Site Shows Loading Screen**
+
+**Common Causes & Solutions**:
+
+1. **GitHub Pages Cache** (Most Common)
+   - **Issue**: GitHub Pages serving old cached files
+   - **Solution**: Wait 5-10 minutes for deployment to propagate
+   - **Check**: Browser developer tools → Network tab for 404 errors
+
+2. **Browser Cache**
+   - **Solution**: Hard refresh with `Ctrl+F5` (Windows) or `Cmd+Shift+R` (Mac)
+   - **Alternative**: Open in incognito/private browsing mode
+
+3. **Asset Loading Issues**
+   - **Check**: Network tab shows `/merogamala/assets/index-*.js` loading successfully
+   - **Expected**: Status 200 for JavaScript and CSS files
+   - **If 404**: Wait for GitHub Pages deployment to complete
+
+### **Verification Steps**
+```bash
+# Test JavaScript asset loading
+curl -I https://manohar252.github.io/merogamala/assets/index-BADe9mGq.js
+# Expected: HTTP/2 200
+
+# Test main page content
+curl -s https://manohar252.github.io/merogamala/ | grep "index-BADe9mGq.js"
+# Expected: <script> tag with correct asset path
+```
+
+### **Local Development**
+If live site has issues, you can run locally:
+```bash
+git clone https://github.com/manohar252/merogamala.git
+cd merogamala
+npm install
+npm run dev
+# Opens at http://localhost:5173
+```
+
+### **Report Issues**
+If problems persist beyond 10 minutes:
+1. Check browser console for error messages
+2. Take screenshot of Network tab showing failed requests
+3. Report via email or GitHub issues
+
+---
+
+## �📞 **Contact & Support**
 
 - 📧 **Email**: manohardhungel@gmail.com
 - 📱 **WhatsApp**: +977-9800000000 (Demo)
