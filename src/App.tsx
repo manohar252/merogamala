@@ -44,21 +44,41 @@ const AppContent = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* BYPASS: Language modal commented out for testing */}
-      {/* {showLanguageModal && (
-        <LanguageModal onSelectLanguage={handleLanguageSelect} />
-      )} */}
-      <Header />
-      <Hero />
-      <ShopSection />
-      <Features />
-      <About />
-      <PlantCareGuide />
-      <PlantRequestForm />
-      <Footer />
-      <Cart />
-    </div>
+    <>
+      {/* REACT TEST: Confirm React is rendering */}
+      <div style={{ 
+        backgroundColor: '#10b981', 
+        color: 'white', 
+        padding: '1rem', 
+        textAlign: 'center', 
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      }}>
+        ✅ React is rendering - MERO GAMALA App Loaded - Path: {currentPath}
+      </div>
+      
+      <div className="min-h-screen bg-white" style={{ paddingTop: '4rem' }}>
+        {/* BYPASS: Language modal commented out for testing */}
+        {/* {showLanguageModal && (
+          <LanguageModal onSelectLanguage={handleLanguageSelect} />
+        )} */}
+        <Header />
+        <Hero />
+        <ShopSection />
+        <Features />
+        <About />
+        <PlantCareGuide />
+        <PlantRequestForm />
+        <Footer />
+        <Cart />
+      </div>
+    </>
   );
 };
 
