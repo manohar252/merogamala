@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Basic Meta Tags -->
+  <title>MERO GAMALA - Premium Plants Delivered to Your Doorstep in Nepal</title>
+  <meta name="description" content="Discover healthy plants, expert care tips, and doorstep delivery across Kathmandu Valley." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/merogamala/favicon.svg" />
+  <link rel="icon" type="image/png" href="/merogamala/favicon.png" />
+  
+  <!-- Manifest for PWA -->
+  <link rel="manifest" href="/merogamala/manifest.json" />
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#10b981" />
+  
+  <!-- Basic Styling -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background-color: #ffffff;
+    }
+    
+    /* Simple loading fallback - will be hidden when React loads */
+    .simple-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #10b981;
+      color: white;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    
+    /* Hide loading when React app loads */
+    #root:not(:empty) ~ .simple-loading {
+      display: none;
+    }
+  </style>
+  <script type="module" crossorigin src="/merogamala/assets/index-sd_wIsP6.js"></script>
+  <link rel="stylesheet" crossorigin href="/merogamala/assets/index-BtrUwVEM.css">
+</head>
+
+<body>
+  <!-- React App Container -->
+  <div id="root"></div>
+  
+  <!-- Simple Loading Fallback -->
+  <div class="simple-loading">
+    <div>
+      <div>🌱 Loading MERO GAMALA...</div>
+      <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">
+        If this doesn't disappear, check browser console for errors
+      </div>
+    </div>
+  </div>
+  
+  <!-- Vite will inject scripts here automatically -->
+</body>
+</html>
