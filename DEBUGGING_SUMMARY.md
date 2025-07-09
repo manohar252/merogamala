@@ -137,7 +137,7 @@ These warnings don't affect functionality and are safe to ignore for now.
 #### **WhatsApp Auto-Confirmation**
 - 📱 **Automatic WhatsApp message** sent to customer
 - 📞 **From number:** +977 9766473272
-- 💬 **Message:** "Dear Customer your order has been received successfully. We will confirm the delivery soon. Thank you for shopping with us! 🌿 — MERO GAMALA"
+- 💬 **Message:** "Dear Customer your order has been received successfully. We will confirm the delivery soon. Thank you for shopping with us! 🌿 — MERO GAMALAA"
 - ✅ **Order details included** in WhatsApp message
 
 #### **Admin Order Management Dashboard**

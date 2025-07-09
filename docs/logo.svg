@@ -1,0 +1,33 @@
+<svg viewBox="0 0 240 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for logo mark -->
+  <circle cx="30" cy="30" r="28" fill="#059669" opacity="0.1"/>
+  
+  <!-- Main plant icon -->
+  <g transform="translate(30, 30)">
+    <!-- Pot -->
+    <path d="M-8 8 L8 8 L6 16 L-6 16 Z" fill="#8B4513" stroke="#654321" stroke-width="0.5"/>
+    <!-- Soil -->
+    <ellipse cx="0" cy="8" rx="8" ry="1.5" fill="#8B4513"/>
+    
+    <!-- Main stem -->
+    <line x1="0" y1="8" x2="0" y2="-5" stroke="#059669" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Leaves -->
+    <path d="M0 -5 Q-6 -10 -8 -15 Q-6 -12 0 -10" fill="#10B981" opacity="0.9"/>
+    <path d="M0 -5 Q6 -10 8 -15 Q6 -12 0 -10" fill="#059669"/>
+    <path d="M0 -2 Q-5 -6 -6 -10 Q-4 -8 0 -6" fill="#10B981" opacity="0.8"/>
+    <path d="M0 -2 Q5 -6 6 -10 Q4 -8 0 -6" fill="#059669" opacity="0.9"/>
+    <path d="M0 1 Q-4 -2 -5 -5 Q-3 -4 0 -3" fill="#10B981" opacity="0.7"/>
+    <path d="M0 1 Q4 -2 5 -5 Q3 -4 0 -3" fill="#059669" opacity="0.8"/>
+  </g>
+  
+  <!-- MERO GAMALA text -->
+  <text x="72" y="25" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#059669">MERO</text>
+  <text x="72" y="45" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#059669">GAMALA</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="190" cy="15" r="1.5" fill="#10B981" opacity="0.6"/>
+  <circle cx="200" cy="20" r="1" fill="#059669" opacity="0.8"/>
+  <circle cx="210" cy="25" r="1.5" fill="#10B981" opacity="0.5"/>
+  <path d="M190 35 Q195 30 200 35 Q205 30 210 35" stroke="#059669" stroke-width="1" fill="none" opacity="0.4"/>
+</svg>

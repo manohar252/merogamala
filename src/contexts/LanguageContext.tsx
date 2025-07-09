@@ -1,4 +1,84 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
+import apiService from '../services/api';
+
+// Translations
+const translations = {
+  // Navigation
+  home: { en: 'Home', ne: 'घर' },
+  shop: { en: 'Shop', ne: 'पसल' },
+  about: { en: 'About', ne: 'बारेमा' },
+  contact: { en: 'Contact', ne: 'सम्पर्क' },
+  language: { en: 'Language', ne: 'भाषा' },
+  
+  // Hero Section
+  heroTitle: { en: 'Transform Your Space with Premium Plants', ne: 'प्रिमियम बिरुवाहरूसँग आफ्नो ठाउँ सुन्दर बनाउनुहोस्' },
+  heroSubtitle: { en: 'Discover our curated collection of indoor and outdoor plants that bring life and beauty to your home and office.', ne: 'तपाईंको घर र कार्यालयमा जीवन र सुन्दरता ल्याउने भित्री र बाहिरी बिरुवाहरूको हाम्रो संग्रह फेला पार्नुहोस्।' },
+  shopNow: { en: 'Shop Now', ne: 'अहिले किन्नुहोस्' },
+  learnMore: { en: 'Learn More', ne: 'थप जान्नुहोस्' },
+  
+  // Shop Section
+  shopPlants: { en: 'Shop Premium Plants', ne: 'प्रिमियम बिरुवाहरू किन्नुहोस्' },
+  discoverOurCollection: { en: 'Discover our carefully curated collection of healthy, beautiful plants for your space', ne: 'तपाईंको ठाउँको लागि स्वस्थ, सुन्दर बिरुवाहरूको हाम्रो सावधानीपूर्वक छानिएको संग्रह फेला पार्नुहोस्' },
+  addToCart: { en: 'Add to Cart', ne: 'कार्टमा थप्नुहोस्' },
+  
+  // Features Section
+  whyChooseUs: { en: 'Why Choose MERO GAMALA?', ne: 'किन MERO GAMALA छान्ने?' },
+  qualityPlants: { en: 'Quality Plants', ne: 'गुणस्तरीय बिरुवाहरू' },
+  qualityPlantsDesc: { en: 'Hand-picked, healthy plants from trusted growers', ne: 'विश्वसनीय उत्पादकहरूबाट हातले छानिएका, स्वस्थ बिरुवाहरू' },
+  expertCare: { en: 'Expert Care Guide', ne: 'विशेषज्ञ हेरचाह गाइड' },
+  expertCareDesc: { en: 'Detailed care instructions for each plant', ne: 'प्रत्येक बिरुवाको लागि विस्तृत हेरचाह निर्देशनहरू' },
+  fastDelivery: { en: 'Fast Delivery', ne: 'छिटो डेलिभरी' },
+  fastDeliveryDesc: { en: 'Quick and safe delivery across Nepal', ne: 'नेपालभरि छिटो र सुरक्षित डेलिभरी' },
+  plantCare: { en: 'Plant Care Support', ne: 'बिरुवा हेरचाह सहयोग' },
+  plantCareDesc: { en: '24/7 support for all your plant care questions', ne: 'तपाईंका सबै बिरुवा हेरचाह प्रश्नहरूको लागि २४/७ सहयोग' },
+  
+  // About Section
+  aboutUs: { en: 'About MERO GAMALA', ne: 'MERO GAMALA बारेमा' },
+  ourMission: { en: 'Our Mission', ne: 'हाम्रो मिशन' },
+  missionText: { en: 'To bring the beauty and benefits of plants into every Nepali home and workspace, creating healthier and more beautiful environments for all.', ne: 'हरेक नेपाली घर र कार्यक्षेत्रमा बिरुवाहरूको सुन्दरता र फाइदाहरू ल्याउनु, सबैका लागि स्वस्थ र अझ सुन्दर वातावरण सिर्जना गर्नु।' },
+  
+  // Plant Care Guide
+  plantCareGuide: { en: 'Plant Care Guide', ne: 'बिरुवा हेरचाह गाइड' },
+  learnPlantCare: { en: 'Learn how to take the best care of your plants', ne: 'आफ्ना बिरुवाहरूको उत्तम हेरचाह कसरी गर्ने सिक्नुहोस्' },
+  wateringTitle: { en: 'Watering', ne: 'पानी दिने' },
+  wateringDesc: { en: 'Understand your plant\'s water needs.', ne: 'तपाईंको बिरुवाको पानीको आवश्यकता बुझ्नुहोस्।' },
+  sunlightTitle: { en: 'Sunlight', ne: 'घामको प्रकाश' },
+  sunlightDesc: { en: 'Provide the right amount of light for healthy growth.', ne: 'स्वस्थ वृद्धिको लागि सही मात्रामा प्रकाश प्रदान गर्नुहोस्।' },
+  temperatureTitle: { en: 'Temperature', ne: 'तापक्रम' },
+  temperatureDesc: { en: 'Maintain optimal temperature for your plants.', ne: 'आफ्ना बिरुवाहरूको लागि उत्तम तापक्रम कायम राख्नुहोस्।' },
+  pruningTitle: { en: 'Pruning', ne: 'काँटछाँट' },
+  pruningDesc: { en: 'Regular pruning keeps plants healthy and beautiful.', ne: 'नियमित काँटछाँटले बिरुवाहरूलाई स्वस्थ र सुन्दर राख्छ।' },
+  
+  // Plant Request Form
+  requestPlant: { en: 'Request a Plant', ne: 'बिरुवा अनुरोध गर्नुहोस्' },
+  requestPlantDesc: { en: 'Can\'t find the plant you\'re looking for? Let us know and we\'ll try to get it for you!', ne: 'तपाईंले खोजिरहनुभएको बिरुवा फेला पार्न सक्नुभएन? हामीलाई थाहा दिनुहोस् र हामी तपाईंको लागि ल्याउने कोशिश गर्नेछौं!' },
+  yourName: { en: 'Your Name', ne: 'तपाईंको नाम' },
+  email: { en: 'Email', ne: 'इमेल' },
+  phoneNumber: { en: 'Phone Number', ne: 'फोन नम्बर' },
+  plantType: { en: 'Plant Type', ne: 'बिरुवाको प्रकार' },
+  selectPlantType: { en: 'Select plant type...', ne: 'बिरुवाको प्रकार छान्नुहोस्...' },
+  indoorPlants: { en: 'Indoor Plants', ne: 'भित्री बिरुवाहरू' },
+  outdoorPlants: { en: 'Outdoor Plants', ne: 'बाहिरी बिरुवाहरू' },
+  floweringPlants: { en: 'Flowering Plants', ne: 'फूल फुल्ने बिरुवाहरू' },
+  succulents: { en: 'Succulents', ne: 'रसिलो बिरुवाहरू' },
+  herbs: { en: 'Herbs', ne: 'जडिबुटीहरू' },
+  message: { en: 'Message', ne: 'सन्देश' },
+  submitRequest: { en: 'Submit Request', ne: 'अनुरोध पेश गर्नुहोस्' },
+  
+  // Footer
+  footerTagline: { en: 'Bringing nature closer to you', ne: 'प्रकृतिलाई तपाईंको नजिक ल्याउँदै' },
+  quickLinks: { en: 'Quick Links', ne: 'द्रुत लिंकहरू' },
+  followUs: { en: 'Follow Us', ne: 'हामीलाई फलो गर्नुहोस्' },
+  allRightsReserved: { en: 'All rights reserved.', ne: 'सबै अधिकारहरू सुरक्षित।' },
+  
+  // Cart
+  cart: { en: 'Cart', ne: 'कार्ट' },
+  emptyCart: { en: 'Your cart is empty', ne: 'तपाईंको कार्ट खाली छ' },
+  continueShopping: { en: 'Continue Shopping', ne: 'किनमेल जारी राख्नुहोस्' },
+  checkout: { en: 'Checkout', ne: 'चेकआउट' },
+  remove: { en: 'Remove', ne: 'हटाउनुहोस्' },
+  total: { en: 'Total', ne: 'जम्मा' }
+};
 
 interface LanguageContextType {
   language: 'en' | 'ne';
@@ -9,148 +89,99 @@ interface LanguageContextType {
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-const translations: Record<string, Record<'en' | 'ne', string>> = {
-  storeName: { en: 'MERO GAMALA', ne: 'मेरो गमला' },
-  heroTitle: { en: 'Bring Greenery to Your Home with', ne: 'तपाईंको घरमा हरियाली ल्याउनुहोस्' },
-  heroTitleHighlight: { en: 'MERO GAMALA', ne: 'मेरो गमला' },
-  heroDescription: { en: 'Discover a wide selection of healthy plants, delivered right to your doorstep in Nepal.', ne: 'नेपालमा तपाईंको घरदैलोमा स्वस्थ बिरुवाहरूको विस्तृत चयन पत्ता लगाउनुहोस्।' },
-  shopPlantsNow: { en: 'Shop Plants Now', ne: 'अहिले बिरुवा किन्नुहोस्' },
-  plantCareGuide: { en: 'Plant Care Guide', ne: 'बिरुवा हेरचाह गाइड' },
-  deliveryToDoorstep: { en: 'Delivery to Doorstep', ne: 'घरदैलोमा डेलिभरी' },
-  healthyPlantsGuaranteed: { en: 'Healthy Plants Guaranteed', ne: 'स्वस्थ बिरुवाको ग्यारेन्टी' },
-  expertCareTips: { en: 'Expert Care Tips', ne: 'विशेषज्ञ हेरचाह सुझावहरू' },
-  whatMakesUsDifferent: { en: 'What Makes Us Different?', ne: 'हामीलाई के फरक बनाउँछ?' },
-  whatMakesUsDifferentDesc: { en: 'At MERO GAMALA, we are committed to providing the best plant shopping experience.', ne: 'मेरो गमलामा, हामी उत्कृष्ट बिरुवा किनमेल अनुभव प्रदान गर्न प्रतिबद्ध छौं।' },
-  handpickedPlants: { en: 'Handpicked Plants', ne: 'हातले छानेका बिरुवाहरू' },
-  handpickedPlantsDesc: { en: 'Every plant is carefully selected and inspected for quality.', ne: 'प्रत्येक बिरुवा सावधानीपूर्वक चयन गरिन्छ र गुणस्तरको लागि निरीक्षण गरिन्छ।' },
-  ecoFriendlyPackaging: { en: 'Eco-Friendly Packaging', ne: 'वातावरणमैत्री प्याकेजिङ्ग' },
-  ecoFriendlyPackagingDesc: { en: 'We use sustainable materials to ensure safe delivery and minimal environmental impact.', ne: 'हामी सुरक्षित डेलिभरी र न्यूनतम वातावरणीय प्रभाव सुनिश्चित गर्न दिगो सामग्रीहरू प्रयोग गर्छौं।' },
-  careInstructions: { en: 'Detailed Care Instructions', ne: 'विस्तृत हेरचाह निर्देशनहरू' },
-  careInstructionsDesc: { en: 'Each plant comes with a comprehensive guide to help it thrive in your home.', ne: 'प्रत्येक बिरुवा तपाईंको घरमा फस्टाउन मद्दत गर्न विस्तृत गाइडको साथ आउँछ।' },
-  expertSupport: { en: 'Expert Support', ne: 'विशेषज्ञ समर्थन' },
-  expertSupportDesc: { en: 'Our team of plant enthusiasts is always ready to assist you with any questions.', ne: 'बिरुवा उत्साहीहरूको हाम्रो टोली कुनै पनि प्रश्नहरूको साथ तपाईंलाई सहयोग गर्न सधैं तयार छ।' },
-  aboutTitle: { en: 'About MERO GAMALA', ne: 'मेरो गमला बारे' },
-  aboutDesc: { en: 'Your trusted partner for bringing nature into your home and office.', ne: 'तपाईंको घर र कार्यालयमा प्रकृति ल्याउनको लागि तपाईंको विश्वसनीय साझेदार।' },
-  ourMission: { en: 'Our Mission', ne: 'हाम्रो मिशन' },
-  ourMissionDesc: { en: 'To make plant ownership accessible and enjoyable for everyone.', ne: 'बिरुवाको स्वामित्व सबैका लागि पहुँचयोग्य र रमाइलो बनाउनु।' },
-  forEveryone: { en: 'Plants for Everyone', ne: 'सबैका लागि बिरुवा' },
-  forEveryoneDesc: { en: 'Whether you are a seasoned plant parent or just starting, we have something for you.', ne: 'तपाईं अनुभवी बिरुवा अभिभावक हुनुहुन्छ वा भर्खरै सुरु गर्दै हुनुहुन्छ, हामीसँग तपाईंको लागि केहि छ।' },
-  ourPromise: { en: 'Our Promise', ne: 'हाम्रो वाचा' },
-  ourPromiseDesc: { en: 'Quality plants, exceptional service, and a greener Nepal.', ne: 'गुणस्तरीय बिरुवाहरू, असाधारण सेवा, र हरियाली नेपाल।' },
-  happyPlantParents: { en: 'Happy Plant Parents', ne: 'खुसी बिरुवा अभिभावकहरू' },
-  shopByNeeds: { en: 'Shop by Your Needs', ne: 'तपाईंको आवश्यकता अनुसार किनमेल गर्नुहोस्' },
-  shopByNeedsDesc: { en: 'Find the perfect plant for your space and lifestyle.', ne: 'तपाईंको ठाउँ र जीवनशैलीको लागि उत्तम बिरुवा पत्ता लगाउनुहोस्।' },
-  lowLight: { en: 'Low Light', ne: 'कम प्रकाश' },
-  lowLightDesc: { en: 'Plants that thrive in minimal sunlight.', ne: 'कम घाममा फस्टाउने बिरुवाहरू।' },
-  petFriendly: { en: 'Pet Friendly', ne: 'पालतू जनावर मैत्री' },
-  petFriendlyDesc: { en: 'Safe and non-toxic options for homes with pets.', ne: 'पालतू जनावर भएका घरहरूको लागि सुरक्षित र गैर-विषाक्त विकल्पहरू।' },
-  gifts: { en: 'Gifts', ne: 'उपहार' },
-  giftsDesc: { en: 'Thoughtful green gifts for every occasion.', ne: 'हरेक अवसरको लागि विचारशील हरियो उपहार।' },
-  airPurifiers: { en: 'Air Purifiers', ne: 'हावा शुद्धीकरण' },
-  airPurifiersDesc: { en: 'Plants that naturally clean your indoor air.', ne: 'तपाईंको भित्री हावालाई प्राकृतिक रूपमा सफा गर्ने बिरुवाहरू।' },
-  officePlants: { en: 'Office Plants', ne: 'कार्यालय बिरुवा' },
-  officePlantsDesc: { en: 'Boost productivity and aesthetics in your workspace.', ne: 'तपाईंको कार्यक्षेत्रमा उत्पादकता र सौन्दर्य बढाउनुहोस्।' },
-  hangingPlants: { en: 'Hanging Plants', ne: 'झुण्ड्याउने बिरुवा' },
-  hangingPlantsDesc: { en: 'Add vertical greenery and save space.', ne: 'ठाडो हरियाली थप्नुहोस् र ठाउँ बचत गर्नुहोस्।' },
-  plantSets: { en: 'Plant Sets', ne: 'बिरुवा सेट' },
-  plantSetsDesc: { en: 'Curated collections for easy gardening.', ne: 'सजिलो बगैंचाको लागि क्युरेट गरिएका संग्रहहरू।' },
-  shopPlants: { en: 'Shop Plants', ne: 'बिरुवा किन्नुहोस्' },
-  discoverOurCollection: { en: 'Explore our diverse collection of plants.', ne: 'हाम्रो बिरुवाहरूको विविध संग्रह अन्वेषण गर्नुहोस्।' },
-  addToCart: { en: 'Add to Cart', ne: 'कार्टमा थप्नुहोस्' },
-  watering: { en: 'Watering', ne: 'पानी हाल्ने' },
-  wateringDesc: { en: 'Understand your plant\'s water needs. Overwatering is a common mistake.', ne: 'तपाईंको बिरुवाको पानीको आवश्यकता बुझ्नुहोस्। धेरै पानी हाल्नु सामान्य गल्ती हो।' },
-  sunlight: { en: 'Sunlight', ne: 'सूर्यको प्रकाश' },
-  sunlightDesc: { en: 'Different plants require different light levels. Find the right spot.', ne: 'फरक बिरुवाहरूलाई फरक प्रकाश स्तर चाहिन्छ। सही ठाउँ पत्ता लगाउनुहोस्।' },
-  temperature: { en: 'Temperature', ne: 'तापमान' },
-  temperatureDesc: { en: 'Maintain optimal temperature and humidity for healthy growth.', ne: 'स्वस्थ वृद्धिको लागि इष्टतम तापमान र आर्द्रता कायम राख्नुहोस्।' },
-  pruning: { en: 'Pruning', ne: 'छाँट्ने' },
-  pruningDesc: { en: 'Regular pruning encourages bushier growth and removes dead leaves.', ne: 'नियमित छाँट्नेले झाडीदार वृद्धि बढाउँछ र मरेका पातहरू हटाउँछ।' },
-  learnHowToCareForYourPlants: { en: 'Learn how to care for your plants and help them thrive.', ne: 'तपाईंको बिरुवाहरूको हेरचाह कसरी गर्ने र तिनीहरूलाई फस्टाउन मद्दत गर्ने सिक्नुहोस्।' },
-  requestAPlant: { en: 'Request a Plant', ne: 'बिरुवा अनुरोध गर्नुहोस्' },
-  cantFindThePlantYoureLookingFor: { en: 'Can\'t find the plant you\'re looking for? Let us know and we\'ll help you find it!', ne: 'तपाईंले खोजेको बिरुवा फेला पार्न सकेनौं? हामीलाई भन्नुहोस् र हामी तपाईंलाई फेला पार्न मद्दत गर्नेछौं!' },
-  thankYouRequestSubmitted: { en: 'Thank you! Your request has been submitted successfully.', ne: 'धन्यवाद! तपाईंको अनुरोध सफलतापूर्वक पेश भएको छ।' },
-  yourName: { en: 'Your Name', ne: 'तपाईंको नाम' },
-  enterYourName: { en: 'Enter your name', ne: 'तपाईंको नाम लेख्नुहोस्' },
-  emailAddress: { en: 'Email Address', ne: 'इमेल ठेगाना' },
-  enterYourEmail: { en: 'Enter your email', ne: 'तपाईंको इमेल लेख्नुहोस्' },
-  plantType: { en: 'Plant Type', ne: 'बिरुवाको प्रकार' },
-  selectPlantType: { en: 'Select plant type', ne: 'बिरुवाको प्रकार छान्नुहोस्' },
-  message: { en: 'Message', ne: 'सन्देश' },
-  tellUsAboutThePlant: { en: 'Tell us about the plant you\'re looking for...', ne: 'तपाईंले खोज्नुभएको बिरुवाको बारेमा भन्नुहोस्...' },
-  submitting: { en: 'Submitting...', ne: 'पेश गर्दै...' },
-  submitRequest: { en: 'Submit Request', ne: 'अनुरोध पेश गर्नुहोस्' },
-  shoppingCart: { en: 'Shopping Cart', ne: 'किनमेल कार्ट' },
-  yourCartIsEmpty: { en: 'Your cart is empty!', ne: 'तपाईंको कार्ट खाली छ!' },
-  addSomePlantsToGetStarted: { en: 'Add some plants to get started.', ne: 'सुरु गर्न केही बिरुवाहरू थप्नुहोस्।' },
-  total: { en: 'Total', ne: 'कुल' },
-  checkout: { en: 'Checkout', ne: 'चेकआउट' },
-  clearCart: { en: 'Clear Cart', ne: 'कार्ट खाली गर्नुहोस्' },
-  selectPaymentMethod: { en: 'Select Payment Method', ne: 'भुक्तानी विधि चयन गर्नुहोस्' },
-  scanToPay: { en: 'Scan to Pay', ne: 'भुक्तानी गर्न स्क्यान गर्नुहोस्' },
-  pleaseScanTheQRCode: { en: 'Please scan the QR code above to complete your payment.', ne: 'कृपया आफ्नो भुक्तानी पूरा गर्न माथिको QR कोड स्क्यान गर्नुहोस्।' },
-  amount: { en: 'Amount', ne: 'रकम' },
-  processingOrder: { en: 'Processing Order...', ne: 'अर्डर प्रशोधन गर्दै...' },
-  confirmPaymentAndPlaceOrder: { en: 'Confirm Payment & Place Order', ne: 'भुक्तानी पुष्टि गर्नुहोस् र अर्डर राख्नुहोस्' },
-  deliveryDetails: { en: 'Delivery Details', ne: 'डेलिभरी विवरण' },
-  fullName: { en: 'Full Name', ne: 'पूरा नाम' },
-  enterYourFullName: { en: 'Enter your full name', ne: 'तपाईंको पूरा नाम लेख्नुहोस्' },
-  deliveryAddress: { en: 'Delivery Address', ne: 'डेलिभरी ठेगाना' },
-  enterYourCompleteDeliveryAddress: { en: 'Enter your complete delivery address', ne: 'तपाईंको पूरा डेलिभरी ठेगाना लेख्नुहोस्' },
-  phoneNumber: { en: 'Phone Number', ne: 'फोन नम्बर' },
-  enterYourPhoneNumber: { en: 'Enter your phone number', ne: 'तपाईंको फोन नम्बर लेख्नुहोस्' },
-  orderSummary: { en: 'Order Summary', ne: 'अर्डर सारांश' },
-  continueToPayment: { en: 'Continue to Payment', ne: 'भुक्तानीमा जारी राख्नुहोस्' },
-  orderPlacedSuccessfully: { en: 'Order Placed Successfully!', ne: 'अर्डर सफलतापूर्वक राखियो!' },
-  orderNumber: { en: 'Order Number', ne: 'अर्डर नम्बर' },
-  thankYouForYourOrder: { en: 'Thank you for your order. We will confirm the delivery soon.', ne: 'तपाईंको अर्डरको लागि धन्यवाद। हामी चाँडै डेलिभरी पुष्टि गर्नेछौं।' },
-  continueShopping: { en: 'Continue Shopping', ne: 'किनमेल जारी राख्नुहोस्' },
-  shop: { en: 'Shop', ne: 'पसल' },
-  about: { en: 'About', ne: 'बारेमा' },
-  contact: { en: 'Contact', ne: 'सम्पर्क' },
-  cart: { en: 'Cart', ne: 'कार्ट' },
-  lowLightPlants: { en: 'Low Light Plants', ne: 'कम प्रकाश बिरुवाहरू' },
-  plantCareGuideFooter: { en: 'Plant Care Guide', ne: 'बिरुवा हेरचाह गाइड' },
-  deliveryInfo: { en: 'Delivery Information', ne: 'डेलिभरी जानकारी' },
-  returns: { en: 'Returns & Refunds', ne: 'फिर्ता र फिर्ता' },
-  faq: { en: 'FAQ', ne: 'प्रायः सोधिने प्रश्नहरू' },
-  contactUs: { en: 'Contact Us', ne: 'हामीलाई सम्पर्क गर्नुहोस्' },
-  kathmandu: { en: 'Kathmandu, Nepal', ne: 'काठमाडौं, नेपाल' },
-  deliveryAvailable: { en: 'Delivery available across Kathmandu Valley.', ne: 'काठमाडौं उपत्यकाभरि डेलिभरी उपलब्ध छ।' },
-  allRightsReserved: { en: 'All Rights Reserved', ne: 'सबै अधिकार सुरक्षित' },
-  shopCategories: { en: 'Shop Categories', ne: 'पसल कोटीहरू' },
-  english: { en: 'English', ne: 'अंग्रेजी' },
-  nepali: { en: 'Nepali', ne: 'नेपाली' }
-};
-
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<'en' | 'ne'>(() => {
-    const storedLang = localStorage.getItem('language');
-    return (storedLang === 'en' || storedLang === 'ne') ? storedLang : 'en';
-  });
+  const [language, setLanguageState] = useState<'en' | 'ne'>('en');
   const [showLanguageModal, setShowLanguageModal] = useState(false);
 
-  useEffect(() => {
-    const hasVisited = localStorage.getItem('hasVisited');
-    if (!hasVisited) {
-      setShowLanguageModal(true);
-      localStorage.setItem('hasVisited', 'true');
+  const loadUserPreferences = useCallback(async () => {
+    try {
+      // Try to load from database first
+      const preferences = await apiService.getUserPreferences();
+      
+      if (preferences) {
+        setLanguageState(preferences.language);
+        if (!preferences.has_visited) {
+          setShowLanguageModal(true);
+        }
+        
+        if (import.meta.env.DEV) {
+          console.log('Loaded user preferences from database:', preferences);
+        }
+      } else {
+        // Fallback to localStorage if database fails or no preferences found
+        loadFromLocalStorage();
+      }
+    } catch (error) {
+      console.error('Failed to load user preferences from database:', error);
+      // Fallback to localStorage
+      loadFromLocalStorage();
     }
   }, []);
 
-  const setLanguage = (lang: 'en' | 'ne') => {
-    setLanguageState(lang);
-    localStorage.setItem('language', lang);
-    setShowLanguageModal(false);
+  useEffect(() => {
+    loadUserPreferences();
+  }, [loadUserPreferences]);
+
+  const loadFromLocalStorage = () => {
+    try {
+      const storedLang = localStorage.getItem('language');
+      if (storedLang && (storedLang === 'en' || storedLang === 'ne')) {
+        setLanguageState(storedLang);
+      }
+
+      const hasVisited = localStorage.getItem('hasVisited');
+      if (!hasVisited) {
+        setShowLanguageModal(true);
+        localStorage.setItem('hasVisited', 'true');
+      }
+      
+      if (import.meta.env.DEV) {
+        console.log('Loaded preferences from localStorage as fallback');
+      }
+    } catch (error) {
+      console.error('Failed to load from localStorage:', error);
+    }
+  };
+
+  const setLanguage = async (lang: 'en' | 'ne') => {
+    try {
+      setLanguageState(lang);
+      setShowLanguageModal(false);
+      
+      // Save to database
+      await apiService.saveUserPreferences({
+        language: lang,
+        hasVisited: true
+      });
+      
+      // Also save to localStorage as backup
+      localStorage.setItem('language', lang);
+      localStorage.setItem('hasVisited', 'true');
+      
+      if (import.meta.env.DEV) {
+        console.log(`Language preferences saved to database: ${lang}`);
+      }
+    } catch (error) {
+      console.error('Failed to save language preferences to database:', error);
+      
+      // Fallback to localStorage only
+      try {
+        localStorage.setItem('language', lang);
+        localStorage.setItem('hasVisited', 'true');
+        console.log('Language preferences saved to localStorage as fallback');
+      } catch (localError) {
+        console.error('Failed to save to localStorage:', localError);
+      }
+    }
   };
 
   const t = (key: string): string => {
-    const translation = translations[key];
-    if (translation) {
-      return translation[language];
+    const translation = translations[key as keyof typeof translations];
+    if (!translation) {
+      console.warn(`Translation key "${key}" not found`);
+      return key;
     }
-    console.warn(`Translation key '${key}' not found for language '${language}'`);
-    return key; // Fallback to key if translation not found
+    return translation[language];
   };
 
   return (

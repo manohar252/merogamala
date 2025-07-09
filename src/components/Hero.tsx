@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Truck, Shield, Heart, Settings } from 'lucide-react';
+import { ArrowRight, Truck, Shield, Heart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 
@@ -68,30 +68,22 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Quick Access Features */}
+              {/* Plant Request Quick Access */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-emerald-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">🚀 Quick Access Features</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <a 
-                    href="/admin"
-                    className="flex items-center gap-2 p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
-                  >
-                    <Settings className="h-5 w-5 text-emerald-600" />
-                    <span className="text-sm font-medium">Admin Panel</span>
-                  </a>
-                  <button 
-                    onClick={() => {
-                      const plantRequestSection = document.getElementById('plant-request');
-                      if (plantRequestSection) {
-                        plantRequestSection.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
-                    className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-                  >
-                    <ArrowRight className="h-5 w-5 text-blue-600" />
-                    <span className="text-sm font-medium">Plant Request</span>
-                  </button>
-                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">🌱 Need a Specific Plant?</h3>
+                <button 
+                  onClick={() => {
+                    const plantRequestSection = document.getElementById('plant-request');
+                    if (plantRequestSection) {
+                      plantRequestSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="w-full flex items-center justify-center gap-2 p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
+                >
+                  <Heart className="h-5 w-5 text-emerald-600" />
+                  <span className="text-sm font-medium">Request Custom Plant</span>
+                  <ArrowRight className="h-4 w-4 text-emerald-600" />
+                </button>
               </div>
             </div>
             

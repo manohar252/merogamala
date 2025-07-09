@@ -1,12 +1,21 @@
-import React from 'react';
-import { Leaf, Menu, X, ShoppingCart } from 'lucide-react';
+import React, { useState } from 'react';
+import { Menu, X, ShoppingCart, Search } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
+import { useSearch } from '../contexts/SearchContext';
+import Logo from './Logo';
 
-const Header = () => {
+interface HeaderProps {
+  onShopClick?: () => void;
+  onContactClick?: () => void;
+}
+
+const Header = ({ onShopClick, onContactClick }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { t } = useLanguage();
   const { items: cartItems, setIsCartOpen } = useCart();
+  const { setSearchQuery: setGlobalSearchQuery } = useSearch();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -20,37 +29,80 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const handleShopClick = () => {
+    if (onShopClick) {
+      onShopClick();
+    } else {
+      scrollToSection('shop');
+    }
+    setIsMenuOpen(false);
+  };
+
+  const handleContactClick = () => {
+    if (onContactClick) {
+      onContactClick();
+    } else {
+      scrollToSection('contact');
+    }
+    setIsMenuOpen(false);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setGlobalSearchQuery(searchQuery.trim());
+      if (onShopClick) {
+        onShopClick(); // Navigate to shop page with search
+      } else {
+        scrollToSection('shop');
+      }
+    }
+  };
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div 
-            className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+          <Logo 
+            size="medium"
             onClick={scrollToTop}
-          >
-            <Leaf className="h-8 w-8 text-emerald-600" />
-            <span className="ml-2 text-xl font-bold text-gray-900">{t('storeName')}</span>
+          />
+          
+          {/* Search Bar - Desktop */}
+          <div className="hidden lg:flex flex-1 max-w-lg mx-8">
+            <form onSubmit={handleSearch} className="w-full">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t('language') === 'en' ? 'Search plants and products...' : 'बिरुवा र उत्पादनहरू खोज्नुहोस्...'}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+              </div>
+            </form>
           </div>
           
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex space-x-8">
               <button 
-                onClick={() => scrollToSection('shop')}
-                className="text-gray-700 hover:text-emerald-600 transition-colors"
+                onClick={handleShopClick}
+                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
               >
                 {t('shop')}
               </button>
               <button 
                 onClick={() => scrollToSection('about')}
-                className="text-gray-700 hover:text-emerald-600 transition-colors"
+                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
               >
                 {t('about')}
               </button>
               <button 
-                onClick={() => scrollToSection('contact')}
-                className="text-gray-700 hover:text-emerald-600 transition-colors"
+                onClick={handleContactClick}
+                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
               >
                 {t('contact')}
               </button>
@@ -81,21 +133,37 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+              {/* Mobile Search */}
+              <div className="px-3 py-2">
+                <form onSubmit={handleSearch} className="w-full">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={t('language') === 'en' ? 'Search...' : 'खोज्नुहोस्...'}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    />
+                  </div>
+                </form>
+              </div>
+              
               <button 
-                onClick={() => scrollToSection('shop')}
-                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600"
+                onClick={handleShopClick}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium"
               >
                 {t('shop')}
               </button>
               <button 
                 onClick={() => scrollToSection('about')}
-                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium"
               >
                 {t('about')}
               </button>
               <button 
-                onClick={() => scrollToSection('contact')}
-                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600"
+                onClick={handleContactClick}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium"
               >
                 {t('contact')}
               </button>
@@ -103,7 +171,7 @@ const Header = () => {
               {/* Mobile Cart */}
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 flex items-center gap-2"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 flex items-center gap-2 font-medium"
               >
                 <ShoppingCart className="h-5 w-5" />
                 {t('cart')} ({totalItems})

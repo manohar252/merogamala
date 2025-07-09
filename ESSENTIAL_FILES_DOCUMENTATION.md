@@ -1,7 +1,7 @@
-# 📁 Essential Files Documentation - MERO GAMALA Plant Store
+# 📁 Essential Files Documentation - MERO GAMALAA Plant Store
 
 ## Overview
-This document lists ALL files that are **technically required** to run the MERO GAMALA React application successfully, including both development and production environments.
+This document lists ALL files that are **technically required** to run the MERO GAMALAA React application successfully, including both development and production environments.
 
 ---
 

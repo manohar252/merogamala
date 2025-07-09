@@ -1,7 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="#10b981">
-  <circle cx="16" cy="16" r="16" fill="#10b981"/>
-  <path d="M8 20c0-4 3-8 8-8s8 4 8 8c0 2-1 4-2 5H10c-1-1-2-3-2-5z" fill="#065f46"/>
-  <ellipse cx="16" cy="12" rx="6" ry="4" fill="#34d399"/>
-  <path d="M16 8c-2 0-4 1-5 3 1-2 3-3 5-3s4 1 5 3c-1-2-3-3-5-3z" fill="#6ee7b7"/>
-  <rect x="15" y="20" width="2" height="8" fill="#92400e"/>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="15" fill="#059669"/>
+  
+  <!-- Main plant icon scaled for favicon -->
+  <g transform="translate(16, 16) scale(0.5)">
+    <!-- Pot -->
+    <path d="M-8 8 L8 8 L6 16 L-6 16 Z" fill="#8B4513"/>
+    <!-- Soil -->
+    <ellipse cx="0" cy="8" rx="8" ry="1.5" fill="#8B4513"/>
+    
+    <!-- Main stem -->
+    <line x1="0" y1="8" x2="0" y2="-5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Leaves -->
+    <path d="M0 -5 Q-6 -10 -8 -15 Q-6 -12 0 -10" fill="#10B981"/>
+    <path d="M0 -5 Q6 -10 8 -15 Q6 -12 0 -10" fill="white"/>
+    <path d="M0 -2 Q-5 -6 -6 -10 Q-4 -8 0 -6" fill="#10B981" opacity="0.8"/>
+    <path d="M0 -2 Q5 -6 6 -10 Q4 -8 0 -6" fill="white" opacity="0.9"/>
+  </g>
 </svg>

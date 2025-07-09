@@ -1,4 +1,4 @@
-// Service Worker for MERO GAMALA Plant Store
+// Service Worker for MERO GAMALAA Plant Store
 const CACHE_NAME = 'mero-gamala-v1';
 const urlsToCache = [
   '/',

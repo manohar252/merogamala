@@ -1,4 +1,4 @@
-name: Deploy MERO GAMALA to GitHub Pages
+name: Build and Deploy MERO GAMALAA to docs folder
 
 on:
   push:
@@ -7,22 +7,19 @@ on:
     branches: [ main, master ]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  contents: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -38,28 +35,24 @@ jobs:
     - name: Build application
       run: npm run build
       
-    - name: Copy build to docs folder
+    - name: Deploy to docs folder
       run: |
+        # Clear existing docs folder
         rm -rf docs/*
+        
+        # Copy build files to docs folder
         cp -r dist/* docs/
         
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-      
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: ./docs
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    
-    steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+        # Add .nojekyll file to prevent Jekyll processing
+        touch docs/.nojekyll
+        
+        # Configure git
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Add and commit changes
+        git add docs/
+        git commit -m "🚀 Auto-deploy: Update docs folder with latest build" || echo "No changes to commit"
+        
+        # Push changes
+        git push origin main
