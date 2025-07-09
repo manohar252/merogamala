@@ -1,43 +1,72 @@
-// MINIMAL TEST: Check if JavaScript loads at all
-console.log('🟢 JavaScript is loading!');
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
 
-// Test 1: Verify DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('🟢 DOM loaded!');
+// Simple test component
+const TestApp = () => {
+  const [count, setCount] = React.useState(0);
   
-  // Test 2: Try to find the root element
-  const root = document.getElementById('root');
-  console.log('🟢 Root element:', root);
-  
-  if (root) {
-    // Test 3: Simple DOM manipulation (no React)
-    root.innerHTML = `
-      <div style="
-        background: linear-gradient(135deg, #10b981 0%, #065f46 100%);
-        color: white;
-        padding: 2rem;
-        text-align: center;
-        font-family: Arial, sans-serif;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      ">
-        <h1 style="font-size: 3rem; margin-bottom: 1rem;">🟢 JavaScript Works!</h1>
-        <p style="font-size: 1.5rem; margin-bottom: 1rem;">MERO GAMALA - Basic Test</p>
-        <p style="font-size: 1rem; opacity: 0.8;">File loaded: /merogamala/assets/index-DFXrOJTB.js</p>
-        <p style="font-size: 1rem; opacity: 0.8;">Path: ${window.location.pathname}</p>
-        <p style="font-size: 1rem; opacity: 0.8;">URL: ${window.location.href}</p>
+  return (
+    <div style={{
+      padding: '2rem',
+      textAlign: 'center',
+      fontFamily: 'Arial, sans-serif',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #10b981 0%, #065f46 100%)',
+      color: 'white',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+        ✅ React + Vite Works!
+      </h1>
+      <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>
+        MERO GAMALA - Plant Store
+      </p>
+      
+      <div style={{ 
+        background: 'rgba(255,255,255,0.1)', 
+        padding: '1rem', 
+        borderRadius: '8px',
+        marginBottom: '2rem'
+      }}>
+        <p style={{ marginBottom: '1rem' }}>Counter Test: {count}</p>
+        <button 
+          onClick={() => setCount(count + 1)}
+          style={{
+            padding: '0.5rem 1rem',
+            fontSize: '1rem',
+            background: 'white',
+            color: '#10b981',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          Click me! (+1)
+        </button>
       </div>
-    `;
-    console.log('🟢 Content inserted into root!');
-  } else {
-    console.error('❌ Root element not found!');
-  }
-});
+      
+      <div style={{ fontSize: '0.9rem', opacity: 0.8 }}>
+        <div>✅ React: Working</div>
+        <div>✅ State Management: Working</div>
+        <div>✅ Event Handlers: Working</div>
+        <div>✅ GitHub Pages: Working</div>
+        <div>📍 URL: {window.location.href}</div>
+      </div>
+    </div>
+  );
+};
 
-// Test 4: Check if this script runs immediately
-console.log('🟢 Script executing immediately');
-console.log('🟢 Current URL:', window.location.href);
-console.log('🟢 Current path:', window.location.pathname);
+// Mount the app
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(<TestApp />);
+  console.log('✅ React app mounted successfully!');
+} else {
+  console.error('❌ Root element not found!');
+}

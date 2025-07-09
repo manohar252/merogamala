@@ -5,12 +5,12 @@
   "type": "module",
   "homepage": "https://manohar252.github.io/merogamala",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist --dotfiles"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",
