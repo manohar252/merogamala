@@ -45,9 +45,10 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {showLanguageModal && (
+      {/* BYPASS: Language modal commented out for testing */}
+      {/* {showLanguageModal && (
         <LanguageModal onSelectLanguage={handleLanguageSelect} />
-      )}
+      )} */}
       <Header />
       <Hero />
       <ShopSection />

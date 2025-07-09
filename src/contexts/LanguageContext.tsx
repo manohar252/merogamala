@@ -131,10 +131,13 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [showLanguageModal, setShowLanguageModal] = useState(false);
 
   useEffect(() => {
+    // BYPASS: Skip language modal for testing
     const hasVisited = localStorage.getItem('hasVisited');
     if (!hasVisited) {
-      setShowLanguageModal(true);
+      // setShowLanguageModal(true);  // COMMENTED OUT - bypass modal
       localStorage.setItem('hasVisited', 'true');
+      // Set default language to English for testing
+      localStorage.setItem('language', 'en');
     }
   }, []);
 
