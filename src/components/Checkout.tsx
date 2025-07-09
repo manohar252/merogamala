@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useOrders, CustomerDetails, OrderItem } from '../contexts/OrderContext';
+import { formatNPR } from '../constants/currency';
 import { 
   User, 
   MapPin, 
@@ -40,6 +41,19 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
   const [selectedPayment, setSelectedPayment] = useState<string>('');
 
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  // Payment QR Code generator (placeholder for real implementation)
+  const generatePaymentQR = (method: string): string => {
+    // In production, this would generate actual QR codes
+    // For now, return a placeholder with proper dimensions
+    const colors = {
+      esewa: '1D4ED8',
+      fonepay: '059669', 
+      bank: 'DC2626'
+    };
+    const color = colors[method as keyof typeof colors] || '000000';
+    return `https://via.placeholder.com/200x200/${color}/FFFFFF?text=${method.toUpperCase()}+QR`;
+  };
 
   const validateForm = (): boolean => {
     const newErrors: Partial<CustomerDetails> = {};
@@ -111,19 +125,19 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
       id: 'esewa',
       name: 'eSewa',
       icon: <Smartphone className="h-6 w-6" />,
-      qr: 'https://via.placeholder.com/200x200/1D4ED8/FFFFFF?text=eSewa+QR'
+      qr: generatePaymentQR('esewa')
     },
     {
-      id: 'fonepay',
+      id: 'fonepay', 
       name: 'FonePay',
       icon: <CreditCard className="h-6 w-6" />,
-      qr: 'https://via.placeholder.com/200x200/059669/FFFFFF?text=FonePay+QR'
+      qr: generatePaymentQR('fonepay')
     },
     {
       id: 'bank',
       name: 'Bank Transfer',
       icon: <Building2 className="h-6 w-6" />,
-      qr: 'https://via.placeholder.com/200x200/DC2626/FFFFFF?text=Bank+QR'
+      qr: generatePaymentQR('bank')
     }
   ];
 
@@ -229,7 +243,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
                     {t('pleaseScanTheQRCode')}
                   </p>
                   <p className="text-lg font-semibold text-emerald-600 mt-2">
-                    {t('amount')}: Rs. {(total * 133).toFixed(0)}
+                    {t('amount')}: {formatNPR(total)}
                   </p>
                 </div>
               )}
@@ -342,12 +356,12 @@ const Checkout: React.FC<CheckoutProps> = ({ onBack, onClose }) => {
             {items.map((item) => (
               <div key={item.id} className="flex justify-between">
                 <span>{item.name} x {item.quantity}</span>
-                <span>Rs. {((item.price * item.quantity) * 133).toFixed(0)}</span>
+                <span>{formatNPR(item.price * item.quantity)}</span>
               </div>
             ))}
             <div className="border-t pt-2 font-semibold flex justify-between">
               <span>{t('total')}:</span>
-              <span className="text-emerald-600">Rs. {(total * 133).toFixed(0)}</span>
+              <span className="text-emerald-600">{formatNPR(total)}</span>
             </div>
           </div>
         </div>

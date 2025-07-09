@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useOrders, Order } from '../contexts/OrderContext';
 import { useAdmin } from '../contexts/AdminContext';
+import { formatNPR } from '../constants/currency';
 import { 
   Package, 
   User, 
@@ -139,7 +140,7 @@ const AdminPanel = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Revenue</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  Rs. {(orders.reduce((sum, order) => sum + order.total, 0) * 133).toFixed(0)}
+                  {formatNPR(orders.reduce((sum, order) => sum + order.total, 0))}
                 </p>
               </div>
             </div>
@@ -240,7 +241,7 @@ const AdminPanel = () => {
                             </div>
                             <div className="flex items-center text-gray-600">
                               <DollarSign className="h-4 w-4 mr-2" />
-                              Total: Rs. {(order.total * 133).toFixed(0)}
+                              Total: {formatNPR(order.total)}
                             </div>
                             <div className="text-gray-600">
                               Payment: {order.paymentMethod}
@@ -259,7 +260,7 @@ const AdminPanel = () => {
                                 {item.name} x {item.quantity}
                               </span>
                               <span className="text-sm font-medium text-gray-900">
-                                Rs. {((item.price * item.quantity) * 133).toFixed(0)}
+                                {formatNPR(item.price * item.quantity)}
                               </span>
                             </div>
                           ))}

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { USD_TO_NPR_RATE } from '../constants/currency';
 
 export interface CustomerDetails {
   fullName: string;
@@ -102,7 +103,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
 Order Details:
 Order Number: ${order.orderNumber}
-Total Amount: Rs. ${(order.total * 133).toFixed(0)}
+Total Amount: Rs. ${(order.total * USD_TO_NPR_RATE).toFixed(0)}
 Delivery Address: ${order.customerDetails.deliveryAddress}`;
 
       // In production, this would be an actual WhatsApp API call

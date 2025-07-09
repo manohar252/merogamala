@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-// Currency conversion rate (USD to NPR)
-const USD_TO_NPR_RATE = 133;
+import { USD_TO_NPR_RATE } from '../constants/currency';
 
 interface CartItem {
   id: string;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { formatNPR } from '../constants/currency';
 import { X, Plus, Minus, ShoppingBag, Trash2 } from 'lucide-react';
 import Checkout from './Checkout';
 
@@ -117,7 +118,7 @@ const Cart = () => {
             <div className="border-t p-6 space-y-4">
               <div className="flex justify-between text-lg font-semibold">
                 <span>{t('total')}:</span>
-                <span className="text-emerald-600">Rs. {(total * 133).toFixed(0)}</span>
+                <span className="text-emerald-600">{formatNPR(total)}</span>
               </div>
               
               <div className="space-y-2">

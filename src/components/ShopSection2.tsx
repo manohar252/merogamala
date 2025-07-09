@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
+import { formatNPR } from '../constants/currency';
 import { Plus, Heart, Star } from 'lucide-react';
 
 interface Plant {
@@ -170,7 +171,7 @@ const ShopSection = () => {
                 
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold text-emerald-600">
-                    Rs. {(plant.price * 133).toFixed(0)}
+                    {formatNPR(plant.price)}
                   </span>
                   <button
                     onClick={() => handleAddToCart(plant)}
