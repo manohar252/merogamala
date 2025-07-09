@@ -165,7 +165,7 @@ class MockDatabase implements DatabaseConnection {
     this.data.set('user_preferences', []);
   }
 
-  async query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]> {
+  async query<T = unknown>(sql: string, _params?: unknown[]): Promise<T[]> { // eslint-disable-line @typescript-eslint/no-unused-vars
     // Return data immediately for fast loading
     // Parse simple SQL queries and return mock data
     if (sql.includes('SELECT * FROM plants')) {

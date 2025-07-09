@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import apiService, { Order as DbOrder } from '../services/api';
 import { USD_TO_NPR_RATE } from '../utils/constants';
 
@@ -47,12 +47,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Load orders from database on component mount
-  useEffect(() => {
-    loadOrders();
-  }, []);
-
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -75,7 +70,12 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Load orders from database on component mount
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
 
   const loadOrdersFromLocalStorage = async () => {
     try {

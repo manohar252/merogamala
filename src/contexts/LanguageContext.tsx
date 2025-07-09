@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
 // Translations
@@ -93,11 +93,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [language, setLanguageState] = useState<'en' | 'ne'>('en');
   const [showLanguageModal, setShowLanguageModal] = useState(false);
 
-  useEffect(() => {
-    loadUserPreferences();
-  }, []);
-
-  const loadUserPreferences = async () => {
+  const loadUserPreferences = useCallback(async () => {
     try {
       // Try to load from database first
       const preferences = await apiService.getUserPreferences();
@@ -120,7 +116,11 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
       // Fallback to localStorage
       loadFromLocalStorage();
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadUserPreferences();
+  }, [loadUserPreferences]);
 
   const loadFromLocalStorage = () => {
     try {

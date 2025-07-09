@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { Plus, Heart, Star, Loader } from 'lucide-react';
@@ -14,17 +14,7 @@ const ShopSection = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load plants and categories on component mount
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // Reload plants when category changes
-  useEffect(() => {
-    loadPlants();
-  }, [selectedCategory]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -51,9 +41,9 @@ const ShopSection = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadPlants = async () => {
+  const loadPlants = useCallback(async () => {
     try {
       setError(null);
       const plantsData = await apiService.getPlantsByCategory(selectedCategory);
@@ -62,7 +52,17 @@ const ShopSection = () => {
       console.error('Error loading plants for category:', error);
       // Keep existing plants data if category filtering fails
     }
-  };
+  }, [selectedCategory]);
+
+  // Load plants and categories on component mount
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Reload plants when category changes
+  useEffect(() => {
+    loadPlants();
+  }, [loadPlants]);
 
   const loadFallbackData = () => {
     // Fallback hardcoded data if database is unavailable
