@@ -13,7 +13,7 @@ export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const WHATSAPP_NUMBER = '+9779766473272';
 
 // Input sanitization patterns
-export const XSS_PREVENTION_REGEX = /[<>\"'&]/g;
+export const XSS_PREVENTION_REGEX = /[<>"'&]/g;
 export const SQL_INJECTION_PREVENTION_REGEX = /[;'"\\]/g;
 
 // Validation constants

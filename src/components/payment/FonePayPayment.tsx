@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { QrCode, Loader2, CheckCircle, X, RefreshCw, AlertTriangle } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+import { X, AlertTriangle } from 'lucide-react';
 import { environment } from '../../config/environment';
 
 interface FonePayPaymentProps {
@@ -18,8 +17,8 @@ const FonePayPayment: React.FC<FonePayPaymentProps> = ({
   onFailure
 }) => {
   const { language } = useLanguage();
-  const [transactionId, setTransactionId] = useState<string>('');
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [transactionId, setTransactionId] = useState<string>(''); // eslint-disable-line @typescript-eslint/no-unused-vars -- For future payment implementation
+  const [isGenerating, setIsGenerating] = useState(false); // eslint-disable-line @typescript-eslint/no-unused-vars -- For future payment implementation
 
   useEffect(() => {
     // Block in development mode - no fake payments allowed

@@ -129,7 +129,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Error adding item to cart:', error);
       setError('Failed to add item to cart');
     }
-  }, []);
+  }, [clearError]);
 
   const removeFromCart = useCallback((id: string) => {
     clearError();
@@ -158,7 +158,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Error removing item from cart:', error);
       setError('Failed to remove item from cart');
     }
-  }, []);
+  }, [clearError]);
 
   const updateQuantity = useCallback((id: string, quantity: number) => {
     clearError();
@@ -204,7 +204,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Error updating item quantity:', error);
       setError('Failed to update item quantity');
     }
-  }, [removeFromCart]);
+  }, [removeFromCart, clearError]);
 
   const clearCart = useCallback(() => {
     clearError();
@@ -215,7 +215,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Error clearing cart:', error);
       setError('Failed to clear cart');
     }
-  }, []);
+  }, [clearError]);
 
   const getTotalItems = useCallback(() => {
     try {
@@ -294,7 +294,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     getTotalItems,
     getTotalPrice,
     isCartOpen,
-    error
+    error,
+    clearError
   ]);
 
   return (

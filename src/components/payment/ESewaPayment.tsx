@@ -12,7 +12,7 @@ interface ESewaPaymentProps {
 const ESewaPayment: React.FC<ESewaPaymentProps> = ({
   amount,
   orderId,
-  onSuccess,
+  onSuccess, // eslint-disable-line @typescript-eslint/no-unused-vars -- Used for payment success callback after eSewa redirect
   onFailure
 }) => {
   const { language } = useLanguage();

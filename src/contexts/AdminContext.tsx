@@ -111,7 +111,7 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }, []);
 
   const sanitizeInput = (input: string): string => {
-    return input.trim().replace(/[<>\"'&]/g, '');
+    return input.trim().replace(/[<>"'&]/g, '');
   };
 
   const validateTwoFactorCode = (code: string): boolean => {
