@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
-import { Plus, Heart, Star, Loader } from 'lucide-react';
+import { Plus, Heart, Star, Loader, ShoppingCart, CheckCircle } from 'lucide-react';
 import apiService, { Plant, Category } from '../services/api';
 import { USD_TO_NPR_RATE } from '../utils/constants';
 
 const ShopSection = () => {
   const { t, language } = useLanguage();
-  const { addToCart } = useCart();
+  const { addToCart, items: cartItems, setIsCartOpen } = useCart();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [plants, setPlants] = useState<Plant[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [addedToCartIds, setAddedToCartIds] = useState<Set<string>>(new Set());
 
   const loadData = useCallback(async () => {
     try {
@@ -187,6 +188,16 @@ const ShopSection = () => {
         image: plant.image
       });
 
+      // Show visual feedback
+      setAddedToCartIds(prev => new Set(prev).add(plant.id));
+      setTimeout(() => {
+        setAddedToCartIds(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(plant.id);
+          return newSet;
+        });
+      }, 2000);
+
       // Show success message
       if (import.meta.env.DEV) {
         console.log('Added to cart:', plant.name);
@@ -197,13 +208,15 @@ const ShopSection = () => {
     }
   };
 
+  const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
   if (loading) {
     return (
       <section id="shop" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center py-20">
             <Loader className="h-8 w-8 animate-spin text-emerald-600" />
-            <span className="ml-3 text-lg text-gray-600">
+            <span className="ml-3 text-lg text-gray-600 tracking-wide">
               {language === 'en' ? 'Loading plants...' : 'बिरुवाहरू लोड गर्दै...'}
             </span>
           </div>
@@ -217,12 +230,12 @@ const ShopSection = () => {
       <section id="shop" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-20">
-            <p className="text-red-600 text-lg mb-4">
+            <p className="text-red-600 text-lg mb-4 tracking-wide">
               {language === 'en' ? 'Failed to load plants' : 'बिरुवाहरू लोड गर्न असफल'}
             </p>
             <button
               onClick={loadData}
-              className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+              className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors tracking-wide"
             >
               {language === 'en' ? 'Try Again' : 'फेरि कोशिस गर्नुहोस्'}
             </button>
@@ -235,11 +248,38 @@ const ShopSection = () => {
   return (
     <section id="shop" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Cart Visibility Banner */}
+        {totalCartItems > 0 && (
+          <div className="mb-8 bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <ShoppingCart className="h-6 w-6 text-emerald-600" />
+                <div>
+                  <p className="text-emerald-800 font-medium tracking-wide">
+                    {language === 'en' 
+                      ? `${totalCartItems} item${totalCartItems > 1 ? 's' : ''} in your cart` 
+                      : `तपाईंको कार्टमा ${totalCartItems} वस्तु${totalCartItems > 1 ? 'हरू' : ''}`}
+                  </p>
+                  <p className="text-emerald-600 text-sm tracking-wide">
+                    {language === 'en' ? 'Ready for checkout!' : 'चेकआउटका लागि तयार!'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors font-medium tracking-wide"
+              >
+                {language === 'en' ? 'View Cart' : 'कार्ट हेर्नुहोस्'}
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-wide">
             {t('shopPlants')}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide">
             {t('discoverOurCollection')}
           </p>
         </div>
@@ -250,9 +290,9 @@ const ShopSection = () => {
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-6 py-3 rounded-full font-medium transition-colors ${
+              className={`px-6 py-3 rounded-full font-medium transition-colors tracking-wide ${
                 selectedCategory === category.id
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-emerald-600 text-white shadow-lg'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -264,14 +304,14 @@ const ShopSection = () => {
         {/* Plants Grid */}
         {filteredPlants.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-500 text-lg">
+            <p className="text-gray-500 text-lg tracking-wide">
               {language === 'en' ? 'No plants found in this category' : 'यस श्रेणीमा कुनै बिरुवा फेला परेन'}
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPlants.map(plant => (
-              <div key={plant.id} className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+              <div key={plant.id} className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100">
                 <div className="relative overflow-hidden">
                   <img
                     src={plant.image}
@@ -282,54 +322,95 @@ const ShopSection = () => {
                     <Heart className="h-5 w-5 text-gray-600" />
                   </button>
                   {plant.stock <= 5 && (
-                    <div className="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded text-sm">
+                    <div className="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded text-sm font-medium tracking-wide">
                       {language === 'en' ? `Only ${plant.stock} left` : `केवल ${plant.stock} बाँकी`}
+                    </div>
+                  )}
+                  {addedToCartIds.has(plant.id) && (
+                    <div className="absolute inset-0 bg-emerald-500 bg-opacity-90 flex items-center justify-center">
+                      <div className="text-white text-center">
+                        <CheckCircle className="h-12 w-12 mx-auto mb-2" />
+                        <p className="font-medium tracking-wide">
+                          {language === 'en' ? 'Added to Cart!' : 'कार्टमा थपियो!'}
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
                 
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-semibold text-gray-900">
+                    <h3 className="text-xl font-semibold text-gray-900 tracking-wide">
                       {language === 'en' ? plant.name : plant.name_ne}
                     </h3>
                     <div className="flex items-center">
                       <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm text-gray-600 ml-1">{plant.rating}</span>
+                      <span className="text-sm text-gray-600 ml-1 font-medium">{plant.rating}</span>
                     </div>
                   </div>
                   
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-600 text-sm mb-4 tracking-wide leading-relaxed">
                     {language === 'en' ? plant.description : plant.description_ne}
                   </p>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-emerald-600">
+                    <span className="text-2xl font-bold text-emerald-600 tracking-wide">
                       Rs. {(plant.price * USD_TO_NPR_RATE).toFixed(0)}
                     </span>
                     <button
                       onClick={() => handleAddToCart(plant)}
                       disabled={plant.stock <= 0}
-                      className={`px-4 py-2 rounded-lg transition-colors flex items-center ${
+                      className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center tracking-wide font-medium ${
                         plant.stock <= 0
                           ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                          : 'bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-lg transform hover:-translate-y-0.5'
                       }`}
                     >
-                      <Plus className="h-4 w-4 mr-1" />
-                      {plant.stock <= 0 
-                        ? (language === 'en' ? 'Out of Stock' : 'स्टकमा छैन')
-                        : t('addToCart')
-                      }
+                      {addedToCartIds.has(plant.id) ? (
+                        <>
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          {language === 'en' ? 'Added!' : 'थपियो!'}
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-4 w-4 mr-1" />
+                          {plant.stock <= 0 
+                            ? (language === 'en' ? 'Out of Stock' : 'स्टकमा छैन')
+                            : t('addToCart')
+                          }
+                        </>
+                      )}
                     </button>
                   </div>
                   
-                  <div className="mt-2 text-xs text-gray-500">
+                  <div className="mt-2 text-xs text-gray-500 tracking-wide">
                     {language === 'en' ? `${plant.stock} in stock` : `${plant.stock} स्टकमा`}
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* View Cart Footer */}
+        {totalCartItems > 0 && (
+          <div className="mt-12 text-center">
+            <div className="bg-gray-50 rounded-lg p-6 max-w-md mx-auto">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <ShoppingCart className="h-6 w-6 text-emerald-600" />
+                <p className="text-lg font-medium text-gray-900 tracking-wide">
+                  {language === 'en' 
+                    ? `${totalCartItems} item${totalCartItems > 1 ? 's' : ''} ready for checkout` 
+                    : `${totalCartItems} वस्तु${totalCartItems > 1 ? 'हरू' : ''} चेकआउटका लागि तयार`}
+                </p>
+              </div>
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="w-full bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium tracking-wide"
+              >
+                {language === 'en' ? 'Proceed to Checkout' : 'चेकआउटमा जानुहोस्'}
+              </button>
+            </div>
           </div>
         )}
       </div>

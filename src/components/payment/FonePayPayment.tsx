@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { QrCode, Loader2, CheckCircle, X, RefreshCw } from 'lucide-react';
+import { QrCode, Loader2, CheckCircle, X, RefreshCw, AlertTriangle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
 interface FonePayPaymentProps {
@@ -17,92 +17,68 @@ const FonePayPayment: React.FC<FonePayPaymentProps> = ({
   onFailure
 }) => {
   const { language } = useLanguage();
-  const [qrData, setQrData] = useState<string>('');
   const [transactionId, setTransactionId] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'checking' | 'success' | 'failed' | 'expired'>('pending');
-  const [timeRemaining, setTimeRemaining] = useState(300); // 5 minutes
-  const [statusCheckInterval, setStatusCheckInterval] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Auto-generate QR on component mount
-    generateFonePayQR();
+    // Block in development mode - no fake payments allowed
+    if (import.meta.env.DEV) {
+      onFailure({
+        message: language === 'en' 
+          ? 'FonePay integration requires production backend API. Contact administrator.' 
+          : 'FonePay एकीकरणलाई उत्पादन ब्याकएन्ड API चाहिन्छ। व्यवस्थापकसँग सम्पर्क गर्नुहोस्।',
+        code: 'DEV_MODE_BLOCKED'
+      });
+      return;
+    }
 
-    return () => {
-      if (statusCheckInterval) {
-        clearInterval(statusCheckInterval);
-      }
-    };
+    // Auto-generate QR on component mount in production only
+    generateFonePayQR();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    // Countdown timer
-    if (paymentStatus === 'checking' && timeRemaining > 0) {
-      const timer = setTimeout(() => {
-        setTimeRemaining(prev => prev - 1);
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    } else if (timeRemaining === 0 && paymentStatus === 'checking') {
-      setPaymentStatus('expired');
-      if (statusCheckInterval) {
-        clearInterval(statusCheckInterval);
-      }
-      onFailure({
-        message: language === 'en' ? 'Payment session expired' : 'भुक्तानी सत्र समाप्त भयो'
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeRemaining, paymentStatus]);
 
   const generateFonePayQR = async () => {
     setIsGenerating(true);
     
     try {
+      // Validate inputs
+      if (!amount || amount <= 0) {
+        throw new Error('Invalid payment amount');
+      }
+
+      if (!orderId) {
+        throw new Error('Order ID is required');
+      }
+
       // Generate transaction ID
       const newTransactionId = `FP${Date.now()}${Math.random().toString(36).substr(2, 6)}`;
       setTransactionId(newTransactionId);
 
-      // In demo mode, generate a demo QR
-      if (import.meta.env.DEV) {
-        const demoQrData = JSON.stringify({
-          merchantId: 'DEMO_MERCHANT',
-          amount: amount.toString(),
-          transactionId: newTransactionId,
+      // Production API call - MUST be implemented with real backend
+      const response = await fetch('/api/payment/fonepay/generate-qr', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount,
           orderId,
-          currency: 'NPR',
-          type: 'fonepay_demo'
-        });
-        
-        setQrData(demoQrData);
-        setPaymentStatus('checking');
-        setTimeRemaining(300);
-        startDemoStatusCheck(newTransactionId);
-      } else {
-        // Production API call
-        const response = await fetch('/api/payment/fonepay/generate-qr', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            amount,
-            orderId,
-            merchantId: process.env.VITE_FONEPAY_MERCHANT_ID
-          })
-        });
+          transactionId: newTransactionId,
+          merchantId: process.env.VITE_FONEPAY_MERCHANT_ID
+        })
+      });
 
-        const data = await response.json();
-        
-        if (data.success) {
-          setQrData(data.qrData);
-          setTransactionId(data.transactionId);
-          setPaymentStatus('checking');
-          startPaymentStatusCheck(data.transactionId);
-        } else {
-          onFailure(data.error);
-        }
+      if (!response.ok) {
+        throw new Error('Failed to generate QR code');
+      }
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // Start real payment status monitoring
+        startPaymentStatusCheck(data.transactionId);
+      } else {
+        onFailure(data.error || { message: 'QR generation failed' });
       }
     } catch (error) {
       onFailure({
@@ -114,206 +90,110 @@ const FonePayPayment: React.FC<FonePayPaymentProps> = ({
     }
   };
 
-  const startDemoStatusCheck = (transactionId: string) => {
-    // In demo mode, simulate random payment completion after 10-30 seconds
-    const randomDelay = Math.random() * 20000 + 10000; // 10-30 seconds
-    
-    setTimeout(() => {
-      if (Math.random() > 0.2) { // 80% success rate
-        setPaymentStatus('success');
-        onSuccess({
-          method: 'fonepay',
-          transactionId
-        });
-      } else {
-        setPaymentStatus('failed');
-        onFailure({
-          message: language === 'en' ? 'Payment failed' : 'भुक्तानी असफल भयो'
-        });
-      }
-    }, randomDelay);
-  };
-
   const startPaymentStatusCheck = (transactionId: string) => {
+    // Real payment status checking with backend verification
     const interval = setInterval(async () => {
       try {
         const response = await fetch(`/api/payment/fonepay/status/${transactionId}`);
+        
+        if (!response.ok) {
+          throw new Error('Status check failed');
+        }
+
         const data = await response.json();
         
-        if (data.status === 'success') {
-          setPaymentStatus('success');
+        if (data.status === 'success' && data.verified === true) {
+          // Payment verified by backend
           clearInterval(interval);
-          onSuccess(data);
+          onSuccess({
+            method: 'fonepay',
+            transactionId: data.transactionId
+          });
         } else if (data.status === 'failed') {
-          setPaymentStatus('failed');
           clearInterval(interval);
-          onFailure(data);
+          onFailure({
+            message: data.message || 'Payment failed',
+            code: 'PAYMENT_FAILED'
+          });
         }
         // Continue checking if status is still pending
       } catch (error) {
-        console.error('Status check error:', error);
+        console.error('Payment status check error:', error);
+        clearInterval(interval);
+        onFailure({
+          message: 'Payment verification failed',
+          code: 'VERIFICATION_ERROR'
+        });
       }
     }, 3000); // Check every 3 seconds
 
-    setStatusCheckInterval(interval);
+    // Timeout after 10 minutes
+    setTimeout(() => {
+      clearInterval(interval);
+      onFailure({
+        message: language === 'en' ? 'Payment session expired' : 'भुक्तानी सत्र समाप्त भयो',
+        code: 'TIMEOUT'
+      });
+    }, 600000); // 10 minutes
   };
 
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
-  const refreshQR = () => {
-    setPaymentStatus('pending');
-    setTimeRemaining(300);
-    if (statusCheckInterval) {
-      clearInterval(statusCheckInterval);
-    }
-    generateFonePayQR();
-  };
-
-  if (paymentStatus === 'success') {
+  // Development mode - show configuration warning
+  if (import.meta.env.DEV) {
     return (
-      <div className="text-center py-8">
-        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="h-12 w-12 text-green-500" />
+      <div className="p-6 bg-white border rounded-lg">
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="h-8 w-8 text-red-500" />
+          </div>
+          <h3 className="text-lg font-semibold text-red-600 mb-2">
+            {language === 'en' ? 'Payment Gateway Not Available' : 'भुक्तानी गेटवे उपलब्ध छैन'}
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            {language === 'en' 
+              ? 'FonePay QR payment requires backend API integration and merchant account setup.' 
+              : 'FonePay QR भुक्तानीलाई ब्याकएन्ड API एकीकरण र व्यापारी खाता सेटअप चाहिन्छ।'}
+          </p>
         </div>
-        <h3 className="text-xl font-semibold text-green-600 mb-2">
-          {language === 'en' ? 'Payment Successful!' : 'भुक्तानी सफल भयो!'}
-        </h3>
-        <p className="text-gray-600">
-          {language === 'en' ? 'Transaction completed via FonePay' : 'FonePay मार्फत लेनदेन पूरा भयो'}
-        </p>
+
+        <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 mb-4">
+          <h4 className="text-sm font-medium text-yellow-800 mb-2">
+            {language === 'en' ? 'Required for Production:' : 'उत्पादनको लागि आवश्यक:'}
+          </h4>
+          <ul className="text-xs text-yellow-700 space-y-1">
+            <li>• {language === 'en' ? 'Valid FonePay merchant account' : 'वैध FonePay व्यापारी खाता'}</li>
+            <li>• {language === 'en' ? 'Backend API for QR generation' : 'QR उत्पादनको लागि ब्याकएन्ड API'}</li>
+            <li>• {language === 'en' ? 'Payment verification system' : 'भुक्तानी प्रमाणीकरण प्रणाली'}</li>
+            <li>• {language === 'en' ? 'Webhook endpoints for callbacks' : 'कलब्याकको लागि वेबहुक endpoints'}</li>
+          </ul>
+        </div>
+
+        <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+          <p className="text-xs text-red-800">
+            <strong>{language === 'en' ? 'Security Note:' : 'सुरक्षा नोट:'}</strong>{' '}
+            {language === 'en' 
+              ? 'QR code payments must be verified through secure backend systems. Never trust client-side payment confirmations.' 
+              : 'QR कोड भुक्तानीहरू सुरक्षित ब्याकएन्ड प्रणाली मार्फत प्रमाणित हुनुपर्छ। कहिल्यै क्लाइन्ट-साइड भुक्तानी पुष्टिहरूमा भर नराख्नुहोस्।'}
+          </p>
+        </div>
       </div>
     );
   }
 
+  // Production mode error fallback
   return (
     <div className="p-6 bg-white border rounded-lg">
-      <div className="flex items-center mb-6">
-        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-          <img 
-            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzI1NjNFQiIvPgo8cGF0aCBkPSJNMTYgOEMxOC4yMDkxIDggMjAgOS43OTA4NiAyMCAxMkMyMCAxNC4yMDkxIDE4LjIwOTEgMTYgMTYgMTZDMTMuNzkwOSAxNiAxMiAxNC4yMDkxIDEyIDEyQzEyIDkuNzkwODYgMTMuNzkwOSA4IDE2IDhaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgMThDMTguMjA5MSAxOCAyMCAxOS43OTA5IDIwIDIyQzIwIDI0LjIwOTEgMTguMjA5MSAyNiAxNiAyNkMxMy43OTA5IDI2IDEyIDI0LjIwOTEgMTIgMjJDMTIgMTkuNzkwOSAxMy43OTA5IDE4IDE2IDE4WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+"
-            alt="FonePay"
-            className="w-6 h-6"
-          />
-        </div>
-        <div>
-          <h3 className="font-semibold text-gray-900">
-            {language === 'en' ? 'Pay with FonePay' : 'FonePay सँग भुक्तानी गर्नुहोस्'}
-          </h3>
-          <p className="text-sm text-gray-600">
-            {language === 'en' ? 'Mobile banking QR payment' : 'मोबाइल बैंकिङ QR भुक्तानी'}
-          </p>
-        </div>
+      <div className="text-center py-8">
+        <X className="h-16 w-16 text-red-500 mx-auto mb-4" />
+        <p className="text-red-600 mb-4">
+          {language === 'en' ? 'Payment service temporarily unavailable' : 'भुक्तानी सेवा अस्थायी रूपमा अनुपलब्ध'}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          {language === 'en' ? 'Refresh Page' : 'पृष्ठ रिफ्रेश गर्नुहोस्'}
+        </button>
       </div>
-
-      {isGenerating ? (
-        <div className="text-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600">
-            {language === 'en' ? 'Generating QR Code...' : 'QR कोड उत्पादन गर्दै...'}
-          </p>
-        </div>
-      ) : qrData ? (
-        <div>
-          <div className="text-center mb-6">
-            <div className="bg-white p-4 rounded-lg border-2 border-blue-200 inline-block mb-4">
-              <QRCodeSVG value={qrData} size={200} />
-            </div>
-            
-            <p className="text-sm text-gray-600 mb-2">
-              {language === 'en' 
-                ? 'Scan with FonePay app to pay' 
-                : 'भुक्तानी गर्न FonePay एप संग स्क्यान गर्नुहोस्'}
-            </p>
-            
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <p className="text-lg font-semibold text-blue-800">
-                Rs. {amount.toFixed(2)}
-              </p>
-              <p className="text-xs text-blue-600">
-                {language === 'en' ? 'Transaction ID:' : 'लेनदेन ID:'} {transactionId}
-              </p>
-            </div>
-          </div>
-
-          {paymentStatus === 'checking' && (
-            <div className="text-center mb-6">
-              <div className="flex items-center justify-center mb-2">
-                <Loader2 className="h-4 w-4 animate-spin mr-2 text-blue-600" />
-                <span className="text-sm font-medium">
-                  {language === 'en' ? 'Waiting for payment...' : 'भुक्तानीको पर्खाइमा...'}
-                </span>
-              </div>
-              
-              <div className="text-sm text-gray-600">
-                <span className="font-medium">
-                  {language === 'en' ? 'Time remaining:' : 'बाँकी समय:'} {formatTime(timeRemaining)}
-                </span>
-              </div>
-
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
-                  style={{ width: `${(timeRemaining / 300) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-          )}
-
-          {(paymentStatus === 'failed' || paymentStatus === 'expired') && (
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <X className="h-8 w-8 text-red-500" />
-              </div>
-              <p className="text-red-600 font-medium mb-4">
-                {paymentStatus === 'expired' 
-                  ? (language === 'en' ? 'QR Code Expired' : 'QR कोड समाप्त भयो')
-                  : (language === 'en' ? 'Payment Failed' : 'भुक्तानी असफल भयो')
-                }
-              </p>
-              <button
-                onClick={refreshQR}
-                className="flex items-center justify-center mx-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                {language === 'en' ? 'Generate New QR' : 'नयाँ QR उत्पादन गर्नुहोस्'}
-              </button>
-            </div>
-          )}
-
-          <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-start">
-              <QrCode className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-              <div className="text-sm text-blue-800">
-                <p className="font-medium mb-1">
-                  {language === 'en' ? 'How to pay:' : 'कसरी भुक्तानी गर्ने:'}
-                </p>
-                <ol className="list-decimal list-inside space-y-1 text-xs">
-                  <li>{language === 'en' ? 'Open FonePay app' : 'FonePay एप खोल्नुहोस्'}</li>
-                  <li>{language === 'en' ? 'Scan this QR code' : 'यो QR कोड स्क्यान गर्नुहोस्'}</li>
-                  <li>{language === 'en' ? 'Confirm payment' : 'भुक्तानी पुष्टि गर्नुहोस्'}</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="text-center py-8">
-          <X className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <p className="text-red-600 mb-4">
-            {language === 'en' ? 'Failed to generate QR code' : 'QR कोड उत्पादन गर्न असफल भयो'}
-          </p>
-          <button
-            onClick={generateFonePayQR}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            {language === 'en' ? 'Try Again' : 'फेरि प्रयास गर्नुहोस्'}
-          </button>
-        </div>
-      )}
     </div>
   );
 };
