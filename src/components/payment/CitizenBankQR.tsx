@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Building2, Loader2, CheckCircle, X, RefreshCw, Clock } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import { environment } from '../../config/environment';
 
 interface CitizenBankQRProps {
   amount: number;
@@ -90,7 +91,7 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
           body: JSON.stringify({
             amount,
             orderId,
-            merchantId: process.env.VITE_CITIZEN_BANK_MERCHANT_ID
+            merchantId: environment.payment.citizenBank.merchantId
           })
         });
 
