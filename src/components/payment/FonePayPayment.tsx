@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { QrCode, Loader2, CheckCircle, X, RefreshCw, AlertTriangle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import { environment } from '../../config/environment';
 
 interface FonePayPaymentProps {
   amount: number;
@@ -64,7 +65,7 @@ const FonePayPayment: React.FC<FonePayPaymentProps> = ({
           amount,
           orderId,
           transactionId: newTransactionId,
-          merchantId: process.env.VITE_FONEPAY_MERCHANT_ID
+          merchantId: environment.payment.fonepay.merchantCode
         })
       });
 
