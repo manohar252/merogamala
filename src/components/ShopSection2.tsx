@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
-import { Plus, Heart, Star, Loader, ShoppingCart, CheckCircle } from 'lucide-react';
+import { Plus, Heart, Star, Loader, ShoppingCart, CheckCircle, ArrowRight } from 'lucide-react';
 import apiService, { Plant, Category } from '../services/api';
 import { USD_TO_NPR_RATE } from '../utils/constants';
 
@@ -209,6 +209,7 @@ const ShopSection = () => {
   };
 
   const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalCartValue = cartItems.reduce((sum, item) => sum + (item.price * USD_TO_NPR_RATE * item.quantity), 0);
 
   if (loading) {
     return (
@@ -248,32 +249,71 @@ const ShopSection = () => {
   return (
     <section id="shop" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Cart Visibility Banner */}
-        {totalCartItems > 0 && (
-          <div className="mb-8 bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <ShoppingCart className="h-6 w-6 text-emerald-600" />
-                <div>
-                  <p className="text-emerald-800 font-medium tracking-wide">
-                    {language === 'en' 
-                      ? `${totalCartItems} item${totalCartItems > 1 ? 's' : ''} in your cart` 
-                      : `तपाईंको कार्टमा ${totalCartItems} वस्तु${totalCartItems > 1 ? 'हरू' : ''}`}
-                  </p>
-                  <p className="text-emerald-600 text-sm tracking-wide">
-                    {language === 'en' ? 'Ready for checkout!' : 'चेकआउटका लागि तयार!'}
-                  </p>
-                </div>
+        {/* PERMANENT CART WIDGET - Always Visible */}
+        <div className="mb-8 bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-emerald-200 rounded-xl p-6 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center">
+                <ShoppingCart className="h-6 w-6 text-white" />
               </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 tracking-wide">
+                  {language === 'en' ? 'Your Shopping Cart' : 'तपाईंको किनमेल कार्ट'}
+                </h3>
+                {totalCartItems > 0 ? (
+                  <div>
+                    <p className="text-emerald-700 font-medium tracking-wide">
+                      {language === 'en' 
+                        ? `${totalCartItems} item${totalCartItems > 1 ? 's' : ''} • Rs. ${totalCartValue.toFixed(0)}` 
+                        : `${totalCartItems} वस्तु${totalCartItems > 1 ? 'हरू' : ''} • रु. ${totalCartValue.toFixed(0)}`}
+                    </p>
+                    <p className="text-emerald-600 text-sm tracking-wide">
+                      {language === 'en' ? '🎉 Ready for checkout!' : '🎉 चेकआउटका लागि तयार!'}
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-gray-600 tracking-wide">
+                      {language === 'en' ? 'Start adding plants to your cart' : 'आफ्नो कार्टमा बिरुवाहरू थप्न सुरु गर्नुहोस्'}
+                    </p>
+                    <p className="text-emerald-600 text-sm tracking-wide">
+                      {language === 'en' ? '🌱 Free delivery on orders over Rs. 2000!' : '🌱 रु. २००० भन्दा माथिको अर्डरमा निःशुल्क डेलिभरी!'}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors font-medium tracking-wide"
+                className={`px-6 py-3 rounded-lg font-medium tracking-wide transition-all duration-300 flex items-center gap-2 ${
+                  totalCartItems > 0 
+                    ? 'bg-emerald-600 text-white hover:bg-emerald-700 hover:scale-105 shadow-lg' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
               >
-                {language === 'en' ? 'View Cart' : 'कार्ट हेर्नुहोस्'}
+                {totalCartItems > 0 ? (
+                  <>
+                    <span>{language === 'en' ? 'View Cart' : 'कार्ट हेर्नुहोस्'}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                ) : (
+                  <>
+                    <span>{language === 'en' ? 'View Cart' : 'कार्ट हेर्नुहोस्'}</span>
+                    <span className="text-xs">({totalCartItems})</span>
+                  </>
+                )}
               </button>
+              {totalCartItems > 0 && (
+                <div className="text-center">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                    {totalCartItems} {language === 'en' ? 'items' : 'वस्तुहरू'}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
 
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-wide">
@@ -392,27 +432,54 @@ const ShopSection = () => {
           </div>
         )}
 
-        {/* View Cart Footer */}
-        {totalCartItems > 0 && (
-          <div className="mt-12 text-center">
-            <div className="bg-gray-50 rounded-lg p-6 max-w-md mx-auto">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <ShoppingCart className="h-6 w-6 text-emerald-600" />
-                <p className="text-lg font-medium text-gray-900 tracking-wide">
-                  {language === 'en' 
-                    ? `${totalCartItems} item${totalCartItems > 1 ? 's' : ''} ready for checkout` 
-                    : `${totalCartItems} वस्तु${totalCartItems > 1 ? 'हरू' : ''} चेकआउटका लागि तयार`}
-                </p>
+        {/* Enhanced Footer Cart Section */}
+        <div className="mt-16 bg-emerald-50 rounded-xl p-8 border border-emerald-200">
+          <div className="text-center">
+            <ShoppingCart className="h-12 w-12 text-emerald-600 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 tracking-wide">
+              {language === 'en' ? 'Ready to Complete Your Order?' : 'आफ्नो अर्डर पूरा गर्न तयार हुनुहुन्छ?'}
+            </h3>
+            
+            {totalCartItems > 0 ? (
+              <div>
+                <div className="bg-white rounded-lg p-6 max-w-md mx-auto mb-6">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <ShoppingCart className="h-6 w-6 text-emerald-600" />
+                    <div>
+                      <p className="text-lg font-medium text-gray-900 tracking-wide">
+                        {language === 'en' 
+                          ? `${totalCartItems} item${totalCartItems > 1 ? 's' : ''} ready for checkout` 
+                          : `${totalCartItems} वस्तु${totalCartItems > 1 ? 'हरू' : ''} चेकआउटका लागि तयार`}
+                      </p>
+                      <p className="text-emerald-600 font-medium tracking-wide">
+                        {language === 'en' ? `Total: Rs. ${totalCartValue.toFixed(0)}` : `कुल: रु. ${totalCartValue.toFixed(0)}`}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsCartOpen(true)}
+                    className="w-full bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition-all duration-300 font-medium tracking-wide transform hover:scale-105 shadow-lg"
+                  >
+                    {language === 'en' ? 'Proceed to Checkout' : 'चेकआउटमा जानुहोस्'} →
+                  </button>
+                </div>
               </div>
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="w-full bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium tracking-wide"
-              >
-                {language === 'en' ? 'Proceed to Checkout' : 'चेकआउटमा जानुहोस्'}
-              </button>
-            </div>
+            ) : (
+              <div>
+                <p className="text-gray-600 mb-6 tracking-wide">
+                  {language === 'en' 
+                    ? 'Browse our collection and add your favorite plants to start shopping!' 
+                    : 'हाम्रो संग्रह ब्राउज गर्नुहोस् र किनमेल सुरु गर्न आफ्ना मनपर्ने बिरुवाहरू थप्नुहोस्!'}
+                </p>
+                <div className="flex items-center justify-center gap-4 text-sm text-emerald-600 font-medium">
+                  <span>🚚 {language === 'en' ? 'Free Delivery' : 'निःशुल्क डेलिभरी'}</span>
+                  <span>🌱 {language === 'en' ? 'Healthy Plants' : 'स्वस्थ बिरुवाहरू'}</span>
+                  <span>📞 {language === 'en' ? '24/7 Support' : '२४/७ सहयोग'}</span>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
