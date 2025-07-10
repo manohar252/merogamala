@@ -80,7 +80,7 @@ const Header = ({ onShopClick, onContactClick }: HeaderProps) => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('language') === 'en' ? 'Search plants and products...' : 'बिरुवा र उत्पादनहरू खोज्नुहोस्...'}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent tracking-wide"
                 />
               </div>
             </form>
@@ -90,19 +90,19 @@ const Header = ({ onShopClick, onContactClick }: HeaderProps) => {
             <nav className="hidden md:flex space-x-8">
               <button 
                 onClick={handleShopClick}
-                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
+                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium tracking-wide"
               >
                 {t('shop')}
               </button>
               <button 
                 onClick={() => scrollToSection('about')}
-                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
+                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium tracking-wide"
               >
                 {t('about')}
               </button>
               <button 
                 onClick={handleContactClick}
-                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
+                className="text-gray-700 hover:text-emerald-600 transition-colors font-medium tracking-wide"
               >
                 {t('contact')}
               </button>
@@ -112,10 +112,11 @@ const Header = ({ onShopClick, onContactClick }: HeaderProps) => {
             <button 
               onClick={() => setIsCartOpen(true)}
               className="relative p-2 text-gray-700 hover:text-emerald-600 transition-colors"
+              title={`${t('cart')} (${totalItems})`}
             >
               <ShoppingCart className="h-6 w-6" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
                   {totalItems}
                 </span>
               )}
@@ -143,7 +144,7 @@ const Header = ({ onShopClick, onContactClick }: HeaderProps) => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder={t('language') === 'en' ? 'Search...' : 'खोज्नुहोस्...'}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent tracking-wide"
                     />
                   </div>
                 </form>
@@ -151,30 +152,33 @@ const Header = ({ onShopClick, onContactClick }: HeaderProps) => {
               
               <button 
                 onClick={handleShopClick}
-                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium tracking-wide"
               >
                 {t('shop')}
               </button>
               <button 
                 onClick={() => scrollToSection('about')}
-                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium tracking-wide"
               >
                 {t('about')}
               </button>
               <button 
                 onClick={handleContactClick}
-                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 font-medium tracking-wide"
               >
                 {t('contact')}
               </button>
               
               {/* Mobile Cart */}
               <button 
-                onClick={() => setIsCartOpen(true)}
-                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 flex items-center gap-2 font-medium"
+                onClick={() => {
+                  setIsCartOpen(true);
+                  setIsMenuOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-emerald-600 flex items-center gap-2 font-medium tracking-wide"
               >
                 <ShoppingCart className="h-5 w-5" />
-                {t('cart')} ({totalItems})
+                <span className="tracking-wide">{t('cart')} ({totalItems})</span>
               </button>
             </div>
           </div>
