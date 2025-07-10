@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback, useRef } from 'react';
 import apiService, { Order as DbOrder } from '../services/api';
 import { USD_TO_NPR_RATE } from '../utils/constants';
 
@@ -46,13 +46,66 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const orderCreationInProgress = useRef<boolean>(false);
+
+  const sanitizeInput = (input: string): string => {
+    return input.trim().replace(/[<>\"'&]/g, '');
+  };
+
+  const validateCustomerDetails = (details: CustomerDetails): void => {
+    if (!details.fullName?.trim()) {
+      throw new Error('Customer name is required');
+    }
+    if (!details.deliveryAddress?.trim()) {
+      throw new Error('Delivery address is required');
+    }
+    if (!details.phoneNumber?.trim()) {
+      throw new Error('Phone number is required');
+    }
+    
+    // Validate phone number format
+    const phoneRegex = /^(\+977|977|0)?[9][0-9]{8,9}$/;
+    if (!phoneRegex.test(details.phoneNumber.replace(/\s/g, ''))) {
+      throw new Error('Invalid phone number format');
+    }
+  };
+
+  const validateOrderItems = (items: OrderItem[]): void => {
+    if (!items || items.length === 0) {
+      throw new Error('Order must contain at least one item');
+    }
+    
+    items.forEach((item, index) => {
+      if (!item.id || !item.name || typeof item.price !== 'number' || item.price <= 0) {
+        throw new Error(`Invalid item at position ${index + 1}`);
+      }
+      if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+        throw new Error(`Invalid quantity for item ${item.name}`);
+      }
+    });
+  };
 
   const loadOrders = useCallback(async () => {
+    // Cancel any existing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new abort controller
+    abortControllerRef.current = new AbortController();
+
     try {
       setLoading(true);
       setError(null);
       
       const dbOrders = await apiService.getOrders();
+      
+      // Check if request was aborted
+      if (abortControllerRef.current.signal.aborted) {
+        return;
+      }
+
       const transformedOrders = dbOrders.map(transformDbOrderToOrder);
       
       setOrders(transformedOrders);
@@ -61,6 +114,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         console.log(`Loaded ${transformedOrders.length} orders from database`);
       }
     } catch (error) {
+      if (abortControllerRef.current?.signal.aborted) {
+        return; // Don't handle aborted requests as errors
+      }
+
       const errorMessage = error instanceof Error ? error.message : 'Failed to load orders';
       setError(errorMessage);
       console.error('Failed to load orders:', error);
@@ -68,13 +125,22 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       // Fallback to localStorage if database fails
       await loadOrdersFromLocalStorage();
     } finally {
-      setLoading(false);
+      if (!abortControllerRef.current?.signal.aborted) {
+        setLoading(false);
+      }
     }
   }, []);
 
   // Load orders from database on component mount
   useEffect(() => {
     loadOrders();
+
+    // Cleanup function
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [loadOrders]);
 
   const loadOrdersFromLocalStorage = async () => {
@@ -82,10 +148,22 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       const storedOrders = localStorage.getItem('mero-gamala-orders');
       if (storedOrders) {
         const parsedOrders = JSON.parse(storedOrders);
-        const ordersWithDates = parsedOrders.map((order: Omit<Order, 'orderDate'> & { orderDate: string }) => ({
-          ...order,
-          orderDate: new Date(order.orderDate)
-        }));
+        
+        // Validate the structure of stored orders
+        if (!Array.isArray(parsedOrders)) {
+          throw new Error('Invalid stored orders format');
+        }
+
+        const ordersWithDates = parsedOrders.map((order: any) => {
+          if (!order.id || !order.orderNumber || !order.orderDate) {
+            throw new Error('Invalid order structure in localStorage');
+          }
+          return {
+            ...order,
+            orderDate: new Date(order.orderDate)
+          };
+        });
+        
         setOrders(ordersWithDates);
         
         if (import.meta.env.DEV) {
@@ -95,6 +173,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     } catch (error) {
       console.error('Failed to parse stored orders from localStorage:', error);
       localStorage.removeItem('mero-gamala-orders');
+      setOrders([]); // Reset to empty array if localStorage is corrupted
     }
   };
 
@@ -103,39 +182,80 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       id: dbOrder.id,
       orderNumber: dbOrder.order_number,
       customerDetails: {
-        fullName: dbOrder.customer_name,
-        deliveryAddress: dbOrder.customer_address,
-        phoneNumber: dbOrder.customer_phone
+        fullName: sanitizeInput(dbOrder.customer_name),
+        deliveryAddress: sanitizeInput(dbOrder.customer_address),
+        phoneNumber: sanitizeInput(dbOrder.customer_phone)
       },
-      items: dbOrder.items,
-      total: dbOrder.total,
-      paymentMethod: dbOrder.payment_method,
+      items: Array.isArray(dbOrder.items) ? dbOrder.items.map(item => ({
+        ...item,
+        name: sanitizeInput(item.name),
+        price: Number(item.price) || 0,
+        quantity: Number(item.quantity) || 1
+      })) : [],
+      total: Number(dbOrder.total) || 0,
+      paymentMethod: sanitizeInput(dbOrder.payment_method),
       status: dbOrder.status,
       orderDate: new Date(dbOrder.created_at),
-      whatsappSent: dbOrder.whatsapp_sent
+      whatsappSent: Boolean(dbOrder.whatsapp_sent)
     };
   };
 
   const addOrder = async (customerDetails: CustomerDetails, items: OrderItem[], paymentMethod: string): Promise<string> => {
+    // Prevent concurrent order creation
+    if (orderCreationInProgress.current) {
+      throw new Error('Another order is being processed. Please wait.');
+    }
+
+    orderCreationInProgress.current = true;
+
     try {
       setLoading(true);
       setError(null);
 
+      // Validate inputs
+      validateCustomerDetails(customerDetails);
+      validateOrderItems(items);
+
+      if (!paymentMethod?.trim()) {
+        throw new Error('Payment method is required');
+      }
+
+      // Sanitize inputs
+      const sanitizedCustomerDetails = {
+        fullName: sanitizeInput(customerDetails.fullName),
+        deliveryAddress: sanitizeInput(customerDetails.deliveryAddress),
+        phoneNumber: sanitizeInput(customerDetails.phoneNumber)
+      };
+
+      const sanitizedItems = items.map(item => ({
+        ...item,
+        name: sanitizeInput(item.name),
+        price: Math.max(0, Number(item.price) || 0),
+        quantity: Math.max(1, Number(item.quantity) || 1)
+      }));
+
+      const sanitizedPaymentMethod = sanitizeInput(paymentMethod);
+
       // Create order in database
       const orderNumber = await apiService.createOrder({
-        customerName: customerDetails.fullName,
-        customerPhone: customerDetails.phoneNumber,
-        customerAddress: customerDetails.deliveryAddress,
-        items: items,
-        total: items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-        paymentMethod: paymentMethod
+        customerName: sanitizedCustomerDetails.fullName,
+        customerPhone: sanitizedCustomerDetails.phoneNumber,
+        customerAddress: sanitizedCustomerDetails.deliveryAddress,
+        items: sanitizedItems,
+        total: sanitizedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        paymentMethod: sanitizedPaymentMethod
       });
 
-      // Refresh orders from database
+      // Refresh orders from database and wait for completion
       await loadOrders();
 
+      // Wait a bit for the orders to be loaded
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // Find the newly created order
-      const newOrder = orders.find(order => order.orderNumber === orderNumber);
+      const newOrder = orders.find(order => order.orderNumber === orderNumber) ||
+                      (await apiService.getOrders()).map(transformDbOrderToOrder)
+                        .find(order => order.orderNumber === orderNumber);
       
       if (newOrder) {
         // Send WhatsApp confirmation
@@ -158,6 +278,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       throw new Error(errorMessage);
     } finally {
       setLoading(false);
+      orderCreationInProgress.current = false;
     }
   };
 
@@ -165,31 +286,42 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     try {
       setError(null);
       
+      if (!orderId?.trim()) {
+        throw new Error('Order ID is required');
+      }
+
+      const sanitizedOrderId = sanitizeInput(orderId);
+      
+      if (!['pending', 'confirmed', 'processing', 'delivered', 'cancelled'].includes(status)) {
+        throw new Error('Invalid order status');
+      }
+      
       // Update in database
-      await apiService.updateOrderStatus(orderId, status);
+      await apiService.updateOrderStatus(sanitizedOrderId, status);
       
       // Update local state
       setOrders(prev => {
         const updatedOrders = prev.map(order => 
-          order.id === orderId 
+          order.id === sanitizedOrderId 
             ? { ...order, status }
             : order
         );
         
         // Debug logging in development
         if (import.meta.env.DEV) {
-          const updatedOrder = updatedOrders.find(order => order.id === orderId);
-          console.log(`Order ${orderId} status updated to: ${status}`, updatedOrder);
+          const updatedOrder = updatedOrders.find(order => order.id === sanitizedOrderId);
+          console.log(`Order ${sanitizedOrderId} status updated to: ${status}`, updatedOrder);
+        }
+        
+        // Save to localStorage as backup
+        try {
+          localStorage.setItem('mero-gamala-orders', JSON.stringify(updatedOrders));
+        } catch (storageError) {
+          console.warn('Failed to backup orders to localStorage:', storageError);
         }
         
         return updatedOrders;
       });
-      
-      // Also save to localStorage as backup
-      const updatedOrders = orders.map(order => 
-        order.id === orderId ? { ...order, status } : order
-      );
-      localStorage.setItem('mero-gamala-orders', JSON.stringify(updatedOrders));
       
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update order status';
@@ -200,12 +332,26 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   const getOrderById = (orderId: string): Order | undefined => {
-    return orders.find(order => order.id === orderId);
+    if (!orderId?.trim()) {
+      return undefined;
+    }
+    const sanitizedOrderId = sanitizeInput(orderId);
+    return orders.find(order => order.id === sanitizedOrderId);
   };
 
   const sendWhatsAppConfirmation = async (order: Order): Promise<boolean> => {
     try {
-      // Simulate WhatsApp API call
+      if (!order?.orderNumber || !order?.customerDetails?.phoneNumber) {
+        throw new Error('Invalid order data for WhatsApp confirmation');
+      }
+
+      // Validate phone number format before sending
+      const phoneRegex = /^(\+977|977|0)?[9][0-9]{8,9}$/;
+      if (!phoneRegex.test(order.customerDetails.phoneNumber.replace(/\s/g, ''))) {
+        throw new Error('Invalid phone number format for WhatsApp');
+      }
+
+      // Simulate WhatsApp API call with timeout
       const message = `Dear Customer your order has been received successfully. We will confirm the delivery soon. Thank you for shopping with us! 🌿 — MERO GAMALAA
 
 Order Details:
@@ -219,8 +365,11 @@ Delivery Address: ${order.customerDetails.deliveryAddress}`;
         console.log('Message:', message);
       }
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Simulate API call delay with timeout
+      await Promise.race([
+        new Promise(resolve => setTimeout(resolve, 1000)),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('WhatsApp API timeout')), 5000))
+      ]);
       
       return true;
     } catch (error) {
