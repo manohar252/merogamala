@@ -50,7 +50,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const orderCreationInProgress = useRef<boolean>(false);
 
   const sanitizeInput = (input: string): string => {
-    return input.trim().replace(/[<>\"'&]/g, '');
+    return input.trim().replace(/[<>"'&]/g, '');
   };
 
   const validateCustomerDetails = (details: CustomerDetails): void => {
@@ -154,7 +154,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           throw new Error('Invalid stored orders format');
         }
 
-        const ordersWithDates = parsedOrders.map((order: any) => {
+        const ordersWithDates = parsedOrders.map((order: Order) => {
           if (!order.id || !order.orderNumber || !order.orderDate) {
             throw new Error('Invalid order structure in localStorage');
           }
