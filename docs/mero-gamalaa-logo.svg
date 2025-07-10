@@ -1,123 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="95" fill="#f5f5f0" stroke="#4a5d23" stroke-width="2"/>
+<svg width="240" height="80" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="240" height="80" fill="#ffffff" rx="8"/>
   
-  <!-- Decorative leaves background -->
-  <g opacity="0.3">
-    <path d="M30 60 Q35 45 50 50 Q35 55 30 60" fill="#68a428"/>
-    <path d="M170 60 Q165 45 150 50 Q165 55 170 60" fill="#68a428"/>
-    <path d="M30 140 Q35 155 50 150 Q35 145 30 140" fill="#68a428"/>
-    <path d="M170 140 Q165 155 150 150 Q165 145 170 140" fill="#68a428"/>
-  </g>
-  
-  <!-- Main plant pot -->
-  <g transform="translate(100, 120)">
+  <!-- Plant icon on the left -->
+  <g transform="translate(20, 40)">
     <!-- Pot -->
-    <path d="M-25 0 L-20 25 L20 25 L25 0 Z" fill="#cd7f32"/>
-    <path d="M-25 0 L-20 -5 L20 -5 L25 0 Z" fill="#e69546"/>
-    <rect x="-25" y="-8" width="50" height="8" fill="#8b4513"/>
+    <path d="M-8 5 L-6 15 L6 15 L8 5 Z" fill="#8b4513"/>
+    <ellipse cx="0" cy="5" rx="8" ry="2" fill="#a0522d"/>
     
     <!-- Plant stems and leaves -->
-    <g transform="translate(0, -5)">
+    <g>
       <!-- Main stem -->
-      <rect x="-2" y="-35" width="4" height="30" fill="#228b22"/>
+      <rect x="-1" y="-10" width="2" height="15" fill="#228b22"/>
       
-      <!-- Left branch -->
-      <g transform="rotate(-20)">
-        <rect x="-1" y="-25" width="2" height="15" fill="#228b22"/>
-        <!-- Large leaf -->
-        <ellipse cx="0" cy="-35" rx="8" ry="12" fill="#32cd32"/>
-        <path d="M0 -47 L0 -23" stroke="#228b22" stroke-width="1"/>
-      </g>
+      <!-- Left leaf -->
+      <ellipse cx="-5" cy="-8" rx="4" ry="6" fill="#32cd32" transform="rotate(-15)"/>
       
-      <!-- Right branch -->
-      <g transform="rotate(25)">
-        <rect x="-1" y="-20" width="2" height="12" fill="#228b22"/>
-        <!-- Medium leaf -->
-        <ellipse cx="0" cy="-28" rx="6" ry="9" fill="#32cd32"/>
-        <path d="M0 -37 L0 -19" stroke="#228b22" stroke-width="1"/>
-      </g>
+      <!-- Right leaf -->
+      <ellipse cx="5" cy="-8" rx="4" ry="6" fill="#32cd32" transform="rotate(15)"/>
       
-      <!-- Center top leaf -->
-      <ellipse cx="0" cy="-45" rx="10" ry="15" fill="#32cd32"/>
-      <path d="M0 -60 L0 -30" stroke="#228b22" stroke-width="1"/>
+      <!-- Top leaf -->
+      <ellipse cx="0" cy="-15" rx="5" ry="7" fill="#32cd32"/>
+      
+      <!-- Leaf veins -->
+      <path d="M0 -22 L0 -8" stroke="#228b22" stroke-width="0.5"/>
+      <path d="M-5 -14 L-2 -8" stroke="#228b22" stroke-width="0.5"/>
+      <path d="M5 -14 L2 -8" stroke="#228b22" stroke-width="0.5"/>
     </g>
   </g>
   
-  <!-- Character (simplified cartoon child) -->
-  <g transform="translate(100, 95)">
-    <!-- Head -->
-    <circle cx="0" cy="-15" r="12" fill="#fdbcb4"/>
-    
-    <!-- Hair -->
-    <path d="M-12 -27 Q0 -35 12 -27 Q8 -15 0 -20 Q-8 -15 -12 -27" fill="#4a2c2a"/>
-    <!-- Hair buns -->
-    <circle cx="-15" cy="-20" r="4" fill="#4a2c2a"/>
-    <circle cx="15" cy="-20" r="4" fill="#4a2c2a"/>
-    
-    <!-- Face -->
-    <circle cx="-4" cy="-18" r="1.5" fill="#333"/>
-    <circle cx="4" cy="-18" r="1.5" fill="#333"/>
-    <path d="M-3 -12 Q0 -8 3 -12" stroke="#333" stroke-width="1" fill="none"/>
-    <!-- Cheeks -->
-    <circle cx="-8" cy="-15" r="2" fill="#ff69b4" opacity="0.6"/>
-    <circle cx="8" cy="-15" r="2" fill="#ff69b4" opacity="0.6"/>
-    
-    <!-- Body -->
-    <ellipse cx="0" cy="5" rx="10" ry="12" fill="#d2691e"/>
-    
-    <!-- Arms -->
-    <ellipse cx="-12" cy="2" rx="3" ry="8" fill="#fdbcb4"/>
-    <ellipse cx="12" cy="2" rx="3" ry="8" fill="#fdbcb4"/>
-    
-    <!-- Hands on pot -->
-    <circle cx="-15" cy="8" r="3" fill="#fdbcb4"/>
-    <circle cx="15" cy="8" r="3" fill="#fdbcb4"/>
+  <!-- Main brand text -->
+  <g transform="translate(50, 35)">
+    <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#1e40af" letter-spacing="2px">
+      MERO
+    </text>
+    <text x="0" y="25" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#dc2626" letter-spacing="2px">
+      GAMALA
+    </text>
   </g>
   
-  <!-- Butterflies -->
-  <g transform="translate(40, 40)">
-    <ellipse cx="0" cy="0" rx="3" ry="2" fill="#ff8c00"/>
-    <ellipse cx="0" cy="3" rx="2" ry="1.5" fill="#ff8c00"/>
-    <ellipse cx="4" cy="0" rx="3" ry="2" fill="#ffa500"/>
-    <ellipse cx="4" cy="3" rx="2" ry="1.5" fill="#ffa500"/>
-    <rect x="1.5" y="-1" width="1" height="6" fill="#333"/>
-  </g>
+  <!-- Alternative horizontal layout -->
+  <!-- <g transform="translate(50, 45)">
+    <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="bold" fill="#1e40af" letter-spacing="1.5px">
+      MERO
+    </text>
+    <text x="70" y="0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="bold" fill="#dc2626" letter-spacing="1.5px">
+      GAMALA
+    </text>
+  </g> -->
   
-  <g transform="translate(160, 40)">
-    <ellipse cx="0" cy="0" rx="3" ry="2" fill="#ff8c00"/>
-    <ellipse cx="0" cy="3" rx="2" ry="1.5" fill="#ff8c00"/>
-    <ellipse cx="4" cy="0" rx="3" ry="2" fill="#ffa500"/>
-    <ellipse cx="4" cy="3" rx="2" ry="1.5" fill="#ffa500"/>
-    <rect x="1.5" y="-1" width="1" height="6" fill="#333"/>
-  </g>
-  
-  <!-- Curved text "MERO GAMALAA" -->
-  <defs>
-    <path id="topCurve" d="M 30 100 A 70 70 0 0 1 170 100"/>
-  </defs>
-  <text font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2d5016">
-    <textPath href="#topCurve" startOffset="50%" text-anchor="middle">
-      MERO GAMALAA
-    </textPath>
+  <!-- Small tagline -->
+  <text x="50" y="55" font-family="Arial, Helvetica, sans-serif" font-size="9" fill="#6b7280" letter-spacing="0.5px">
+    Premium Plants for Your Space
   </text>
   
-  <!-- Bottom Nepali text -->
-  <text x="100" y="180" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#1e40af" text-anchor="middle">
-    "मायाले हुकाएका बिरुवाहरू"
-  </text>
-  
-  <!-- Decorative leaf elements -->
-  <g transform="translate(70, 170)">
-    <path d="M0 0 Q5 -5 10 0 Q5 5 0 0" fill="#68a428"/>
-    <path d="M12 0 Q17 -5 22 0 Q17 5 12 0" fill="#68a428"/>
-    <path d="M-12 0 Q-7 -5 -2 0 Q-7 5 -12 0" fill="#68a428"/>
+  <!-- Decorative elements -->
+  <g opacity="0.7">
+    <!-- Small leaf accent -->
+    <path d="M200 20 Q205 15 210 20 Q205 25 200 20" fill="#10b981"/>
+    <path d="M210 25 Q215 20 220 25 Q215 30 210 25" fill="#10b981"/>
+    
+    <!-- Another leaf accent -->
+    <path d="M200 55 Q205 50 210 55 Q205 60 200 55" fill="#10b981"/>
+    <path d="M210 60 Q215 55 220 60 Q215 65 210 60" fill="#10b981"/>
   </g>
   
-  <g transform="translate(130, 170)">
-    <path d="M0 0 Q5 -5 10 0 Q5 5 0 0" fill="#68a428"/>
-    <path d="M12 0 Q17 -5 22 0 Q17 5 12 0" fill="#68a428"/>
-    <path d="M-12 0 Q-7 -5 -2 0 Q-7 5 -12 0" fill="#68a428"/>
-  </g>
+  <!-- Border -->
+  <rect width="240" height="80" fill="none" stroke="#e5e7eb" stroke-width="1" rx="8"/>
 </svg>
