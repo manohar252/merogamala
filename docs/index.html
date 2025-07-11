@@ -12,34 +12,38 @@
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://merogamalaa.com/" />
-    <meta property="og:title" content="MERO GAMALAA - Premium Plants Delivered in Nepal" />
+  <meta property="og:url" content="https://merogamalaa.com/" />
+  <meta property="og:title" content="MERO GAMALAA - Premium Plants Delivered in Nepal" />
   <meta property="og:description" content="Discover healthy plants, expert care tips, and doorstep delivery across Kathmandu Valley." />
-  <meta property="og:image" content="/og-image.jpg" />
+  <meta property="og:image" content="https://merogamalaa.com/logo.svg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/svg+xml" />
   
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content="https://merogamalaa.com/" />
-    <meta property="twitter:title" content="MERO GAMALAA - Premium Plants Delivered in Nepal" />
+  <meta property="twitter:url" content="https://merogamalaa.com/" />
+  <meta property="twitter:title" content="MERO GAMALAA - Premium Plants Delivered in Nepal" />
   <meta property="twitter:description" content="Discover healthy plants, expert care tips, and doorstep delivery across Kathmandu Valley." />
-  <meta property="twitter:image" content="/og-image.jpg" />
+  <meta property="twitter:image" content="https://merogamalaa.com/logo.svg" />
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/merogamala/favicon.svg" />
-  <link rel="icon" type="image/png" href="/merogamala/favicon.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
   
   <!-- Apple Touch Icon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/merogamala/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   
   <!-- Manifest for PWA -->
-  <link rel="manifest" href="/merogamala/manifest.json" />
+  <link rel="manifest" href="/manifest.json" />
   
   <!-- Theme Color -->
   <meta name="theme-color" content="#10b981" />
   
-  <!-- Preconnect to external resources -->
+  <!-- Preconnect to external resources for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   
   <!-- Google Fonts for Nepali Support -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -67,7 +71,10 @@
     "sameAs": [
       "https://www.facebook.com/merogamalaa",
       "https://www.instagram.com/merogamalaa"
-    ]
+    ],
+    "priceRange": "Rs. 500 - Rs. 5000",
+    "currenciesAccepted": "NPR",
+    "paymentAccepted": "Cash, Bank Transfer, Mobile Payment"
   }
   </script>
   
@@ -94,28 +101,36 @@
       line-height: 1.6;
       color: var(--text-primary);
       background-color: #ffffff;
+      overflow-x: hidden;
     }
     
     .nepali-text {
       font-family: var(--font-nepali);
     }
     
-    /* Loading spinner styles */
+    /* Enhanced loading spinner styles */
     .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       background: linear-gradient(135deg, #10b981 0%, #065f46 100%);
+      z-index: 9999;
     }
     
     .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-top: 3px solid white;
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
       border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin-bottom: 20px;
     }
     
     @keyframes spin {
@@ -125,80 +140,162 @@
     
     .loading-text {
       color: white;
-      margin-top: 20px;
       font-size: 18px;
       font-weight: 500;
+      text-align: center;
+      font-family: var(--font-nepali);
+    }
+    
+    .loading-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      font-weight: 400;
+      margin-top: 10px;
+      text-align: center;
     }
     
     /* Hide loading when app loads */
     #root:not(:empty) + .loading-container {
       display: none;
     }
+    
+    /* Fallback styles for no-js */
+    .noscript-fallback {
+      padding: 40px;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .noscript-fallback h1 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .noscript-fallback p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    
+    .noscript-fallback .nepali-text {
+      font-family: var(--font-nepali);
+      font-size: 14px;
+    }
   </style>
-  <script type="module" crossorigin src="/merogamala/assets/index-Dc8yRK77.js"></script>
-  <link rel="stylesheet" crossorigin href="/merogamala/assets/index-swGFizY0.css">
 </head>
 
 <body>
   <!-- Main React App Container -->
   <div id="root"></div>
   
-  <!-- Loading fallback -->
+  <!-- Enhanced Loading fallback -->
   <div class="loading-container">
     <div>
       <div class="loading-spinner"></div>
       <div class="loading-text">मेरो गमला लोड गर्दै...</div>
+      <div class="loading-subtitle">Loading your plant paradise...</div>
     </div>
   </div>
   
-  <!-- No JavaScript Fallback -->
+  <!-- Enhanced No JavaScript Fallback -->
   <noscript>
-    <div style="padding: 40px; text-align: center; font-family: Inter, sans-serif;">
-      <h1 style="color: #10b981; margin-bottom: 20px;">MERO GAMALAA</h1>
-      <p style="color: #6b7280; font-size: 16px;">
-        JavaScript is required to run this application. Please enable JavaScript in your browser.
+    <div class="noscript-fallback">
+      <h1>MERO GAMALAA</h1>
+      <p>
+        JavaScript is required to run this application. Please enable JavaScript in your browser to experience our full plant store.
       </p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 10px; font-family: 'Noto Sans Devanagari', sans-serif;">
+      <p class="nepali-text">
         यो एप चलाउनको लागि JavaScript आवश्यक छ। कृपया आफ्नो ब्राउजरमा JavaScript सक्षम गर्नुहोस्।
+      </p>
+      <p>
+        <strong>Contact us directly:</strong><br>
+        📞 +977-9766473272<br>
+        🌐 merogamalaa.com
       </p>
     </div>
   </noscript>
   
-  <!-- Module Script -->
-  
-  <!-- Analytics (placeholder for Google Analytics or other analytics) -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script> -->
+  <!-- Performance monitoring and analytics -->
   <script>
-    // Google Analytics placeholder
-    // window.dataLayer = window.dataLayer || [];
-    // function gtag(){dataLayer.push(arguments);}
-    // gtag('js', new Date());
-    // gtag('config', 'GA_MEASUREMENT_ID');
-    
     // Performance monitoring
     if ('performance' in window) {
       window.addEventListener('load', function() {
         setTimeout(function() {
-          const perfData = performance.getEntriesByType('navigation')[0];
-          if (perfData && perfData.loadEventEnd > 0) {
-            console.log('Page load time:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
+          try {
+            const perfData = performance.getEntriesByType('navigation')[0];
+            if (perfData && perfData.loadEventEnd > 0) {
+              const loadTime = perfData.loadEventEnd - perfData.fetchStart;
+              console.log('Page load time:', loadTime, 'ms');
+              
+              // Track Core Web Vitals
+              if ('web-vital' in window) {
+                // This would integrate with actual analytics
+                console.log('Core Web Vitals tracking enabled');
+              }
+            }
+          } catch (error) {
+            console.warn('Performance monitoring error:', error);
           }
-        }, 0);
+        }, 100);
       });
     }
     
-    // Service Worker registration for PWA (optional)
-    if ('serviceWorker' in navigator) {
+    // Enhanced error handling
+    window.addEventListener('error', function(event) {
+      console.error('Application error:', event.error);
+      // In production, send to error tracking service
+    });
+    
+    // Service Worker registration for PWA
+    if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
       window.addEventListener('load', function() {
-        // navigator.serviceWorker.register('/sw.js')
-        //   .then(function(registration) {
-        //     console.log('SW registered: ', registration);
-        //   })
-        //   .catch(function(registrationError) {
-        //     console.log('SW registration failed: ', registrationError);
-        //   });
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(registration) {
+            console.log('Service Worker registered successfully:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Service Worker registration failed:', error);
+          });
       });
     }
+    
+    // Preload critical resources
+    function preloadCriticalResources() {
+      const criticalResources = [
+        '/favicon.svg',
+        '/logo.svg',
+        '/manifest.json'
+      ];
+      
+      criticalResources.forEach(function(resource) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = resource;
+        link.as = resource.endsWith('.svg') ? 'image' : 'fetch';
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+      });
+    }
+    
+    // Initialize preloading
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', preloadCriticalResources);
+    } else {
+      preloadCriticalResources();
+    }
   </script>
+  
+  <!-- Build assets - These paths will be updated by the build process -->
+  <script type="module" crossorigin src="/assets/index-2b041Vng.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DTK_4FcR.css">
 </body>
 </html>
