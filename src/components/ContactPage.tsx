@@ -158,30 +158,37 @@ const ContactPage = ({ onBack }: { onBack: () => void }) => {
               </div>
             </div>
 
-            {/* Social Media */}
+            {/* Social Media - FIXED: Added valid href attributes for accessibility */}
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 {language === 'en' ? 'Follow Us' : 'हामीलाई फलो गर्नुहोस्'}
               </h3>
               <div className="flex space-x-4">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/merogamalaa"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="p-3 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                  aria-label={language === 'en' ? 'Visit our Facebook page' : 'हाम्रो Facebook पेज हेर्नुहोस्'}
                 >
                   <Facebook className="h-6 w-6" />
                 </a>
                 <a
-                  href="#"
+                  href="https://www.instagram.com/merogamalaa"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="p-3 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
+                  aria-label={language === 'en' ? 'Visit our Instagram page' : 'हाम्रो Instagram पेज हेर्नुहोस्'}
                 >
                   <Instagram className="h-6 w-6" />
                 </a>
-                <a
-                  href="#"
+                <button
+                  onClick={() => alert(language === 'en' ? 'Twitter page coming soon!' : 'Twitter पेज चाँडै आउँदैछ!')}
                   className="p-3 bg-blue-100 text-blue-400 rounded-lg hover:bg-blue-200 transition-colors"
+                  aria-label={language === 'en' ? 'Twitter page coming soon' : 'Twitter पेज चाँडै आउँदैछ'}
                 >
                   <Twitter className="h-6 w-6" />
-                </a>
+                </button>
               </div>
             </div>
 
