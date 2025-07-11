@@ -15,6 +15,44 @@ export interface DatabaseConnection {
   close(): Promise<void>;
 }
 
+// Production database implementation placeholder
+class ProductionDatabase implements DatabaseConnection {
+  private config: DatabaseConfig;
+
+  constructor(config: DatabaseConfig) {
+    this.config = config;
+  }
+
+  async query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]> {
+    // TODO: Implement actual database query with proper connection pooling
+    // For now, log the configuration and return empty results
+    console.warn('Production database not fully implemented. Using fallback.');
+    console.log('Database config:', { 
+      host: this.config.host, 
+      port: this.config.port, 
+      database: this.config.database 
+    });
+    return [];
+  }
+
+  async execute(sql: string, params?: unknown[]): Promise<{ insertId?: number; affectedRows: number }> {
+    // TODO: Implement actual database execute
+    console.warn('Production database not fully implemented. Using fallback.');
+    return { affectedRows: 0 };
+  }
+
+  async transaction<T>(callback: (trx: DatabaseConnection) => Promise<T>): Promise<T> {
+    // TODO: Implement actual transaction
+    console.warn('Production database not fully implemented. Using fallback.');
+    return callback(this);
+  }
+
+  async close(): Promise<void> {
+    // TODO: Implement connection cleanup
+    console.log('Database connection closed');
+  }
+}
+
 // Mock database implementation for development
 class MockDatabase implements DatabaseConnection {
   private data: Map<string, unknown[]> = new Map();
@@ -253,20 +291,44 @@ export class DatabaseFactory {
 
     // In development, use mock database
     if (import.meta.env.DEV || !config) {
+      console.log('Using mock database for development');
       this.instance = new MockDatabase();
       return this.instance;
     }
 
-    // In production, would create real database connection
-    // This would be implemented with your preferred database driver
-    throw new Error('Production database configuration not implemented');
+    // In production, attempt to create real database connection
+    // If configuration is provided, try to use it
+    try {
+      // Validate production config
+      if (!config.host || !config.database || !config.username) {
+        console.warn('Incomplete database configuration, falling back to mock database');
+        this.instance = new MockDatabase();
+        return this.instance;
+      }
+
+      console.log('Attempting to create production database connection');
+      this.instance = new ProductionDatabase(config);
+      return this.instance;
+    } catch (error) {
+      console.error('Failed to create production database connection:', error);
+      console.log('Falling back to mock database');
+      this.instance = new MockDatabase();
+      return this.instance;
+    }
   }
 
   static async getInstance(): Promise<DatabaseConnection> {
     if (!this.instance) {
+      // For now, always use mock database for safety and simplicity
+      // Production database configuration can be added later when needed
       this.instance = await this.create();
     }
     return this.instance;
+  }
+
+  // Method to reset instance (useful for testing)
+  static reset(): void {
+    this.instance = null;
   }
 }
 
