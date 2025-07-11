@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import { USD_TO_NPR_RATE, sanitizeInput, validatePrice, MAX_NAME_LENGTH } from '../utils/constants';
+import { USD_TO_NPR_RATE } from '../utils/constants';
+import { sanitizeInput, validatePrice } from '../utils/validators';
 
 interface CartItem {
   id: string;
@@ -48,8 +49,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return { isValid: false, error: 'Item name is required' };
     }
 
-    if (item.name.length > MAX_NAME_LENGTH) {
-      return { isValid: false, error: `Item name cannot exceed ${MAX_NAME_LENGTH} characters` };
+    if (item.name.length > 100) { // Changed MAX_NAME_LENGTH to 100
+      return { isValid: false, error: `Item name cannot exceed 100 characters` };
     }
 
     const priceValidation = validatePrice(item.price);
@@ -93,7 +94,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Sanitize item data
     const sanitizedItem = {
       id: sanitizeInput(item.id),
-      name: sanitizeInput(item.name, MAX_NAME_LENGTH),
+      name: sanitizeInput(item.name, 100), // Changed MAX_NAME_LENGTH to 100
       price: validatePrice(item.price).value,
       discountPercentage: item.discountPercentage ? Math.max(0, Math.min(100, item.discountPercentage)) : undefined,
       image: sanitizeInput(item.image)

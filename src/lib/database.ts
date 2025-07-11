@@ -23,21 +23,17 @@ class ProductionDatabase implements DatabaseConnection {
     this.config = config;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]> {
-    // TODO: Implement actual database query with proper connection pooling
-    // For now, log the configuration and return empty results
-    console.warn('Production database not fully implemented. Using fallback.');
-    console.log('Database config:', { 
-      host: this.config.host, 
-      port: this.config.port, 
-      database: this.config.database 
-    });
+    // Production database not implemented - returns empty array
+    console.warn('Production database query attempted but not configured');
     return [];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async execute(sql: string, params?: unknown[]): Promise<{ insertId?: number; affectedRows: number }> {
-    // TODO: Implement actual database execute
-    console.warn('Production database not fully implemented. Using fallback.');
+    // Production database not implemented - returns empty result
+    console.warn('Production database execute attempted but not configured');
     return { affectedRows: 0 };
   }
 

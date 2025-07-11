@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import CryptoJS from 'crypto-js';
+import { SESSION_DURATION, SESSION_STORAGE_KEY, MAX_LOGIN_ATTEMPTS, LOCKOUT_DURATION } from '../utils/constants';
 
 interface Product {
   id: string;
@@ -51,11 +52,6 @@ const getAdminCredentials = () => {
   };
 };
 
-const SESSION_DURATION = 1 * 60 * 60 * 1000; // Reduced to 1 hour for better security
-const SESSION_STORAGE_KEY = 'mero-gamala-admin-session';
-const MAX_LOGIN_ATTEMPTS = 5;
-const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes lockout
-
 // Generate a unique session token
 const generateSessionToken = (): string => {
   return CryptoJS.lib.WordArray.random(256/8).toString();
@@ -92,7 +88,22 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   ]);
   const [plantRequests, setPlantRequests] = useState<PlantRequest[]>([]);
 
-  // Enhanced session checking
+  const logout = useCallback(() => {
+    // Log logout (in production, log to server)
+    if (isAuthenticated) {
+      console.log('Admin logout at:', new Date().toISOString());
+    }
+
+    setIsAuthenticated(false);
+    setSessionExpiry(null);
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    
+    // Redirect to login page
+    if (window.location.pathname.includes('/admin')) {
+      window.location.href = '/admin-portal-secure';
+    }
+  }, [isAuthenticated]);
+
   useEffect(() => {
     const checkExistingSession = () => {
       try {
@@ -137,7 +148,7 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     };
 
     checkExistingSession();
-  }, []);
+  }, [logout]);
 
   const sanitizeInput = (input: string): string => {
     return input.trim().replace(/[<>"'&]/g, '');
@@ -263,22 +274,6 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       }
       
       throw new Error('Login failed. Please check your credentials.');
-    }
-  };
-
-  const logout = () => {
-    // Log logout (in production, log to server)
-    if (isAuthenticated) {
-      console.log('Admin logout at:', new Date().toISOString());
-    }
-
-    setIsAuthenticated(false);
-    setSessionExpiry(null);
-    sessionStorage.removeItem(SESSION_STORAGE_KEY);
-    
-    // Redirect to login page
-    if (window.location.pathname.includes('/admin')) {
-      window.location.href = '/admin-portal-secure';
     }
   };
 

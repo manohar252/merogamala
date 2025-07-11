@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Send, User, Mail, Phone, Upload, X, Camera, Plus, Image } from 'lucide-react';
-import { PHONE_NUMBER_REGEX } from '../utils/constants';
+import { PHONE_NUMBER_REGEX } from '../utils/validators';
 
 const PlantRequestForm = () => {
   const { t } = useLanguage();

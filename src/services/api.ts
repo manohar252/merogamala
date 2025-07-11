@@ -1,5 +1,5 @@
 import DatabaseFactory from '../lib/database';
-import { sanitizeInput, validatePrice } from '../utils/constants';
+import { sanitizeInput, validatePrice } from '../utils/validators';
 
 // Database models/interfaces
 export interface Plant {
@@ -691,7 +691,7 @@ export class ApiService {
         throw new Error('Invalid language preference');
       }
 
-      const sanitizedUserId = preferences.userId ? sanitizeInput(preferences.userId) : null;
+      const sanitizedUserId = preferences.userId ? sanitizeInput(preferences.userId) : undefined;
 
       await this.executeWithTimeout(async () => {
         const db = await DatabaseFactory.getInstance();
@@ -704,7 +704,7 @@ export class ApiService {
           );
         } else {
           const newPrefs = {
-            user_id: sanitizedUserId,
+            user_id: sanitizedUserId || null,
             language: preferences.language,
             has_visited: preferences.hasVisited,
             created_at: new Date().toISOString(),

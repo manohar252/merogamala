@@ -106,6 +106,29 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     return { sanitizedCustomerDetails, sanitizedItems, sanitizedPaymentMethod };
   };
 
+  const transformDbOrderToOrder = useCallback((dbOrder: DbOrder): Order => {
+    return {
+      id: dbOrder.id,
+      orderNumber: dbOrder.order_number,
+      customerDetails: {
+        fullName: sanitizeInput(dbOrder.customer_name),
+        deliveryAddress: sanitizeInput(dbOrder.customer_address),
+        phoneNumber: sanitizeInput(dbOrder.customer_phone)
+      },
+      items: Array.isArray(dbOrder.items) ? dbOrder.items.map(item => ({
+        ...item,
+        name: sanitizeInput(item.name),
+        price: Number(item.price) || 0,
+        quantity: Number(item.quantity) || 1
+      })) : [],
+      total: Number(dbOrder.total) || 0,
+      paymentMethod: sanitizeInput(dbOrder.payment_method),
+      status: dbOrder.status,
+      orderDate: new Date(dbOrder.created_at),
+      whatsappSent: Boolean(dbOrder.whatsapp_sent)
+    };
+  }, []);
+
   const loadOrders = useCallback(async () => {
     // Cancel any existing request
     if (abortControllerRef.current) {
@@ -149,7 +172,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setLoading(false);
       }
     }
-  }, []);
+  }, [transformDbOrderToOrder]);
 
   const loadOrdersFromLocalStorage = async () => {
     try {
@@ -183,29 +206,6 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       localStorage.removeItem('mero-gamala-orders');
       setOrders([]); // Reset to empty array if localStorage is corrupted
     }
-  };
-
-  const transformDbOrderToOrder = (dbOrder: DbOrder): Order => {
-    return {
-      id: dbOrder.id,
-      orderNumber: dbOrder.order_number,
-      customerDetails: {
-        fullName: sanitizeInput(dbOrder.customer_name),
-        deliveryAddress: sanitizeInput(dbOrder.customer_address),
-        phoneNumber: sanitizeInput(dbOrder.customer_phone)
-      },
-      items: Array.isArray(dbOrder.items) ? dbOrder.items.map(item => ({
-        ...item,
-        name: sanitizeInput(item.name),
-        price: Number(item.price) || 0,
-        quantity: Number(item.quantity) || 1
-      })) : [],
-      total: Number(dbOrder.total) || 0,
-      paymentMethod: sanitizeInput(dbOrder.payment_method),
-      status: dbOrder.status,
-      orderDate: new Date(dbOrder.created_at),
-      whatsappSent: Boolean(dbOrder.whatsapp_sent)
-    };
   };
 
   const createOrderInDatabase = async (customerDetails: CustomerDetails, items: OrderItem[], paymentMethod: string): Promise<string> => {

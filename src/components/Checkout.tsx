@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useOrders, CustomerDetails, OrderItem } from '../contexts/OrderContext';
-import { USD_TO_NPR_RATE, PHONE_NUMBER_REGEX } from '../utils/constants';
+import { USD_TO_NPR_RATE } from '../utils/constants';
+import { PHONE_NUMBER_REGEX } from '../utils/validators';
 import PaymentInterface from './payment/PaymentInterface';
 import { 
   User, 

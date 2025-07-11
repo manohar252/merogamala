@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Building2, QrCode, CheckCircle, Copy, RefreshCw } from 'lucide-react';
+import { Building2, QrCode, Copy, RefreshCw } from 'lucide-react';
 
 interface CitizenBankQRProps {
   amount: number;
