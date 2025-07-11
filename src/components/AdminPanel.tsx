@@ -72,6 +72,154 @@ const AdminPanel = () => {
     }).format(new Date(date));
   };
 
+  // EXTRACTED: Helper function to get empty state message - FIXED nested ternary
+  const getEmptyStateMessage = () => {
+    if (orders.length === 0) {
+      return 'No orders found';
+    }
+    return 'No orders in this status';
+  };
+
+  // EXTRACTED: Loading state component - FIXED nested ternary S3358
+  const renderLoadingState = () => (
+    <div className="text-center py-12">
+      <Loader className="h-16 w-16 text-emerald-600 mx-auto mb-4 animate-spin" />
+      <p className="text-gray-500 text-lg">Loading orders from database...</p>
+    </div>
+  );
+
+  // EXTRACTED: Empty state component - FIXED nested ternary S3358
+  const renderEmptyState = () => (
+    <div className="text-center py-12">
+      <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+      <p className="text-gray-500 text-lg">
+        {getEmptyStateMessage()}
+      </p>
+      {orders.length === 0 && !error && (
+        <p className="text-gray-400 text-sm mt-2">
+          Orders will appear here when customers place them from the shop
+        </p>
+      )}
+    </div>
+  );
+
+  // EXTRACTED: Orders list component - FIXED nested ternary S3358
+  const renderOrdersList = () => (
+    <div className="divide-y divide-gray-200">
+      {filteredOrders.map((order) => (
+        <div key={order.id} className="p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              {/* Order Header */}
+              <div className="flex items-center mb-4">
+                <span className="text-lg font-semibold text-gray-900">
+                  #{order.orderNumber}
+                </span>
+                <span className={`ml-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
+                  {getStatusIcon(order.status)}
+                  <span className="ml-1 capitalize">{order.status}</span>
+                </span>
+                {order.whatsappSent && (
+                  <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                    <MessageCircle className="h-4 w-4 mr-1" />
+                    WhatsApp Sent
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Customer Details */}
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-3">Customer Details</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center text-gray-600">
+                      <User className="h-4 w-4 mr-2" />
+                      {order.customerDetails.fullName}
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <Phone className="h-4 w-4 mr-2" />
+                      {order.customerDetails.phoneNumber}
+                    </div>
+                    <div className="flex items-start text-gray-600">
+                      <MapPin className="h-4 w-4 mr-2 mt-0.5" />
+                      <span>{order.customerDetails.deliveryAddress}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Order Details */}
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-3">Order Details</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center text-gray-600">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      {formatDate(order.orderDate)}
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <DollarSign className="h-4 w-4 mr-2" />
+                      Total: Rs. {(order.total * USD_TO_NPR_RATE).toFixed(0)}
+                    </div>
+                    <div className="text-gray-600">
+                      Payment: {order.paymentMethod}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Items */}
+              <div className="mt-4">
+                <h4 className="font-medium text-gray-900 mb-3">Items Ordered</h4>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  {order.items.map((item) => (
+                    <div key={item.id} className="flex justify-between py-2">
+                      <span className="text-sm text-gray-900">
+                        {item.name} x {item.quantity}
+                      </span>
+                      <span className="text-sm font-medium text-gray-900">
+                        Rs. {((item.price * item.quantity) * USD_TO_NPR_RATE).toFixed(0)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Status Update */}
+            <div className="ml-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Update Status
+              </label>
+              <select
+                value={order.status}
+                onChange={(e) => handleStatusUpdate(order.id, e.target.value as Order['status'])}
+                className="block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+              >
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="processing">Processing</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  // EXTRACTED: Main content renderer - FIXED nested ternary S3358
+  const renderOrdersContent = () => {
+    if (loading) {
+      return renderLoadingState();
+    }
+    
+    if (filteredOrders.length === 0) {
+      return renderEmptyState();
+    }
+    
+    return renderOrdersList();
+  };
+
   const handleRefresh = async () => {
     try {
       setIsRefreshing(true);
@@ -252,7 +400,7 @@ const AdminPanel = () => {
           </div>
         </div>
 
-        {/* Orders List */}
+        {/* Orders List - FIXED: Replaced nested ternary with function call */}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-semibold text-gray-900">
@@ -260,125 +408,7 @@ const AdminPanel = () => {
             </h2>
           </div>
 
-          {loading ? (
-            <div className="text-center py-12">
-              <Loader className="h-16 w-16 text-emerald-600 mx-auto mb-4 animate-spin" />
-              <p className="text-gray-500 text-lg">Loading orders from database...</p>
-            </div>
-          ) : filteredOrders.length === 0 ? (
-            <div className="text-center py-12">
-              <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">
-                {orders.length === 0 ? 'No orders found' : 'No orders in this status'}
-              </p>
-              {orders.length === 0 && !error && (
-                <p className="text-gray-400 text-sm mt-2">
-                  Orders will appear here when customers place them from the shop
-                </p>
-              )}
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-200">
-              {filteredOrders.map((order) => (
-                <div key={order.id} className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      {/* Order Header */}
-                      <div className="flex items-center mb-4">
-                        <span className="text-lg font-semibold text-gray-900">
-                          #{order.orderNumber}
-                        </span>
-                        <span className={`ml-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                          {getStatusIcon(order.status)}
-                          <span className="ml-1 capitalize">{order.status}</span>
-                        </span>
-                        {order.whatsappSent && (
-                          <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                            <MessageCircle className="h-4 w-4 mr-1" />
-                            WhatsApp Sent
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Customer Details */}
-                        <div>
-                          <h4 className="font-medium text-gray-900 mb-3">Customer Details</h4>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center text-gray-600">
-                              <User className="h-4 w-4 mr-2" />
-                              {order.customerDetails.fullName}
-                            </div>
-                            <div className="flex items-center text-gray-600">
-                              <Phone className="h-4 w-4 mr-2" />
-                              {order.customerDetails.phoneNumber}
-                            </div>
-                            <div className="flex items-start text-gray-600">
-                              <MapPin className="h-4 w-4 mr-2 mt-0.5" />
-                              <span>{order.customerDetails.deliveryAddress}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Order Details */}
-                        <div>
-                          <h4 className="font-medium text-gray-900 mb-3">Order Details</h4>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center text-gray-600">
-                              <Calendar className="h-4 w-4 mr-2" />
-                              {formatDate(order.orderDate)}
-                            </div>
-                            <div className="flex items-center text-gray-600">
-                              <DollarSign className="h-4 w-4 mr-2" />
-                              Total: Rs. {(order.total * USD_TO_NPR_RATE).toFixed(0)}
-                            </div>
-                            <div className="text-gray-600">
-                              Payment: {order.paymentMethod}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Order Items */}
-                      <div className="mt-4">
-                        <h4 className="font-medium text-gray-900 mb-3">Items Ordered</h4>
-                        <div className="bg-gray-50 rounded-lg p-4">
-                          {order.items.map((item) => (
-                            <div key={item.id} className="flex justify-between py-2">
-                              <span className="text-sm text-gray-900">
-                                {item.name} x {item.quantity}
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                Rs. {((item.price * item.quantity) * USD_TO_NPR_RATE).toFixed(0)}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Status Update */}
-                    <div className="ml-6">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Update Status
-                      </label>
-                      <select
-                        value={order.status}
-                        onChange={(e) => handleStatusUpdate(order.id, e.target.value as Order['status'])}
-                        className="block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 text-sm"
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="processing">Processing</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="cancelled">Cancelled</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {renderOrdersContent()}
         </div>
       </div>
     </div>
