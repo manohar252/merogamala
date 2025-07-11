@@ -9,6 +9,34 @@ interface CitizenBankQRProps {
   onFailure: (error: { message: string; code?: string }) => void;
 }
 
+// Cryptographically secure random number generation
+const getSecureRandomFloat = (): number => {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0] / (0xffffffff + 1);
+};
+
+// Generate cryptographically secure transaction ID
+const generateSecureTransactionId = (): string => {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  
+  // Convert to hexadecimal string
+  const hex = Array.from(array)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+  
+  // Format as CB-XXXX-XXXX-XXXX-XXXX for readability
+  return `CB-${hex.slice(0, 4)}-${hex.slice(4, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}`.toUpperCase();
+};
+
+// Secure random delay between 5-12 seconds for realistic simulation
+const getSecureRandomDelay = (): number => {
+  const minDelay = 5000; // 5 seconds
+  const maxDelay = 12000; // 12 seconds
+  return minDelay + Math.floor(getSecureRandomFloat() * (maxDelay - minDelay));
+};
+
 const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
   amount,
   orderId,
@@ -32,46 +60,108 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
       onFailure({
         message: language === 'en' 
           ? 'QR code expired. Please generate a new one.' 
-          : 'QR कोड समाप्त भयो। कृपया नयाँ एक उत्पन्न गर्नुहोस्।'
+          : 'QR कोड समाप्त भयो। कृपया नयाँ एक उत्पन्न गर्नुहोस्।',
+        code: 'QR_EXPIRED'
       });
     }
   }, [qrGenerated, timeLeft, language, onFailure]);
 
   const generateQR = () => {
-    setQrGenerated(true);
-    setIsWaitingForPayment(true);
-    
-    // Generate QR data (in real implementation, this would come from the bank API)
-    const qrString = `upi://pay?pa=merchant@citizenbank&pn=MeroGamala&am=${amount}&cu=NPR&tn=Order${orderId}`;
-    setQrData(qrString);
-
-    // Simulate payment detection after some time
-    setTimeout(() => {
-      const success = Math.random() > 0.2; // 80% success rate for demo
+    try {
+      setQrGenerated(true);
+      setIsWaitingForPayment(true);
       
-      if (success) {
-        onSuccess({
-          method: 'Citizen Bank QR',
-          transactionId: `CB${Date.now()}`
-        });
-      } else {
-        onFailure({
-          message: language === 'en' 
-            ? 'Payment not detected. Please try again or use a different method.' 
-            : 'भुक्तानी पत्ता लागेन। कृपया फेरि प्रयास गर्नुहोस् वा अर्को विधि प्रयोग गर्नुहोस्।'
-        });
-      }
-    }, 8000);
+      // Generate secure QR data (in real implementation, this would come from the bank API)
+      // Adding timestamp and secure random component for uniqueness
+      const timestamp = Date.now();
+      const secureComponent = Array.from(crypto.getRandomValues(new Uint8Array(4)))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+      
+      const qrString = `upi://pay?pa=merchant@citizenbank&pn=MeroGamala&am=${amount}&cu=NPR&tn=Order${orderId}&tr=${timestamp}${secureComponent}`;
+      setQrData(qrString);
+
+      // SECURITY NOTE: This is DEMO/DEVELOPMENT code only
+      // In production, payment verification should be handled server-side
+      // through secure bank APIs, not client-side simulation
+      console.warn('🚨 SECURITY WARNING: This is demo payment simulation. Do not use in production!');
+
+      // Use cryptographically secure random number for payment simulation
+      // In production, this would be actual payment verification from bank API
+      const secureRandomDelay = getSecureRandomDelay();
+      
+      setTimeout(() => {
+        try {
+          // Use secure random number generator for demo outcome
+          // In production, this would be actual payment status from bank
+          const secureRandom = getSecureRandomFloat();
+          const success = secureRandom > 0.2; // 80% success rate for demo
+          
+          if (success) {
+            // Generate cryptographically secure transaction ID
+            const transactionId = generateSecureTransactionId();
+            
+            onSuccess({
+              method: 'Citizen Bank QR',
+              transactionId: transactionId
+            });
+          } else {
+            onFailure({
+              message: language === 'en' 
+                ? 'Payment not detected. Please try again or use a different method.' 
+                : 'भुक्तानी पत्ता लागेन। कृपया फेरि प्रयास गर्नुहोस् वा अर्को विधि प्रयोग गर्नुहोस्।',
+              code: 'PAYMENT_NOT_DETECTED'
+            });
+          }
+        } catch (error) {
+          console.error('Payment simulation error:', error);
+          onFailure({
+            message: language === 'en' 
+              ? 'Payment processing error. Please try again.' 
+              : 'भुक्तानी प्रक्रियामा त्रुटि। कृपया फेरि प्रयास गर्नुहोस्।',
+            code: 'PROCESSING_ERROR'
+          });
+        }
+      }, secureRandomDelay);
+      
+    } catch (error) {
+      console.error('QR generation error:', error);
+      onFailure({
+        message: language === 'en' 
+          ? 'Failed to generate QR code. Please try again.' 
+          : 'QR कोड उत्पन्न गर्न असफल। कृपया फेरि प्रयास गर्नुहोस्।',
+        code: 'QR_GENERATION_FAILED'
+      });
+    }
   };
 
-  const copyQRData = () => {
-    navigator.clipboard.writeText(qrData);
+  const copyQRData = async () => {
+    try {
+      await navigator.clipboard.writeText(qrData);
+      // Could add a toast notification here for user feedback
+    } catch (error) {
+      console.error('Failed to copy QR data:', error);
+      // Fallback for browsers that don't support clipboard API
+      const textArea = document.createElement('textarea');
+      textArea.value = qrData;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
   };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const resetQR = () => {
+    setQrGenerated(false);
+    setTimeLeft(300);
+    setIsWaitingForPayment(false);
+    setQrData('');
   };
 
   return (
@@ -86,6 +176,14 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
             {language === 'en' ? 'Bank QR payment' : 'बैंक QR भुक्तानी'}
           </p>
         </div>
+      </div>
+
+      {/* Security Warning for Development */}
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+        <p className="text-xs text-yellow-800">
+          <strong>⚠️ DEMO MODE:</strong> This is simulated payment for development. 
+          Production requires real bank API integration.
+        </p>
       </div>
 
       {!qrGenerated ? (
@@ -121,6 +219,9 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
               <QrCode className="h-16 w-16 text-gray-400 mx-auto mb-2" />
               <p className="text-sm text-gray-500">
                 {language === 'en' ? 'QR Code' : 'QR कोड'}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {language === 'en' ? 'Scan with bank app' : 'बैंक एप संग स्क्यान गर्नुहोस्'}
               </p>
             </div>
           </div>
@@ -173,11 +274,7 @@ const CitizenBankQR: React.FC<CitizenBankQRProps> = ({
 
           {/* Refresh Button */}
           <button
-            onClick={() => {
-              setQrGenerated(false);
-              setTimeLeft(300);
-              setIsWaitingForPayment(false);
-            }}
+            onClick={resetQR}
             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
