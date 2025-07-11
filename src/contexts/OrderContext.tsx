@@ -53,6 +53,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     return input.trim().replace(/[<>"'&]/g, '');
   };
 
+  // EXTRACTED: Validation methods for better cognitive complexity
   const validateCustomerDetails = (details: CustomerDetails): void => {
     if (!details.fullName?.trim()) {
       throw new Error('Customer name is required');
@@ -84,6 +85,25 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         throw new Error(`Invalid quantity for item ${item.name}`);
       }
     });
+  };
+
+  const sanitizeOrderInputs = (customerDetails: CustomerDetails, items: OrderItem[], paymentMethod: string) => {
+    const sanitizedCustomerDetails = {
+      fullName: sanitizeInput(customerDetails.fullName),
+      deliveryAddress: sanitizeInput(customerDetails.deliveryAddress),
+      phoneNumber: sanitizeInput(customerDetails.phoneNumber)
+    };
+
+    const sanitizedItems = items.map(item => ({
+      ...item,
+      name: sanitizeInput(item.name),
+      price: Math.max(0, Number(item.price) || 0),
+      quantity: Math.max(1, Number(item.quantity) || 1)
+    }));
+
+    const sanitizedPaymentMethod = sanitizeInput(paymentMethod);
+
+    return { sanitizedCustomerDetails, sanitizedItems, sanitizedPaymentMethod };
   };
 
   const loadOrders = useCallback(async () => {
@@ -130,18 +150,6 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       }
     }
   }, []);
-
-  // Load orders from database on component mount
-  useEffect(() => {
-    loadOrders();
-
-    // Cleanup function
-    return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, [loadOrders]);
 
   const loadOrdersFromLocalStorage = async () => {
     try {
@@ -200,6 +208,52 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     };
   };
 
+  const createOrderInDatabase = async (customerDetails: CustomerDetails, items: OrderItem[], paymentMethod: string): Promise<string> => {
+    return await apiService.createOrder({
+      customerName: customerDetails.fullName,
+      customerPhone: customerDetails.phoneNumber,
+      customerAddress: customerDetails.deliveryAddress,
+      items: items,
+      total: items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+      paymentMethod: paymentMethod
+    });
+  };
+
+  const handleOrderConfirmation = async (orderNumber: string): Promise<void> => {
+    // Refresh orders and wait for completion
+    await loadOrders();
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Find the newly created order
+    const newOrder = orders.find(order => order.orderNumber === orderNumber) ||
+                    (await apiService.getOrders()).map(transformDbOrderToOrder)
+                      .find(order => order.orderNumber === orderNumber);
+    
+    if (newOrder) {
+      try {
+        await sendWhatsAppConfirmation(newOrder);
+        await apiService.updateOrderWhatsAppStatus(newOrder.id, true);
+        await loadOrders(); // Refresh to get updated WhatsApp status
+      } catch (whatsappError) {
+        console.error('Failed to send WhatsApp confirmation:', whatsappError);
+        // Don't throw error - order was created successfully
+      }
+    }
+  };
+
+  // Load orders from database on component mount
+  useEffect(() => {
+    loadOrders();
+
+    // Cleanup function
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [loadOrders]);
+
+  // REFACTORED: Simplified addOrder function with extracted helpers
   const addOrder = async (customerDetails: CustomerDetails, items: OrderItem[], paymentMethod: string): Promise<string> => {
     // Prevent concurrent order creation
     if (orderCreationInProgress.current) {
@@ -212,63 +266,27 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       setLoading(true);
       setError(null);
 
-      // Validate inputs
+      // Step 1: Validate inputs (extracted to separate methods)
       validateCustomerDetails(customerDetails);
       validateOrderItems(items);
-
+      
       if (!paymentMethod?.trim()) {
         throw new Error('Payment method is required');
       }
 
-      // Sanitize inputs
-      const sanitizedCustomerDetails = {
-        fullName: sanitizeInput(customerDetails.fullName),
-        deliveryAddress: sanitizeInput(customerDetails.deliveryAddress),
-        phoneNumber: sanitizeInput(customerDetails.phoneNumber)
-      };
+      // Step 2: Sanitize inputs (extracted to separate method)
+      const { sanitizedCustomerDetails, sanitizedItems, sanitizedPaymentMethod } = 
+        sanitizeOrderInputs(customerDetails, items, paymentMethod);
 
-      const sanitizedItems = items.map(item => ({
-        ...item,
-        name: sanitizeInput(item.name),
-        price: Math.max(0, Number(item.price) || 0),
-        quantity: Math.max(1, Number(item.quantity) || 1)
-      }));
+      // Step 3: Create order in database (extracted to separate method)
+      const orderNumber = await createOrderInDatabase(
+        sanitizedCustomerDetails, 
+        sanitizedItems, 
+        sanitizedPaymentMethod
+      );
 
-      const sanitizedPaymentMethod = sanitizeInput(paymentMethod);
-
-      // Create order in database
-      const orderNumber = await apiService.createOrder({
-        customerName: sanitizedCustomerDetails.fullName,
-        customerPhone: sanitizedCustomerDetails.phoneNumber,
-        customerAddress: sanitizedCustomerDetails.deliveryAddress,
-        items: sanitizedItems,
-        total: sanitizedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-        paymentMethod: sanitizedPaymentMethod
-      });
-
-      // Refresh orders from database and wait for completion
-      await loadOrders();
-
-      // Wait a bit for the orders to be loaded
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      // Find the newly created order
-      const newOrder = orders.find(order => order.orderNumber === orderNumber) ||
-                      (await apiService.getOrders()).map(transformDbOrderToOrder)
-                        .find(order => order.orderNumber === orderNumber);
-      
-      if (newOrder) {
-        // Send WhatsApp confirmation
-        try {
-          await sendWhatsAppConfirmation(newOrder);
-          await apiService.updateOrderWhatsAppStatus(newOrder.id, true);
-          // Refresh orders to get updated WhatsApp status
-          await loadOrders();
-        } catch (whatsappError) {
-          console.error('Failed to send WhatsApp confirmation:', whatsappError);
-          // Don't throw error - order was created successfully
-        }
-      }
+      // Step 4: Handle post-order confirmation (extracted to separate method)
+      await handleOrderConfirmation(orderNumber);
 
       return orderNumber;
     } catch (error) {

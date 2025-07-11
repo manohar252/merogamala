@@ -147,7 +147,74 @@ export class ApiService {
     ]);
   }
 
-  // Input validation helpers
+  // Input validation helpers - EXTRACTED FOR BETTER COGNITIVE COMPLEXITY
+  private validateOrderData(orderData: {
+    customerName: string;
+    customerPhone: string;
+    customerAddress: string;
+    items: OrderItem[];
+    total: number;
+    paymentMethod: string;
+  }): void {
+    // Validate required fields
+    if (!orderData.customerName?.trim()) {
+      throw new Error('Customer name is required');
+    }
+    if (!orderData.customerPhone?.trim()) {
+      throw new Error('Customer phone is required');
+    }
+    if (!orderData.customerAddress?.trim()) {
+      throw new Error('Customer address is required');
+    }
+    if (!orderData.items || orderData.items.length === 0) {
+      throw new Error('Order items are required');
+    }
+    if (!orderData.paymentMethod?.trim()) {
+      throw new Error('Payment method is required');
+    }
+    
+    // Validate total matches items
+    const calculatedTotal = orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    if (Math.abs(calculatedTotal - orderData.total) > 0.01) {
+      throw new Error('Order total does not match item prices');
+    }
+  }
+
+  private sanitizeOrderData(orderData: {
+    customerName: string;
+    customerPhone: string;
+    customerAddress: string;
+    items: OrderItem[];
+    total: number;
+    paymentMethod: string;
+  }) {
+    return {
+      order_number: this.generateOrderNumber(),
+      customer_name: sanitizeInput(orderData.customerName),
+      customer_phone: sanitizeInput(orderData.customerPhone),
+      customer_address: sanitizeInput(orderData.customerAddress),
+      items: JSON.stringify(orderData.items.map(item => ({
+        ...item,
+        name: sanitizeInput(item.name),
+        price: validatePrice(item.price).value,
+        quantity: Math.max(1, Number(item.quantity) || 1)
+      }))),
+      total: validatePrice(orderData.total).value,
+      payment_method: sanitizeInput(orderData.paymentMethod),
+      status: 'pending',
+      whatsapp_sent: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+  }
+
+  private async updateOrderStock(items: OrderItem[]): Promise<void> {
+    // Update plant stock for each item
+    for (const item of items) {
+      await this.updatePlantStock(item.id, item.quantity);
+    }
+  }
+
   private validatePlantData(plant: Partial<Plant>): void {
     if (!plant.name?.trim()) {
       throw new Error('Plant name is required');
@@ -297,7 +364,7 @@ export class ApiService {
     }
   }
 
-  // Order operations
+  // REFACTORED Order operations - Reduced Cognitive Complexity
   async createOrder(orderData: {
     customerName: string;
     customerPhone: string;
@@ -307,60 +374,19 @@ export class ApiService {
     paymentMethod: string;
   }): Promise<string> {
     try {
-      // Validate input data
-      if (!orderData.customerName?.trim()) {
-        throw new Error('Customer name is required');
-      }
-      if (!orderData.customerPhone?.trim()) {
-        throw new Error('Customer phone is required');
-      }
-      if (!orderData.customerAddress?.trim()) {
-        throw new Error('Customer address is required');
-      }
-      if (!orderData.items || orderData.items.length === 0) {
-        throw new Error('Order items are required');
-      }
-      if (!orderData.paymentMethod?.trim()) {
-        throw new Error('Payment method is required');
-      }
+      // Step 1: Validate input data (extracted to separate method)
+      this.validateOrderData(orderData);
 
-      // Validate total matches items
-      const calculatedTotal = orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      if (Math.abs(calculatedTotal - orderData.total) > 0.01) {
-        throw new Error('Order total does not match item prices');
-      }
-
+      // Step 2: Create order in database
       const orderNumber = await this.executeWithTimeout(async () => {
         const db = await DatabaseFactory.getInstance();
-        const orderNum = this.generateOrderNumber();
-        
-        const order = {
-          order_number: orderNum,
-          customer_name: sanitizeInput(orderData.customerName),
-          customer_phone: sanitizeInput(orderData.customerPhone),
-          customer_address: sanitizeInput(orderData.customerAddress),
-          items: JSON.stringify(orderData.items.map(item => ({
-            ...item,
-            name: sanitizeInput(item.name),
-            price: validatePrice(item.price).value,
-            quantity: Math.max(1, Number(item.quantity) || 1)
-          }))),
-          total: validatePrice(orderData.total).value,
-          payment_method: sanitizeInput(orderData.paymentMethod),
-          status: 'pending',
-          whatsapp_sent: false,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        await db.execute('INSERT INTO orders', [order]);
-        return orderNum;
+        const sanitizedOrder = this.sanitizeOrderData(orderData);
+        await db.execute('INSERT INTO orders', [sanitizedOrder]);
+        return sanitizedOrder.order_number;
       });
       
-      // Update plant stock for each item
-      for (const item of orderData.items) {
-        await this.updatePlantStock(item.id, item.quantity);
-      }
+      // Step 3: Update stock (extracted to separate method)
+      await this.updateOrderStock(orderData.items);
 
       return orderNumber;
     } catch (error) {
@@ -369,6 +395,40 @@ export class ApiService {
     }
   }
 
+  // EXTRACTED: Order data transformation helper
+  private transformOrderData(order: Record<string, unknown>): Order {
+    try {
+      const items = typeof order.items === 'string' ? JSON.parse(order.items as string) : order.items;
+      return {
+        ...order,
+        id: sanitizeInput(String(order.id)),
+        customer_name: sanitizeInput(String(order.customer_name)),
+        customer_phone: sanitizeInput(String(order.customer_phone)),
+        customer_address: sanitizeInput(String(order.customer_address)),
+        payment_method: sanitizeInput(String(order.payment_method)),
+        total: validatePrice(Number(order.total) || 0).value,
+        items: Array.isArray(items) ? items : []
+      } as Order;
+          } catch (parseError) {
+        console.error('Error parsing order items:', parseError);
+        return {
+          id: sanitizeInput(String(order.id)),
+          order_number: String(order.order_number || ''),
+          customer_name: sanitizeInput(String(order.customer_name || '')),
+          customer_phone: sanitizeInput(String(order.customer_phone || '')),
+          customer_address: sanitizeInput(String(order.customer_address || '')),
+          payment_method: sanitizeInput(String(order.payment_method || '')),
+          status: (order.status as Order['status']) || 'pending',
+          whatsapp_sent: Boolean(order.whatsapp_sent),
+          created_at: String(order.created_at || new Date().toISOString()),
+          updated_at: String(order.updated_at || new Date().toISOString()),
+          total: 0,
+          items: []
+        } as Order;
+      }
+  }
+
+  // REFACTORED: Simplified getOrders function
   async getOrders(): Promise<Order[]> {
     try {
       const orders = await this.executeWithTimeout(async () => {
@@ -376,28 +436,8 @@ export class ApiService {
         return await db.query<Record<string, unknown>>('SELECT * FROM orders ORDER BY created_at DESC');
       });
       
-      // Parse items JSON for each order with error handling
-      return orders.map(order => {
-        try {
-          const items = typeof order.items === 'string' ? JSON.parse(order.items as string) : order.items;
-          return {
-            ...order,
-            id: sanitizeInput(String(order.id)),
-            customer_name: sanitizeInput(String(order.customer_name)),
-            customer_phone: sanitizeInput(String(order.customer_phone)),
-            customer_address: sanitizeInput(String(order.customer_address)),
-            payment_method: sanitizeInput(String(order.payment_method)),
-            total: validatePrice(order.total).value,
-            items: Array.isArray(items) ? items : []
-          } as Order;
-        } catch (parseError) {
-          console.error('Error parsing order items:', parseError);
-          return {
-            ...order,
-            items: []
-          } as Order;
-        }
-      });
+      // Transform each order using extracted helper method
+      return orders.map(order => this.transformOrderData(order));
     } catch (error) {
       console.error('Error fetching orders:', error);
       throw new Error('Failed to fetch orders');
