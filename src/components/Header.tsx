@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Menu, X, ShoppingCart, Search } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useSearch } from '../contexts/SearchContext';
+import { Menu, X, ShoppingCart, Search } from '../utils/icons';
 import Logo from './Logo';
 
 interface HeaderProps {

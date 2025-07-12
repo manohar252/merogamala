@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAdmin } from '../contexts/AdminContext';
-import { Eye, EyeOff, Settings, Lock, User, AlertTriangle } from 'lucide-react';
+import { Eye, EyeOff, Settings, Lock, User, AlertTriangle } from '../utils/icons';
 
 const SecretAdminLogin = () => {
   const [username, setUsername] = useState('');

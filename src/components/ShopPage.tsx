@@ -3,7 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useSearch } from '../contexts/SearchContext';
 import { USD_TO_NPR_RATE } from '../utils/constants';
-import { Plus, Heart, Star, Grid, List, Search, ArrowLeft } from 'lucide-react';
+import { Plus, Heart, Star, Grid, List, Search, ArrowLeft } from '../utils/icons';
 
 interface Plant {
   id: string;

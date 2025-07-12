@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { CreditCard, AlertCircle, CheckCircle } from 'lucide-react';
+import { CreditCard, AlertCircle, CheckCircle } from '../../utils/icons';
 
 interface FonePayPaymentProps {
   amount: number;

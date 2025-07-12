@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
-import { Plus, Heart, Star, Loader, ShoppingCart, CheckCircle, ArrowRight } from 'lucide-react';
+import { Plus, Heart, Star, Loader, ShoppingCart, CheckCircle, ArrowRight } from '../utils/icons';
 import apiService, { Plant, Category } from '../services/api';
 import { USD_TO_NPR_RATE } from '../utils/constants';
 import { fallbackPlants, fallbackCategories } from '../utils/fallbackData';

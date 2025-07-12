@@ -1,5 +1,5 @@
 import React from 'react';
-import { Target, Users, Leaf } from 'lucide-react';
+import { Target, Users, Leaf } from '../utils/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const About = () => {

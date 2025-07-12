@@ -13,7 +13,7 @@ import {
   ArrowRight, 
   CheckCircle, 
   X
-} from 'lucide-react';
+} from '../utils/icons';
 
 interface CheckoutProps {
   onBack: () => void;

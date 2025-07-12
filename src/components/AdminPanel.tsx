@@ -19,7 +19,7 @@ import {
   RefreshCw,
   Loader,
   AlertCircle
-} from 'lucide-react';
+} from '../utils/icons';
 
 const AdminPanel = () => {
   const { orders, loading, error, updateOrderStatus, clearAllOrders, refreshOrders } = useOrders();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter } from '../utils/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import Logo from './Logo';
 

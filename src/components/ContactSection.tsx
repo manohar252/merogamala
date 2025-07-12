@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MessageSquare, Clock, ShoppingBag } from 'lucide-react';
+import { Phone, Mail, MessageSquare, Clock, ShoppingBag } from '../utils/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface ContactSectionProps {

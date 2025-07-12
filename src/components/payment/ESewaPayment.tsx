@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { ExternalLink, Loader2, AlertTriangle } from 'lucide-react';
+import { ExternalLink, Loader2, AlertTriangle } from '../../utils/icons';
 
 interface ESewaPaymentProps {
   amount: number;

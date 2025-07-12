@@ -1,5 +1,5 @@
 import React from 'react';
-import { Globe } from 'lucide-react';
+import { Globe } from '../utils/icons';
 
 interface LanguageModalProps {
   onSelectLanguage: (language: 'en' | 'ne') => void;

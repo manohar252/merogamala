@@ -1,5 +1,5 @@
 import React from 'react';
-import { Truck, Leaf, Package, BookOpen, Heart } from 'lucide-react';
+import { Truck, Leaf, Package, BookOpen, Heart } from '../utils/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Features = () => {

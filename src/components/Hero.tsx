@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Truck, Shield, Heart } from 'lucide-react';
+import { ArrowRight, Truck, Shield, Heart } from '../utils/icons';
 import { useLanguage } from '../contexts/LanguageContext';
 
 

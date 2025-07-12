@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Send, User, Mail, Phone, Upload, X, Camera, Plus, Image } from 'lucide-react';
+import { Send, User, Mail, Phone, Upload, X, Camera, Plus, Image } from '../utils/icons';
 import { PHONE_NUMBER_REGEX } from '../utils/validators';
 
 const PlantRequestForm = () => {

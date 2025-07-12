@@ -11,7 +11,7 @@ import {
   Facebook,
   Instagram,
   Twitter
-} from 'lucide-react';
+} from '../utils/icons';
 
 const ContactPage = ({ onBack }: { onBack: () => void }) => {
   const { language } = useLanguage();

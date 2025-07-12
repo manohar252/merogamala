@@ -8,7 +8,7 @@ import {
   X, 
   ArrowLeft,
   AlertCircle 
-} from 'lucide-react';
+} from '../../utils/icons';
 import ESewaPayment from './ESewaPayment';
 import FonePayPayment from './FonePayPayment';
 import CitizenBankQR from './CitizenBankQR';

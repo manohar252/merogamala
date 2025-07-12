@@ -5,16 +5,18 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   base: '/merogamala/', // GitHub Pages base URL
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
+    minify: 'esbuild',
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          icons: ['react-icons/fi', 'react-icons/tb', 'react-icons/hi'],
+          crypto: ['crypto-js'],
+        },
       },
     },
   },

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Droplets, Sun, Thermometer, Scissors, Loader, AlertCircle } from 'lucide-react';
+import { Droplets, Sun, Thermometer, Scissors, Loader, AlertCircle } from '../utils/icons';
 import apiService, { CareGuide } from '../services/api';
 
 const PlantCareGuide = () => {
